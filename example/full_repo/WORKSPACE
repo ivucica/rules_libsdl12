@@ -1,0 +1,17 @@
+# -*- mode: python; -*-
+# vim: set syntax=python:
+
+workspace(name="full_repo")
+
+# Usually, you would do something like:
+#   git_repository(name="rules_libsdl12", ...)
+# to refer to the rules repo on GitHub.
+local_repository(
+    name = "rules_libsdl12",
+    path = __workspace_dir__ + "/../..",
+)
+
+
+load("@rules_libsdl12//:libsdl12.bzl", "libsdl12_repositories")
+libsdl12_repositories()
+

@@ -1,0 +1,9 @@
+# -*- mode: python; -*-
+# vim: set syntax=python:
+
+cc_binary(
+    name = "full_repo",
+    srcs = ["full_repo.c"],
+    deps = ["@rules_libsdl12//:libsdl12", "@rules_libsdl12//:libsdl12-main"],
+)
+

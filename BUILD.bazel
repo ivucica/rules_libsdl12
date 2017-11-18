@@ -1,0 +1,14 @@
+# -*- mode: python; -*-
+# vim: set syntax=python:
+
+alias(
+    name = "libsdl12",
+    actual = "@libsdl12//:sdl",
+    visibility = ["//visibility:public"],
+)
+
+alias(
+    name = "libsdl12-main",
+    actual = "@libsdl12//:sdlmain",
+    visibility = ["//visibility:public"],
+)

@@ -1,0 +1,45 @@
+# -*- mode: python; -*-
+# vim: set syntax=python:
+
+cc_inc_library(
+    name = "X11",
+    hdrs = [
+        "//:Xlib.h",
+        "//:X.h",
+        "//:Xfuncproto.h",
+        "//:Xosdefs.h",
+        "//:Xatom.h",
+
+        "//:Xlibint.h",
+        "//:Xproto.h",
+        "//:Xmd.h",
+        "//:Xprotostr.h",
+        "//:XlibConf.h",
+        "//:Xfuncs.h",
+        "//:Xutil.h",
+        "//:keysym.h",
+        "//:keysymdef.h",
+        "//:Xdefs.h",
+
+        "//:extensions/XShm.h",
+        "//:extensions/shm.h",
+        "//:extensions/Xrandr.h",
+        "//:extensions/randr.h",
+        "//:extensions/Xrender.h",
+        "//:extensions/render.h",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+cc_inc_library(
+    name = "Xext",
+    hdrs = [
+        "//:extensions/XShm.h",
+        "//:extensions/shm.h",
+        "//:extensions/Xrandr.h",
+        "//:extensions/randr.h",
+        "//:extensions/Xrender.h",
+        "//:extensions/render.h",
+    ],
+    visibility = ["//visibility:public"],
+)
