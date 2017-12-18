@@ -8,6 +8,21 @@ config_setting(
     values = {"host_cpu": "darwin"}
 )
 
+config_setting(
+    name = "windows",
+    values = {"host_cpu": "x64_windows"}
+)
+
+config_setting(
+    name = "windows_msys",
+    values = {"cpu": "x64_windows_msys"}
+)
+
+config_setting(
+    name = "windows_msvc",
+    values = {"cpu": "x64_windows_msvc"}
+)
+
 cc_library(
     name = "sdl",
     srcs = glob([
@@ -54,6 +69,51 @@ cc_library(
                 "patch2/src/video/quartz/SDL_QuartzVideo.h",  # see [patch2]
                 "fix_mac_audioplayer.c",
             ],
+            ":windows": glob([
+                "src/video/wincommon/*.c", "src/video/wincommon/*.h",
+                "src/video/windib/*.c",    "src/video/windib/*.h",
+                "src/video/windx5/*.c",    "src/video/windx5/*.h",
+                "src/joystick/win32/*.c",  "src/joystick/win32/*.h",
+                "src/cdrom/win32/*.c",     "src/cdrom/win32/*.h",
+                "src/audio/windib/*.c",    "src/audio/windib/*.h",
+                "src/audio/windx5/*.c",    "src/audio/windx5/*.h",
+                "src/thread/win32/SDL_sysmutex.c",
+                "src/thread/win32/SDL_syssem.c",
+                "src/thread/win32/SDL_systhread.c",
+                "src/thread/win32/SDL_systhread_c.h",
+                "src/thread/win32/SDL_systhread.h",
+                "src/timer/win32/*.c",     "src/timer/win32/*.h",
+            ]),
+            ":windows_msys": glob([
+                "src/video/wincommon/*.c", "src/video/wincommon/*.h",
+                "src/video/windib/*.c",    "src/video/windib/*.h",
+                "src/video/windx5/*.c",    "src/video/windx5/*.h",
+                "src/joystick/win32/*.c",  "src/joystick/win32/*.h",
+                "src/cdrom/win32/*.c",     "src/cdrom/win32/*.h",
+                "src/audio/windib/*.c",    "src/audio/windib/*.h",
+                "src/audio/windx5/*.c",    "src/audio/windx5/*.h",
+                "src/thread/win32/SDL_sysmutex.c",
+                "src/thread/win32/SDL_syssem.c",
+                "src/thread/win32/SDL_systhread.c",
+                "src/thread/win32/SDL_systhread_c.h",
+                "src/thread/win32/SDL_systhread.h",
+                "src/timer/win32/*.c",     "src/timer/win32/*.h",
+            ]),
+            ":windows_msvc": glob([
+                "src/video/wincommon/*.c", "src/video/wincommon/*.h",
+                "src/video/windib/*.c",    "src/video/windib/*.h",
+                "src/video/windx5/*.c",    "src/video/windx5/*.h",
+                "src/joystick/win32/*.c",  "src/joystick/win32/*.h",
+                "src/cdrom/win32/*.c",     "src/cdrom/win32/*.h",
+                "src/audio/windib/*.c",    "src/audio/windib/*.h",
+                "src/audio/windx5/*.c",    "src/audio/windx5/*.h",
+                "src/thread/win32/SDL_sysmutex.c",
+                "src/thread/win32/SDL_syssem.c",
+                "src/thread/win32/SDL_systhread.c",
+                "src/thread/win32/SDL_systhread_c.h",
+                "src/thread/win32/SDL_systhread.h",
+                "src/timer/win32/*.c",     "src/timer/win32/*.h",
+            ]),
             "//conditions:default": glob([
                 "src/video/x11/*.c",      "src/video/x11/*.h",
                 "src/video/dga/*.c",      "src/video/dga/*.h",
@@ -80,9 +140,15 @@ cc_library(
     includes = [
         ".", "SDL",
         "src/thread",
-        "patch1", "patch1/src/video/x11",  # see [patch1]
-        "patch2", "patch2/src/video/quartz", # see [patch2]
-    ],
+    ] + select({
+        ":windows": [],
+        ":windows_msys": [],
+        ":windows_msvc": [],
+        "//conditions:default": [
+          "patch1", "patch1/src/video/x11",  # see [patch1]
+          "patch2", "patch2/src/video/quartz", # see [patch2]
+        ],
+    }),
     copts = [
         "-Iexternal/x11repository",
     ] + select({
@@ -92,6 +158,28 @@ cc_library(
         "//conditions:default": [],
     }),
     linkopts = select({
+        ":windows": [
+            "-DEFAULTLIB:winmm.lib",
+            "-DEFAULTLIB:dxguid.lib",
+            "-DEFAULTLIB:gdi32.lib",
+            "-DEFAULTLIB:opengl32.lib",
+            "-DEFAULTLIB:user32.lib",
+            "-DEFAULTLIB:ddraw.lib",
+            "-DEFAULTLIB:advapi32.lib",
+            "-SUBSYSTEM:WINDOWS",
+        ],
+        ":windows_msys": [
+        ],
+        ":windows_msvc": [
+            "-DEFAULTLIB:winmm.lib",
+            "-DEFAULTLIB:dxguid.lib",
+            "-DEFAULTLIB:gdi32.lib",
+            "-DEFAULTLIB:opengl32.lib",
+            "-DEFAULTLIB:user32.lib",
+            "-DEFAULTLIB:ddraw.lib",
+            "-DEFAULTLIB:advapi32.lib",
+            "-SUBSYSTEM:WINDOWS",
+        ],
         ":darwin": [
             "-framework Foundation",
             "-framework AppKit",
@@ -112,10 +200,15 @@ cc_library(
     deps = select({
         ":darwin": [":sdlobjc"],
         "//conditions:default": [],
-    }) + [
-        "@x11repository//:X11",
-        "@x11repository//:Xext",
-    ],
+    }) + select({
+        ":windows": [],
+        ":windows_msys": [],
+        ":windows_msvc": [],
+        "//conditions:default": [
+          "@x11repository//:X11",
+          "@x11repository//:Xext",
+        ],
+    }),
     visibility = ["//visibility:public"],
     linkstatic = 1,
 )
@@ -124,57 +217,92 @@ cc_library(
 # on OS X.
 genrule(
     name = "sdlheaders",
-    srcs = ["configure", "README", "Makefile.in", "sdl-config.in", "sdl.pc.in", "SDL.spec.in", "SDL.qpg.in", "include/SDL_config.h.in",
+    srcs = select({
+        ":windows": [],
+        ":windows_msys": [],
+        ":windows_msvc": [],
+        "//conditions:default": [
+            "configure", "README", "Makefile.in", "sdl-config.in", "sdl.pc.in", "SDL.spec.in", "SDL.qpg.in", "include/SDL_config.h.in",
             # see [patch1] for more info
             "src/video/x11/SDL_x11sym.h",
             # see [patch2] for more info
             "src/video/quartz/SDL_QuartzVideo.h", "e9466ead70e5.patch", "bbfb41c13a87.patch",
-        ] + glob(["build-scripts/*", "include/*.h"]),
+            ],
+    }) + glob(["build-scripts/*", "include/*.h"]),
     outs = [i.replace("include", "SDL") for i in glob(["include/*.h"])] + [
-        "configure.consoleoutput",
+          "configure.consoleoutput",
 
-        # see [patch1] for more info
-        "patch1/src/video/x11/SDL_x11sym.h",
+          # see [patch1] for more info
+          "patch1/src/video/x11/SDL_x11sym.h",
 
-        # see [patch2] for more info
-        "patch2/src/video/quartz/SDL_QuartzVideo.h",
-    ],
+          # see [patch2] for more info
+          "patch2/src/video/quartz/SDL_QuartzVideo.h",
+        ],
     cmd = "\n".join([
-        "mkdir -p $(@D)/SDL",
-        "mkdir -p $(@D)/build-scripts",
-        "mkdir -p $(@D)/include",
-        "for i in $(SRCS) ; do",
-        "  if [[ $${i} == *.patch ]] ; then",
-        "    continue",
-        "  fi",
-        "  if [[ $${i} == external/" + workspace_name + "/include/* ]] ; then",
-        "    cp \"$$i\" \"$(@D)/SDL/$$(basename \"$${i}\")\"",
-        "    cp \"$$i\" \"$(@D)/include/$$(basename \"$${i}\")\"",
-        "  elif [[ $${i} == external/" + workspace_name + "/build-scripts/* ]] ; then",
-        "    cp \"$$i\" \"$(@D)/build-scripts/$$(basename \"$${i}\")\"",
-        "  else",
-        "    cp \"$${i}\" \"$(@D)/$$(basename \"$${i}\")\"",
-        "  fi",
-        "done",
+          "mkdir -p $(@D)/SDL",
+          "mkdir -p $(@D)/build-scripts",
+          "mkdir -p $(@D)/include",
+          "for i in $(SRCS) ; do",
+          "  if [[ $${i} == *.patch ]] ; then",
+          "    continue",
+          "  fi",
+          "  if [[ $${i} == external/" + workspace_name + "/include/* ]] ; then",
+          "    cp \"$$i\" \"$(@D)/SDL/$$(basename \"$${i}\")\"",
+          "    cp \"$$i\" \"$(@D)/include/$$(basename \"$${i}\")\"",
+          "  elif [[ $${i} == external/" + workspace_name + "/build-scripts/* ]] ; then",
+          "    cp \"$$i\" \"$(@D)/build-scripts/$$(basename \"$${i}\")\"",
+          "  else",
+          "    cp \"$${i}\" \"$(@D)/$$(basename \"$${i}\")\"",
+          "  fi",
+          "done",
+          "",
+        ]) + select({
+        ":windows": "\n".join([
+          "echo '' > $(@D)/configure.consoleoutput",
+          "cp external/" + workspace_name + "/src/video/x11/SDL_x11sym.h $(@D)/patch1/src/video/x11/SDL_x11sym.h",
+          "cp external/" + workspace_name + "/src/video/quartz/SDL_QuartzVideo.h $(@D)/patch2/src/video/quartz/SDL_QuartzVideo.h",
+          "cp external/" + workspace_name + "/include/SDL_config_win32.h $(@D)/SDL/SDL_config.h",
+          "",
+        ]),
+        ":windows_msys": "\n".join([
+          "echo '' > $(@D)/configure.consoleoutput",
+          "cp external/" + workspace_name + "/src/video/x11/SDL_x11sym.h $(@D)/patch1/src/video/x11/SDL_x11sym.h",
+          "cp external/" + workspace_name + "/src/video/quartz/SDL_QuartzVideo.h $(@D)/patch2/src/video/quartz/SDL_QuartzVideo.h",
+          "cp external/" + workspace_name + "/include/SDL_config_win32.h $(@D)/SDL/SDL_config.h",
+          "",
+        ]),
+        ":windows_msvc": "\n".join([
+          "echo '' > $(@D)/configure.consoleoutput",
+          "cp external/" + workspace_name + "/src/video/x11/SDL_x11sym.h $(@D)/patch1/src/video/x11/SDL_x11sym.h",
+          "cp external/" + workspace_name + "/src/video/quartz/SDL_QuartzVideo.h $(@D)/patch2/src/video/quartz/SDL_QuartzVideo.h",
+          "cp external/" + workspace_name + "/include/SDL_config_win32.h $(@D)/SDL/SDL_config.h",
+          "",
+        ]),
+        "//conditions:default": "\n".join([
 
-        # see [patch1] for more info
-        "rm -rf $(@D)/patch1/src/video/x11 && mkdir -p $(@D)/patch1/src/video/x11",
-        "sed -e '/_XData32/s:register long:register _Xconst long:' external/" + workspace_name + "/src/video/x11/SDL_x11sym.h > $(@D)/patch1/src/video/x11/SDL_x11sym.h",
+          # see [patch1] for more info
+          "rm -rf $(@D)/patch1/src/video/x11 && mkdir -p $(@D)/patch1/src/video/x11",
+          "sed -e '/_XData32/s:register long:register _Xconst long:' external/" + workspace_name + "/src/video/x11/SDL_x11sym.h > $(@D)/patch1/src/video/x11/SDL_x11sym.h",
+        #] + select({
+        #    "//conditions:default": [],
+        #    ":darwin": [
+              # see [patch2] for more info
+              "rm -rf $(@D)/patch2/src/video/quartz && mkdir -p $(@D)/patch2/src/video/quartz",
+              "patch $$([ $$(uname) != Darwin ] && echo --follow-symlinks) -o $(@D)/patch2/src/video/quartz/SDL_QuartzVideo.h.intermed external/" + workspace_name + "/src/video/quartz/SDL_QuartzVideo.h $(location :e9466ead70e5.patch)",
+              "patch $$([ $$(uname) != Darwin ] && echo --follow-symlinks) -o $(@D)/patch2/src/video/quartz/SDL_QuartzVideo.h $(@D)/patch2/src/video/quartz/SDL_QuartzVideo.h.intermed $(location :bbfb41c13a87.patch)",
+              "rm $(@D)/patch2/src/video/quartz/SDL_QuartzVideo.h.intermed",
+        #    ],
+        #}) + [
+          # TODO(ivucica): Patching rules only work while sandboxed. Why?
+          # n.b. this is a workaround, replacing the above commands:
+          #"cp external/" + workspace_name + "/src/video/quartz/SDL_QuartzVideo.h $(@D)/patch2/src/video/quartz/SDL_QuartzVideo.h",
 
-        # see [patch2] for more info
-        # TODO(ivucica): This is only relevant under Darwin, let's avoid this.
-        "rm -rf $(@D)/patch2/src/video/quartz && mkdir -p $(@D)/patch2/src/video/quartz",
-        "patch $$([ $$(uname) != Darwin ] && echo --follow-symlinks) -o $(@D)/patch2/src/video/quartz/SDL_QuartzVideo.h.intermed external/" + workspace_name + "/src/video/quartz/SDL_QuartzVideo.h $(location :e9466ead70e5.patch)",
-        "patch $$([ $$(uname) != Darwin ] && echo --follow-symlinks) -o $(@D)/patch2/src/video/quartz/SDL_QuartzVideo.h $(@D)/patch2/src/video/quartz/SDL_QuartzVideo.h.intermed $(location :bbfb41c13a87.patch)",
-        "rm $(@D)/patch2/src/video/quartz/SDL_QuartzVideo.h.intermed",
-        # TODO(ivucica): Patching rules only work while sandboxed. Why?
-        # n.b. this is a workaround, replacing the above commands:
-        #"cp external/" + workspace_name + "/src/video/quartz/SDL_QuartzVideo.h $(@D)/patch2/src/video/quartz/SDL_QuartzVideo.h",
-
-        "$(@D)/configure > $(@D)/configure.consoleoutput $$(if [[ $$(uname) == Darwin ]]; then echo --disable-video-x11 ; fi) 2>&1 " +
-        "  || (cat $(@D)/configure.consoleoutput; exit 1)",
-        "cp include/SDL_config.h $(@D)/SDL/SDL_config.h",
-    ]),
+          "$(@D)/configure > $(@D)/configure.consoleoutput $$(if [[ $$(uname) == Darwin ]]; then echo --disable-video-x11 ; fi) 2>&1 " +
+          "  || (cat $(@D)/configure.consoleoutput; exit 1)",
+          "cp include/SDL_config.h $(@D)/SDL/SDL_config.h",
+          "",
+        ]),
+    }),
     visibility = ["//visibility:public"],
 )
 
@@ -240,6 +368,9 @@ cc_library(
     name = "sdlmain",
     srcs = select({
         ":darwin": ["objcXcode/TemplatesForXcodeSnowLeopard/SDL_Cocoa_Application/SDLMain.m.c"],
+        ":windows": ["src/main/win32/SDL_win32_main.c"],
+        ":windows_msys": ["src/main/win32/SDL_win32_main.c"],
+        ":windows_msvc": ["src/main/win32/SDL_win32_main.c"],
         "//conditions:default": [],
     }),
     copts = select({
