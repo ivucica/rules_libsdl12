@@ -1,0 +1,6 @@
+cc_binary(
+    name = "gui",
+    srcs = ["gui.c"],
+    deps = ["//:libsdl12", "//:libsdl12-main"],
+)
+
