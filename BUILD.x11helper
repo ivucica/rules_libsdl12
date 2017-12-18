@@ -1,45 +1,70 @@
 # -*- mode: python; -*-
 # vim: set syntax=python:
 
+config_setting(
+    name = "windows",
+    values = {"cpu": "x64_windows"}
+)
+
+config_setting(
+    name = "windows_msys",
+    values = {"cpu": "x64_windows_msys"}
+)
+
+config_setting(
+    name = "windows_msvc",
+    values = {"cpu": "x64_windows_msvc"}
+)
+
 cc_inc_library(
     name = "X11",
-    hdrs = [
-        "//:Xlib.h",
-        "//:X.h",
-        "//:Xfuncproto.h",
-        "//:Xosdefs.h",
-        "//:Xatom.h",
+    hdrs = select({
+        "//conditions:default": [
+          "//:Xlib.h",
+          "//:X.h",
+          "//:Xfuncproto.h",
+          "//:Xosdefs.h",
+          "//:Xatom.h",
 
-        "//:Xlibint.h",
-        "//:Xproto.h",
-        "//:Xmd.h",
-        "//:Xprotostr.h",
-        "//:XlibConf.h",
-        "//:Xfuncs.h",
-        "//:Xutil.h",
-        "//:keysym.h",
-        "//:keysymdef.h",
-        "//:Xdefs.h",
+          "//:Xlibint.h",
+          "//:Xproto.h",
+          "//:Xmd.h",
+          "//:Xprotostr.h",
+          "//:XlibConf.h",
+          "//:Xfuncs.h",
+          "//:Xutil.h",
+          "//:keysym.h",
+          "//:keysymdef.h",
+          "//:Xdefs.h",
 
-        "//:extensions/XShm.h",
-        "//:extensions/shm.h",
-        "//:extensions/Xrandr.h",
-        "//:extensions/randr.h",
-        "//:extensions/Xrender.h",
-        "//:extensions/render.h",
-    ],
+          "//:extensions/XShm.h",
+          "//:extensions/shm.h",
+          "//:extensions/Xrandr.h",
+          "//:extensions/randr.h",
+          "//:extensions/Xrender.h",
+          "//:extensions/render.h",
+        ],
+        ":windows": [],
+        ":windows_msys": [],
+        ":windows_msvc": [],
+      }),
     visibility = ["//visibility:public"],
 )
 
 cc_inc_library(
     name = "Xext",
-    hdrs = [
-        "//:extensions/XShm.h",
-        "//:extensions/shm.h",
-        "//:extensions/Xrandr.h",
-        "//:extensions/randr.h",
-        "//:extensions/Xrender.h",
-        "//:extensions/render.h",
-    ],
+    hdrs = select({
+        "//conditions:default": [
+          "//:extensions/XShm.h",
+          "//:extensions/shm.h",
+          "//:extensions/Xrandr.h",
+          "//:extensions/randr.h",
+          "//:extensions/Xrender.h",
+          "//:extensions/render.h",
+        ],
+        ":windows": [],
+        ":windows_msys": [],
+        ":windows_msvc": [],
+      }),
     visibility = ["//visibility:public"],
 )
