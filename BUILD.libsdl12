@@ -10,7 +10,7 @@ config_setting(
 
 config_setting(
     name = "windows",
-    values = {"host_cpu": "x64_windows"}
+    values = {"cpu": "x64_windows"}
 )
 
 config_setting(
@@ -21,6 +21,16 @@ config_setting(
 config_setting(
     name = "windows_msvc",
     values = {"cpu": "x64_windows_msvc"}
+)
+
+config_setting(
+    name = "windows_debug",
+    values = {"cpu": "x64_windows", "compilation_mode": "dbg"}
+)
+
+config_setting(
+    name = "windows_msvc_debug",
+    values = {"cpu": "x64_msvc_windows", "compilation_mode": "dbg"}
 )
 
 cc_library(
@@ -166,7 +176,6 @@ cc_library(
             "-DEFAULTLIB:user32.lib",
             "-DEFAULTLIB:ddraw.lib",
             "-DEFAULTLIB:advapi32.lib",
-            "-SUBSYSTEM:WINDOWS",
         ],
         ":windows_msys": [
         ],
@@ -178,7 +187,6 @@ cc_library(
             "-DEFAULTLIB:user32.lib",
             "-DEFAULTLIB:ddraw.lib",
             "-DEFAULTLIB:advapi32.lib",
-            "-SUBSYSTEM:WINDOWS",
         ],
         ":darwin": [
             "-framework Foundation",
@@ -196,6 +204,12 @@ cc_library(
             "-lalsaplayer",
             "-pthread",
         ],
+    }) + select({
+        ":windows_debug": ["-SUBSYSTEM:CONSOLE"],
+        ":windows_msvc_debug": ["-SUBSYSTEM:CONSOLE"],
+        ":windows": ["-SUBSYSTEM:WINDOWS"],
+        ":windows_msvc": ["-SUBSYSTEM:WINDOWS"],
+        "//conditions:default": [],
     }),
     deps = select({
         ":darwin": [":sdlobjc"],
