@@ -53,7 +53,6 @@ cc_library(
         "src/video/dummy/*.c",    "src/video/dummy/*.h",
         "src/joystick/dummy/*.c", "src/joystick/dummy/*.h",
         "src/cdrom/dummy/*.c",    "src/cdrom/dummy/*.h",
-        "src/thread/generic/*.c", "src/thread/generic/*.h",
         "src/timer/dummy/*.c",    "src/timer/dummy/*.h",
         "src/loadso/dummy/*.c",   "src/loadso/dummy/*.h",
 
@@ -73,8 +72,12 @@ cc_library(
                 #"src/video/macdsp/*.c",   "src/video/macdsp/*.h",
                 #"src/video/macrom/*.c",   "src/video/macrom/*.h",
                 "src/thread/pthread/*.c", "src/thread/pthread/*.h",
+                "src/timer/unix/*.c",     "src/timer/unix/*.h",
+                "src/thread/generic/SDL_syssem.c",
+                "src/thread/generic/SDL_systhread_c.h",
             ], exclude=[
                 "src/video/quartz/SDL_QuartzVideo.h",  # see [patch2]
+                "src/thread/pthread/SDL_syssem.c", # this merely includes generic syssem.c anyway.
             ]) + [
                 "patch2/src/video/quartz/SDL_QuartzVideo.h",  # see [patch2]
                 "fix_mac_audioplayer.c",
