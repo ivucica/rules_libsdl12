@@ -314,8 +314,8 @@ genrule(
           # n.b. this is a workaround, replacing the above commands:
           #"cp external/" + workspace_name + "/src/video/quartz/SDL_QuartzVideo.h $(@D)/patch2/src/video/quartz/SDL_QuartzVideo.h",
 
-          "$(@D)/configure > $(@D)/configure.consoleoutput $$(if [[ $$(uname) == Darwin ]]; then echo --disable-video-x11 ; fi) 2>&1 " +
-          "  || (cat $(@D)/configure.consoleoutput; exit 1)",
+          "$(@D)/configure $$(if [[ $$(uname) == Darwin ]]; then echo --disable-video-x11 ; fi; if [[ $$(uname) == Linux ]] ; then echo --disable-pulseaudio --disable-pulseaudio-shared ; fi ) 2>&1 " +
+          "  > $(@D)/configure.consoleoutput || (cat $(@D)/configure.consoleoutput; exit 1)",
           "cp include/SDL_config.h $(@D)/SDL/SDL_config.h",
           "",
         ]),
