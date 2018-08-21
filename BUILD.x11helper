@@ -16,7 +16,7 @@ config_setting(
     values = {"cpu": "x64_windows_msvc"}
 )
 
-cc_inc_library(
+cc_import(
     name = "X11",
     hdrs = select({
         "//conditions:default": [
@@ -51,7 +51,7 @@ cc_inc_library(
     visibility = ["//visibility:public"],
 )
 
-cc_inc_library(
+cc_import(
     name = "Xext",
     hdrs = select({
         "//conditions:default": [
