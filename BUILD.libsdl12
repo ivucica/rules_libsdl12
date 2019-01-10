@@ -1,7 +1,7 @@
 # -*- mode: python; -*-
 # vim: set syntax=python:
 
-workspace_name = REPOSITORY_NAME[1:]
+workspace_name = repository_name()[1:]
 
 config_setting(
     name = "darwin",

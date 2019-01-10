@@ -2,9 +2,10 @@
 # vim: set syntax=python:
 
 load("//:x11-helper.bzl", "x11_repository", "xcb_repository")
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
 def libsdl12_repositories():
-    native.new_http_archive(
+    http_archive(
             name = "libsdl12",
             url = "http://www.libsdl.org/release/SDL-1.2.15.tar.gz",
             sha256 = "d6d316a793e5e348155f0dd93b979798933fb98aa1edebcc108829d6474aad00",
