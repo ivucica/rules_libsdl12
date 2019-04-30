@@ -5,7 +5,8 @@ def x11_repository():
     return native.new_local_repository(
         name = "x11repository",
         build_file = "@rules_libsdl12//:BUILD.x11helper",
-        path = "/usr/include/X11",
+#        path = "/usr/include/X11",
+	path = "/opt/X11/include/X11",
     )
 
 def xcb_repository():
