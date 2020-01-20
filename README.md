@@ -66,6 +66,13 @@ For instance:
 *   `libxrandr-dev`
 *   `libxrender-dev`
 
+Besides X11, other dependencies include:
+
+*   `libgl-dev`
+*   `libglu-dev`
+*   `libasound-dev`
+*   `libalsaplayer-dev`
+
 ### macOS
 
 Even though Quartz (native) UI is built, build process still requires you to
