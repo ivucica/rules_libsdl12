@@ -1,0 +1,378 @@
+.\"                                      Hey, EMACS: -*- nroff -*-
+.\" First parameter, NAME, should be all caps
+.\" Second parameter, SECTION, should be 1-8, maybe w/ subsection
+.\" other parameters are allowed: see man(7), man(1)
+.TH ALSAPLAYER 1 "29 March 2008"
+.\" Please adjust this date whenever revising the manpage.
+.\"
+.\" Some roff macros, for reference:
+.\" .nh        disable hyphenation
+.\" .hy        enable hyphenation
+.\" .ad l      left justify
+.\" .ad b      justify to both left and right margins
+.\" .nf        disable filling
+.\" .fi        enable filling
+.\" .br        insert line break
+.\" .sp <n>    insert n+1 empty lines
+.\" for manpage-specific macros, see man(7)
+.SH NAME
+alsaplayer \- plays various sound files
+.SH SYNOPSIS
+.B alsaplayer
+.RI [ options ] " " [ " filename ..." ]
+.SH DESCRIPTION
+This manual page documents briefly the
+.B alsaplayer
+command.
+This manual page was written for the Debian GNU/Linux distribution
+because the original program does not have a manual page.
+.PP
+.\" TeX users may be more comfortable with the \fB<whatever>\fP and
+.\" \fI<whatever>\fP escape sequences to invoke bold face and italics, 
+.\" respectively.
+\fBalsaplayer\fP is a generic music player that can play back a large
+amount of file formats.
+.PP
+If files are specified on the command line, these files are played.  Otherwise
+alsaplayer plays its playlist from its last run, if any.
+.SH FILENAME
+Play the specified file(s). Can be a file or an URL.
+.TP
+.B CD.cdda
+Special filename. Play a CD. /dev/cdrom will be used by default. Otherwise,
+AlsaPlayer will use the device specified in your config file (usually ~/.alsaplayer/config).
+.SH OPTIONS
+These programs follow the usual GNU command line syntax, with long
+options starting with two dashes (`-').
+A summary of options is included below.
+.TP
+.B \-c, \-\-config <file>
+Use the given config file for this session.
+.TP
+.B \-h, \-\-help
+Print this help message.
+.TP
+.B \-i, \-\-interface <interface>
+Use the specified interface instead of the default one.
+.TP
+.B \-I, \-\-script <file>
+Specify the script to pass to the interface plugin.
+.TP
+.B \-l, \-\-startvolume <vol>
+Start with this volume [default=1.0].
+.TP
+.B \-p, \-\-path <path>
+Set the path alsaplayer looks for add-ons.
+.TP
+.B \-q, \-\-quiet
+Quiet operation, no output.
+.TP
+.B \-s, \-\-session-name name
+Name this session "name"
+.TP
+.B \-v, \-\-version
+Print version of this program.
+.TP
+.B \-\-verbose
+Be verbose about the output.
+.TP
+.B \-\-nosave
+Do not save playlist content at exit.
+.SS Player control:
+.TP
+.B \-n, \-\-session #
+Select session # [default=0]
+.TP
+.B \-e, \-\-enqueue file(s)
+Enqueue file(s) in a running alsaplayer.
+.TP
+.B \-E, \-\-replace file(s)
+Clears and queues file(s) in a running alsaplayer.
+.TP
+.B \-\-status
+Get some information about the session.
+.TP
+.B \-\-volume #
+Set software volume [0.0-1.0].
+.TP
+.B \-\-start
+Start playing.
+.TP
+.B \-\-stop
+Stop playing.
+.TP
+.B \-\-pause
+Pause/unpause playing.
+.TP
+.B \-\-prev
+Jump to the previous track.
+.TP
+.B \-\-next
+Jump to the next track.
+.TP
+.B \-\-seek <second>
+Jump to the specified second in the current track.
+.TP
+.B \-\-relative <second>
+Jump <second> seconds from current position.
+.TP
+.B \-\-speed <value>
+Set the playback speed with -10 <= <value> <= 10.
+1.0 = normal speed, -1.0 = normal speed backwards.
+Be aware that alsaplayer respect your LOCALE. That implies that the decimal point
+will vary accordingly. I.e., with french LOCALE, a valid speed value is 1,5 and not 1.5. 
+.TP
+.B \-\-jump #
+Jump to the specified playlist track.
+.TP
+.B \-\-clear
+Clear the whole playlist
+.TP
+.B \-\-quit
+Quit the session.
+.SS Sound driver options:
+.TP
+.B \-d, \-\-device string
+Select the specific device for the output plugin.  For the ALSA plugin, the
+default is "default".  For the JACK plugin, the default is
+"alsa_pcm:playback_1,alsa_pcm:playback_2".
+.TP
+.B \-f, \-\-fragsize #
+Set fragment size in bytes [default=4096].
+.TP
+.B \-F, \-\-frequency #
+Set the output frequency [default=44100].
+.TP
+.B \-g, \-\-fragcount #
+Fragment count [default=8].
+.TP
+.B \-r, \-\-realtime
+Enable realtime scheduling.  To use this as a normal user, alsaplayer
+must be SUID root.
+.TP
+.B \-o, \-\-output [alsa|esound|jack|nas|null|oss|sgi|sparc]
+Use the specified output driver.
+.SS Experimental options:
+.TP
+.B \-S,\-\-loopsong
+Loop the file.
+.TP
+.B \-P,\-\-looplist
+Loop the playlist.
+.TP
+.B \-x,\-\-crossfade
+Crossfade playlist entries.
+.SH JACK OUTPUT PLUGIN
+For use with JACK, -F <sample_rate> is mandatory for best results. The value of sample rate must be the same as the one used by jackd.
+.TP
+If you forget the -F parameter, the sound can be very bad. The only remedy at that time is to restart both jackd and AlsaPlayer.
+.SH DAEMON INTERFACE
+With the daemon interface, it is mandatory to add the -s option.
+You must process in two steps to get sound with it. First launch the daemon:
+.TP
+.B alsaplayer -i daemon -s <name>
+.TP
+and then add some song:
+.TP
+.B alsaplayer -e <some.song>
+.SH GTK+ INTERFACE
+The gtk+ interface provide some basic keyboard controls:
+.TP
+.B v
+Stop
+.TP
+.B x
+Play
+.TP
+.B c
+Pause
+.TP
+.B b
+Next Song
+.TP
+.B z
+Previous Song
+.TP
+.B g
+Seek Forward
+.TP
+.B a
+Seek Backward
+.TP
+.B f
+Forward Play
+.TP
+.B s
+Reverse Play
+.TP
+.B t
+Speed Up one musical semitone. (handy for changing the key the song is played back in)
+.TP
+.B q
+Speed Down one musical semitone.
+.TP
+.B h
+Speed Up one comma. (handy to tune the song instead of the guitar when playing at the same time as listening)
+.TP
+.B i
+Speed Down one comma.
+.TP
+.B r
+Volume Up
+.TP
+.B w
+Volume Down
+.TP
+.B l
+Loop
+.SH PREFERENCES
+AlsaPlayer have a preferences file located in ~/.alsaplayer/config. To modify the preferences setting by hand,
+you must exit from the running program and edit this file. The default value is put in the description below when appropriate:
+.SS General settings
+.TP
+.B main.default_interface=gtk2
+Specify the default interface.
+.TP
+.B main.default_output=alsa
+Specify the default sound server.
+.TP
+.B main.multiopen=true
+Specify if it is possible to run multiple AlsaPlayer instances.
+.TP
+.B main.period_count=8
+Number of periods in the sound buffer
+.TP
+.B main.period_size=4096
+Frames per period in the sound buffer
+.TP
+.B main.play_on_start=false
+Start playing at launch time
+.SS Output settings
+.TP
+.B jack.output1=alsa_pcm:playback_1
+Output device 1 when using JACK sound server
+.TP
+.B jack.output2=alsa_pcm:playback_2
+Output device 2 when using JACK sound server
+.SS Input settings
+.TP
+.B cdda.cddb_servername=freedb.freedb.org
+Server used by the cdda input module to retrieve the cddb information.
+.TP
+.B cdda.cddb_serverport=80
+Port used by the cdda input module to retrieve the cddb information.
+.TP
+.B cdda.device=/dev/cdrom
+Device used by the cdda input module to retrieve the CD.
+.TP
+.B cdda.do_cddb_lookup=true
+Must AlsaPlayer retrieve or not the cddb information.
+.TP
+.B http.buffer_size=1048576
+Size of the input buffer when <filename> is an URL.
+.TP
+.B mad.parse_id3=true
+Parse or not the Id3 tags.
+.SS GTK+ interface settings
+.TP
+.B gtk2_interface.background_colour=#000000
+Default background color of the interface. The playlist windows will use the background color from your gtk+ theme.
+.TP
+.B gtk2_interface.default_play_path=~/
+Default path used by the Add file function
+.TP
+.B gtk2_interface.default_playlist_add_path=/
+Default path used by the Add file function in the Playlist window
+.TP
+.B gtk2_interface.default_playlist_load_path=/
+Default path used by the Load playlist function
+.TP
+.B gtk2_interface.default_playlist_save_path=/
+Default path used by the Save playlist function
+.TP
+.B gtk2_interface.font_colour=#ffffff
+Default font color of the interface. The playlist windows will use the font color from your gtk+ theme.
+.TP
+.B gtk2_interface_font=
+Default font of the interface. The playlist windows will use the font from your gtk+ theme. The main window will also use that font if none is specified.
+.TP
+.B gtk2_interface.height=118
+Default height of the interface.
+.TP
+.B gtk2_interface.loop=0
+Start in loop mode.
+.TP
+.B gtk2_interface.play_on_add=false
+Jump playing to a new song when added.
+.TP
+.B gtk2_interface.play_on_title=false
+Show song title in title bar.
+.TP
+.B gtk2_interface.playlist_active=false
+Launch or not the playlist window at start up.
+.TP
+.B gtk2_interface.playlist_height=0
+Default height of the playlist window. This value combined with the defaukt value of gtk2_interface.height correspond to no visible playlist.
+.TP
+.B gtk2_interface.sopeswindow_active=false
+Launch or not the scopes selector window at start up.
+.TP
+.B gtk2_interface.smooth_transition=false
+Will functions such as pause use a smooth speed transition.
+.TP
+.B gtk2_interface.width=529
+Width of the interface.
+.SS XOSD interface settings
+.TP
+.B xosd_interface.color=#55ff55
+Colour used by the XOSD interface.
+.TP
+.B xosd_interface.font=-adobe-helvetica-medium-r-normal-*-24-*-*-*-*-*-*-*
+.TP
+.B xosd_interface.h_offset=20
+Display horizontal offset from the left of the screen
+.TP
+.B xosd_interface.timeout=5
+Set the display time.
+.TP
+.B xosd_interface.v_offset=20
+Display vertical offset from the top of the screen
+.SS Scopes settings
+.TP
+.B blurscope.active=false
+Launch or not the blurscope plugin at start up.
+.TP
+.B fftscope.active=false
+Launch or not the fftscope plugin at start up.
+.TP
+.B levelmeter.active=false
+Launch or not the levelmeter scope plugin at start up.
+.TP
+.B logbarfft.active=false
+Launch or not the logbar scope plugin at start up.
+.TP
+.B monoscope.active=false
+Launch or not the monoscope scope plugin at start up.
+.TP
+.B opengl_spectrum.active=false
+Launch or not the spectrumgl scope plugin at start up.
+.TP
+.B opengl_spectrum.height=480
+Height of the spectrumgl scope plugin
+.TP
+.B opengl_spectrum.width=640
+Width of the spectrumgl scope plugin
+.TP
+.B spacescope.active=false
+Launch or not the spacescope plugin at start up.
+.TP
+.B synaescope.active=false
+Launch or not the synaescope plugin at start up.
+.SH SEE ALSO
+.BR mikmod (1),
+.BR mpg123 (1).
+.SH AUTHOR
+This manual page was written by Ivo Timmermans <ivo@debian.org>,
+for the Debian GNU/Linux system (but may be used by others).
+FILENAME, GTK, DAEMON INTERFACE and PREFERENCES sections added by Dominique Michel 
+<dominique_libre@sourceforge.net> from the Alsaplayer team.

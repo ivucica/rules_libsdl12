@@ -1,0 +1,18 @@
+#!/usr/bin/make -f
+# debian/rules for the Debian libxrender package.
+
+# set this to the name of the main shlib's binary package
+PACKAGE = libxrender1
+
+%:
+	dh $@ --builddirectory=build/
+
+override_dh_install:
+	dh_install --list-missing
+
+override_dh_strip:
+	dh_strip -p$(PACKAGE) --dbgsym-migration='$(PACKAGE)-dbg (<< 1:0.9.10-1~)'
+	dh_strip -N$(PACKAGE)
+
+override_dh_makeshlibs:
+	dh_makeshlibs --add-udeb=$(PACKAGE)-udeb

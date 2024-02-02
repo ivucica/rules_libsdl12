@@ -1,0 +1,13 @@
+diff --git a/app/Main.cpp b/app/Main.cpp
+index 0f4c232..b0ef646 100644
+--- a/app/Main.cpp
++++ b/app/Main.cpp
+@@ -401,7 +401,7 @@ int main(int argc, char **argv)
+ 	
+ 	int opt;
+ 	int option_index;
+-	const char *options = "bCc:d:eEf:F:g:hi:JI:l:n:NMp:qrs:vRSQPVxo:";
++	const char *options = "bCc:d:eEf:F:g:hi:J:I:l:n:NMp:qrs:vRSQPVxo:";
+ 	struct option long_options[] = {
+ 		{ "config", 1, 0, 'c' },
+ 		{ "device", 1, 0, 'd' },

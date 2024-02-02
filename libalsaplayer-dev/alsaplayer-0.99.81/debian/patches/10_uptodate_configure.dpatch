@@ -1,0 +1,34 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 10_uptodate_configure.dpatch by Paul Brossier <piem@debian.org>
+##
+## DP: Patch config.sub and config.guess to use up-to-date versions
+
+@DPATCH@
+diff --git a/config.guess b/config.guess
+index 278f9e9..9b672ca 100644
+--- a/config.guess
++++ b/config.guess
+@@ -3,6 +3,9 @@
+ #   Copyright (C) 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,
+ #   2000, 2001, 2002, 2003, 2004, 2005, 2006 Free Software Foundation,
+ #   Inc.
++if [ -x /usr/share/misc/config.guess ]; then
++    exec /usr/share/misc/config.guess "$@"
++fi
+ 
+ timestamp='2007-07-22'
+ 
+diff --git a/config.sub b/config.sub
+index 1761d8b..79129d3 100644
+--- a/config.sub
++++ b/config.sub
+@@ -3,6 +3,9 @@
+ #   Copyright (C) 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,
+ #   2000, 2001, 2002, 2003, 2004, 2005, 2006 Free Software Foundation,
+ #   Inc.
++if [ -x /usr/share/misc/config.sub ]; then
++    exec /usr/share/misc/config.sub "$@"
++fi
+ 
+ timestamp='2007-06-28'
+ 

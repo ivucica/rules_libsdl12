@@ -1,0 +1,14 @@
+Index: libx11/nls/compose.dir.pre
+===================================================================
+--- libx11.orig/nls/compose.dir.pre	2013-06-15 17:42:43.987732157 +0200
++++ libx11/nls/compose.dir.pre	2013-06-15 17:42:46.371732132 +0200
+@@ -182,7 +182,8 @@
+ iso8859-14/Compose:		kw_GB.ISO8859-14
+ iso8859-15/Compose:		kw_GB.ISO8859-15
+ iso8859-10/Compose:		lg_UG.ISO8859-10
+-ko/Compose:			ko_KR.eucKR
++XCOMM Remove ko/Compose, as requested in https://bugs.debian.org/89703
++XCOMM ko/Compose:			ko_KR.eucKR
+ ibm-cp1133/Compose:		lo_LA.IBM-CP1133
+ mulelao-1/Compose:		lo_LA.MULELAO-1
+ iso8859-4/Compose:		lt_LT.ISO8859-4

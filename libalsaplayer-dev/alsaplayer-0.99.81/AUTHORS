@@ -1,0 +1,43 @@
+Core code by Andy Lo A Foe <andy@alsaplayer.org>
+
+CDDA plugin uses some routines from dagrab by Marcello Urbani
+
+WAV plugin uses routines from aplay by Jaroslave Kysela
+
+The reverb routines are (C) by Philip Edelbrock.
+
+The FFTscope fft routines, are (C) by Richard Boulton.
+
+Ralph Loader enhanced the Monoscope a great deal
+
+Erik Inge Bolsø wrote the NAS plugin
+
+Looping code by Patrick Shirkey
+
+Evgeny Chukreev is responsible for a huge amount of 
+new features and also does the Python interface.
+
+Frank Baumgart is keeping a sharp eye on resource usage
+and cleaning up lots of code.
+
+Hubert Chan from Debian for committing critical security fixes.
+
+Viktor Radnai and Paul Brossier from Debian made basic keyboard
+navigation and loop mode.
+
+Yvo Timmermans from Debian for the man page.
+
+Code cleanup in CorePlayer + experimental ape, wavpack and tta input plugins
+(SVN only) by Peter Lemenkov.
+
+New Python bindings (separated package) by Austin Bingham.
+ 
+GTK2 interface and bug fixes by Madej. He also added html handling and code
+cleanup in the CDDA plugin. 
+
+Project administration by Dominique Michel <dominique_libre@sourceforge.net>.
+I also made some tests, added new sections into the man page and made some
+bug fixes.
+
+It is also contributions from other peoples too. If I missed you, please drop
+me a word and I will add you in this file.

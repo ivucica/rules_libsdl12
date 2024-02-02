@@ -5,4 +5,5 @@ work.
 This is done in a separate branch to avoid ballooning the size of the
 code branch.
 
-Initial commit does not contain any actual libraries.
+Initial commit contains a mixture of bookworm and bullseye libraries, and
+some source packages are missing. See <fetch-log.html>.
