@@ -160,15 +160,31 @@ cc_library(
         "//conditions:default": [
           "patch1", "patch1/src/video/x11",  # see [patch1]
           "patch2", "patch2/src/video/quartz", # see [patch2]
+          "external/libx11-dev/usr/include",
+          "external/libxext-dev/usr/include",
+          "external/x11proto-dev/usr/include", # TODO: only if bin debs are used; or make x11repository expose these
+          "external/libx11-xcb-dev/usr/include", # TODO: only if bin debs are used; or make x11repository expose these
+          "external/libxcb1-dev/usr/include", # TODO: only if bin debs are used; or make x11repository expose these
+          "external/libxdmcp-dev/usr/include", # TODO: only if bin debs are used; or make x11repository expose these
+          "external/libalsaplayer-dev/usr/include", # TODO: only if bin debs are used; or make x11repository expose these
+          "external/libasound2-dev/usr/include", # TODO: only if bin debs are used; or make x11repository expose these
         ],
     }),
     copts = [
         "-Iexternal/x11repository",
+        "-isystem", "external/libx11-dev/usr/include", # TODO: only if bin debs are used; or make x11repository expose these
+        "-isystem", "external/libxext-dev/usr/include", # TODO: only if bin debs are used; or make x11repository expose these
+        "-isystem", "external/x11proto-dev/usr/include", # TODO: only if bin debs are used; or make x11repository expose these
+        "-isystem", "external/libx11-xcb-dev/usr/include", # TODO: only if bin debs are used; or make x11repository expose these
+        "-isystem", "external/libxcb1-dev/usr/include", # TODO: only if bin debs are used; or make x11repository expose these
+        "-isystem", "external/libxdmcp-dev/usr/include", # TODO: only if bin debs are used; or make x11repository expose these
+        "-isystem", "external/libalsaplayer-dev/usr/include", # TODO: only if bin debs are used; or make x11repository expose these
+        "-isystem", "external/libasound2-dev/usr/include", # TODO: only if bin debs are used; or make x11repository expose these
     ] + select({
         ":darwin": [
             "-DSDL_VIDEO_DRIVER_QUARTZ=1",
         ],
-        "//conditions:default": [],
+        "//conditions:default": ["-DSDL_VIDEO_DRIVER_X11"], # TODO: only define X11 driver like this for deb binary builds -- possibly only needed because of missing pkgconfig data?
     }),
     linkopts = select({
         ":windows": [
@@ -204,7 +220,7 @@ cc_library(
         ],
         "//conditions:default": [
             "-ldl",
-            "-lalsaplayer",
+            "-lalsaplayer", "-Lexternal/libalsaplayer-dev/usr/lib/x86_64-linux-gnu", # why is -L required for deb builds?
             "-pthread",
         ],
     }) + select({
@@ -224,6 +240,25 @@ cc_library(
         "//conditions:default": [
           "@x11repository//:X11",
           "@x11repository//:Xext",
+          "@libx11-dev//:libx11-dev", # <---- THE REAL THING that fixed include for Xlib.h
+          "@libxext-dev//:libxext-dev",
+          "@x11proto-dev//:x11proto-dev",
+          "@libx11-xcb-dev//:libx11-xcb-dev",
+          "@libxcb1-dev//:libxcb1-dev",
+          "@libxau-dev//:libxau-dev",
+          "@libxdmcp-dev//:libxdmcp-dev",
+          "@libasound2-dev//:libasound2-dev",
+          "@libalsaplayer-dev//:libalsaplayer-dev",
+
+          "@libx11-dev//:libs", # missing symbols with staticlib rule... how about a cc_library instead
+          "@libxext-dev//:libs",
+          #"@x11proto-dev//:libs",
+          "@libx11-xcb-dev//:libs",
+          "@libxcb1-dev//:libs",
+          "@libxau-dev//:libs",
+          "@libxdmcp-dev//:libs",
+          #"@libasound2-dev//:libs",
+          "@libalsaplayer-dev//:libs",
         ],
     }),
     visibility = ["//visibility:public"],
@@ -373,10 +408,15 @@ cc_library(
                 "patch2/src/video/quartz/SDL_QuartzVideo.h",  # see [patch2]
             ] +
         [i.replace("include/", "SDL/") for i in glob(["include/*.h"])]),
-    includes = [".", "SDL", "patch2", "patch2/src/video/quartz"],
+    includes = [".", "SDL", "patch2", "patch2/src/video/quartz", "external/libx11-dev/usr/include", "external/libxext-dev/usr/include"],
     copts = [
         "-x", "objective-c",
         "-Iexternal/x11repository",
+        "-isystem", "external/libx11-dev/usr/include", # TODO: only if bin debs are used; or make x11repository expose these
+        "-isystem", "external/libxext-dev/usr/include", # TODO: only if bin debs are used; or make x11repository expose these
+        "-isystem", "external/x11proto-dev/usr/include", # TODO: only if bin debs are used; or make x11repository expose these
+        "-isystem", "external/libalsaplayer-dev/usr/include", # TODO: only if bin debs are used; or make x11repository expose these
+        "-isystem", "external/libasound2-dev/usr/include", # TODO: only if bin debs are used; or make x11repository expose these
         "-Iexternal/" + workspace_name + "/src/video/quartz",
     ]
 )

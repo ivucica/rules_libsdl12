@@ -54,6 +54,10 @@ cc_import(
         ],
         ":linux_deps_bin": [
           "@libx11-dev//:hdrs",
+          "@x11proto-dev//:hdrs",
+          "@libxcb1-dev//:hdrs",
+          "@libx11-xcb-dev//:hdrs",
+          "@libxdmcp-dev//:hdrs",
         ],
         ":windows": [],
         ":windows_msys": [],
@@ -76,6 +80,10 @@ cc_import(
         ":linux_deps_bin": [
           "@libx11-dev//:hdrs",
           "@libxext-dev//:hdrs",
+          "@x11proto-dev//:hdrs",
+          "@libxcb1-dev//:hdrs",
+          "@libx11-xcb-dev//:hdrs",
+          "@libxdmcp-dev//:hdrs",
         ],
         ":windows": [],
         ":windows_msys": [],

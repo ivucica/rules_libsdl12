@@ -28,7 +28,7 @@ def _recurse_collect_files(repository_ctx, root_dir): #, entries):
     hdrs = [e for e in res.stdout.split("\n") if e]
     hdrs = [_removeprefix(_removeprefix(e, str(repository_ctx.path(".")) + "/"), "./") for e in hdrs]
 
-    res = repository_ctx.execute(["find", str(root_dir), "-type", "f", "-and", "(", "-name", "*.a", "-or", "-name", "*.so", ")"])
+    res = repository_ctx.execute(["find", str(root_dir), "-type", "f", "-and", "(", "-name", "*.a", "-or", "-name", "*.so", "-or", "-name", "*.so.*", ")"])
     libs = [e for e in res.stdout.split("\n") if e]
     libs = [_removeprefix(_removeprefix(e, str(repository_ctx.path(".")) + "/"), "./") for e in libs]
 
@@ -71,13 +71,23 @@ def _x11_deb_repository_rule_impl(repository_ctx):
 
     r = ''
 
+    extra_lib_deps = []
+
+    if repository_ctx.name == 'libx11-dev':
+        # libX11 which we have insists on reallocarray, but it is not available in buildbuddy's environment.
+        # http://lists.busybox.net/pipermail/buildroot/2022-May/643818.html
+        # TODO: figure out a test for this at build-time
+        repository_ctx.file('reallocarray-fix.c', '#include <stdlib.h>\nvoid* reallocarray(void *ptr, size_t nmemb, size_t size) { return realloc(ptr, nmemb * size); }')
+        r += 'cc_library(name="reallocarray-fix", srcs=["reallocarray-fix.c"])\n'
+        extra_lib_deps.append('":reallocarray-fix"')
+
     # Note: cc_import, cc_library etc have really interesting semantics and
     # the best way to do this should be checked.
 
-    r += ('\n'.join(['cc_import(',
+    r += ('\n'.join(['cc_library(',
           '    name="hdrs",',
-                     '    hdrs=[',  # if we used cc_library, these would be 'includes='
-          '        ' + ',\n        '.join(['":' + str(e) + '"' for e in hdrs]) + '\n' +
+                     '    includes=[',  # if we used cc_library, these would be 'includes='; for cc_import, it's hdrs
+          '        ' + ',\n        '.join(['":' + str(repository_ctx.path(e).dirname) + '"' for e in hdrs]) + '\n' +
           '    ],',
           '    visibility=["//visibility:public"],',
           ')\n']))
@@ -88,6 +98,7 @@ def _x11_deb_repository_rule_impl(repository_ctx):
               '    srcs=[',
               '        ' + ',\n        '.join(['":' + str(e) + '"' for e in libs]) + '\n' +
               '    ],',
+              '    deps=[' + ','.join([l for l in extra_lib_deps]) + '],',
               '    visibility=["//visibility:public"],',
               ')\n']))
 
@@ -97,8 +108,9 @@ def _x11_deb_repository_rule_impl(repository_ctx):
           '        ' + ',\n        '.join(['":' + str(e) + '"' for e in hdrs]) + '\n' +
           '    ],'] + ([
           '    static_library=(', # =[',
-          '        ' + ',\n        '.join(['":' + str(e) + '"' for e in libs]) + '\n' +
+          '        ' + ',\n        '.join(['":' + str(e) + '"' for e in libs if str(e).endswith('.a')]) + '\n' +
           '    ),', #],',
+          #'    deps=[' + ','.join([l for l in extra_lib_deps]) + '],', # we can only do this if we have cc_library :(
           ] if libs else []) + [
           '    visibility=["//visibility:public"],',
           ')\n']))
@@ -106,12 +118,12 @@ def _x11_deb_repository_rule_impl(repository_ctx):
     # Try a hack to make system headers like /usr/include/X11/Xlib.h visible.
     # (This does not really make an effort to make pkg-config files etc visible.
     # Maybe use data= attribute?)
-    for e in hdrs:
-        repository_ctx.symlink(e, _removeprefix(str(e), 'usr/include/'))
-    for e in libs:
-        repository_ctx.symlink(e, _removeprefix(
-            _removeprefix(str(e), 'usr/lib/x86_64-linux-gnu/'),
-            'usr/lib/'))
+    #for e in hdrs:
+    #    repository_ctx.symlink(e, _removeprefix(str(e), 'usr/include/')) # bad: needs to ignore files in usr/share/doc (as do other places)
+    #for e in libs:
+    #    repository_ctx.symlink(e, _removeprefix(
+    #        _removeprefix(str(e), 'usr/lib/x86_64-linux-gnu/'),
+    #        'usr/lib/'))
 
     repository_ctx.file(
         'paths_debug.tmp',
@@ -175,7 +187,7 @@ def x11_deb_repository(name, urls, sha256):
 # x11_repository_deb adds all repos.
 def x11_repository_deb():
     # master_deb_hash = 'master.deb'
-    master_deb_hash = '331d3b99e5f1f89cb42bac177b82ade8b0689cc2'
+    master_deb_hash = '7c16d8c2cc980f8366b3056a519cad93829542c6'
 
     x11_deb_repository(
         name="libx11-dev",
@@ -194,6 +206,77 @@ def x11_repository_deb():
         urls = ["https://github.com/ivucica/rules_libsdl12/raw/" + master_deb_hash + "/libgl-dev/libgl-dev_1.6.0-1_amd64.deb"],
         sha256 = "ebc12df48ae53924e114d9358ef3da4306d7ef8f7179300af52f1faef8b5db3e",
     )
+
+    x11_deb_repository(
+        name="x11proto-dev",
+        urls = ["https://github.com/ivucica/rules_libsdl12/raw/" + master_deb_hash + "/x11proto-dev/x11proto-dev_2023.2-1_all.deb"],
+        sha256 = "4b9a0df6ffa80436add5fe64c24dd68a3174dddc42c67f5c007835b674d21c59",
+    )
+
+    x11_deb_repository(
+        name="libxrandr-dev",
+        urls=["https://github.com/ivucica/rules_libsdl12/raw/" +  master_deb_hash + "/libxrandr-dev/libxrandr-dev_2%3a1.5.2-2+b1_amd64.deb"],
+        sha256="a0048d088226403419d9b0856e2d6d29a4facdd1708b6ceda095d7190f819ff3",
+    )
+
+    x11_deb_repository(
+        name="libxrender-dev",
+        urls=["https://github.com/ivucica/rules_libsdl12/raw/" +  master_deb_hash + "/libxrender-dev/libxrender-dev_1%3a0.9.10-1.1_amd64.deb"],
+        sha256="51be2e92b7bb9a81f8dbcad7a0086a58c779761c17f8aa13893b843bced0ae9b",
+    )
+
+    x11_deb_repository(
+        name="libxcb1-dev",
+        urls=["https://github.com/ivucica/rules_libsdl12/raw/" +  master_deb_hash + "/libxcb1-dev/libxcb1-dev_1.15-1_amd64.deb"],
+        sha256="c078c024114fdada06d3158af1771d7ed8763ab434cfbcbe6a334aa8a9cae358",
+    )
+
+    x11_deb_repository(
+        name="libx11-xcb-dev",
+        urls=["https://github.com/ivucica/rules_libsdl12/raw/" +  master_deb_hash + "/libx11-xcb-dev/libx11-xcb-dev_1.8.4-2+deb12u2_amd64.deb"],
+        sha256="47e203c32aea08b81dc8fb3c25052b2431da184f7716b7d4ff92628dfe675534",
+    )
+
+    x11_deb_repository(
+        name="libxau-dev",
+        urls=["https://github.com/ivucica/rules_libsdl12/raw/" +  master_deb_hash + "/libxau-dev/libxau-dev_1.0.9-1_amd64.deb"],
+        sha256="d1a7f5d484e0879b3b2e8d512894744505e53d078712ce65903fef2ecfd824bb",
+    )
+
+    x11_deb_repository(
+        name="libxdmcp-dev",
+        urls=[
+            "https://github.com/ivucica/rules_libsdl12/raw/" +  master_deb_hash + "/libxdmcp-dev/libxdmcp-dev_1.1.2-3_amd64.deb",
+        ],
+        sha256="c6733e5f6463afd261998e408be6eb37f24ce0a64b63bed50a87ddb18ebc1699",
+    )
+
+    # Not X11, but temporarily it is ok to have it live here.
+    x11_deb_repository(
+        name="libalsaplayer-dev",
+        urls=["https://github.com/ivucica/rules_libsdl12/raw/" +  master_deb_hash + "/libalsaplayer-dev/libalsaplayer-dev_0.99.81-2+b3_amd64.deb"],
+        sha256="c7be38adb91e8fcb809a17bb7deba4d8f2cd3b805d1c3a14ff491d6a3f332d03",
+    )
+
+    x11_deb_repository(
+        name="libasound2-dev",
+        urls=["https://github.com/ivucica/rules_libsdl12/raw/" +  master_deb_hash + "/libasound2-dev/libasound2-dev_1.2.8-1+b1_amd64.deb"],
+        sha256="6eddd5b43c03cdd769f6b6f4506abcbc84c19d4bada2b3036d1fd921a9875d7a",
+    )
+
+    # X11 adjacent, temporarily it is ok to have it live here.
+    x11_deb_repository(
+        name="libgl-dev",
+        urls=["https://github.com/ivucica/rules_libsdl12/raw/" +  master_deb_hash + "/libgl-dev/libgl-dev_1.6.0-1_amd64.deb"],
+        sha256="ebc12df48ae53924e114d9358ef3da4306d7ef8f7179300af52f1faef8b5db3e",
+    )
+
+    x11_deb_repository(
+        name="libglu1-mesa-dev",
+        urls=["https://github.com/ivucica/rules_libsdl12/raw/" +  master_deb_hash + "/libglu1-mesa-dev/libglu1-mesa-dev_9.0.2-1.1_amd64.deb"],
+        sha256="c58945175e46cf0465e8fd72e573f5728e2f42ca1ab5a275b34718c9c6ebf65e",
+    )
+
 
 def x11_repository():
     return native.new_local_repository(
