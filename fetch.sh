@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PACKAGES_X11="libx11-dev libxext-dev libxrandr-dev libxrender-dev x11proto-dev xorg-sgml-doctools libxcb1-dev libx11-xcb-dev"
+PACKAGES_X11="libx11-dev libxext-dev libxrandr-dev libxrender-dev x11proto-dev xorg-sgml-doctools libxcb1-dev libx11-xcb-dev libxau-dev libxdmcp-dev"
 PACKAGES_EXTRA="libgl-dev libglu1-mesa-dev libasound2-dev libalsaplayer-dev"
 
 PACKAGES="${PACKAGES_X11} ${PACKAGES_EXTRA}"
