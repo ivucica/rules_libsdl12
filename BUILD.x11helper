@@ -74,7 +74,8 @@ cc_import(
           "//:extensions/render.h",
         ],
         ":linux_deps_bin": [
-          # TODO
+          "@libx11-dev//:hdrs",
+          "@libxext-dev//:hdrs",
         ],
         ":windows": [],
         ":windows_msys": [],

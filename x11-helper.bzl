@@ -82,25 +82,36 @@ def _x11_deb_repository_rule_impl(repository_ctx):
           '    visibility=["//visibility:public"],',
           ')\n']))
 
-    r += ('\n'.join(['cc_library(',  # maybe cc_import here too?
-          '    name="libs",',
-          '    srcs=[',
-          '        ' + ',\n        '.join(['":' + str(e) + '"' for e in libs]) + '\n' +
-          '    ],',
-          '    visibility=["//visibility:public"],',
-          ')\n']))
+    if libs:
+        r += ('\n'.join(['cc_library(',  # maybe cc_import here too?
+              '    name="libs",',
+              '    srcs=[',
+              '        ' + ',\n        '.join(['":' + str(e) + '"' for e in libs]) + '\n' +
+              '    ],',
+              '    visibility=["//visibility:public"],',
+              ')\n']))
 
     r += ('\n'.join(['cc_import(',
           '    name="' + repository_ctx.name + '",',
                      '    hdrs=[',  # with cc_library, 'includes='.
           '        ' + ',\n        '.join(['":' + str(e) + '"' for e in hdrs]) + '\n' +
-          '    ],',
+          '    ],'] + ([
           '    static_library=(', # =[',
           '        ' + ',\n        '.join(['":' + str(e) + '"' for e in libs]) + '\n' +
           '    ),', #],',
+          ] if libs else []) + [
           '    visibility=["//visibility:public"],',
           ')\n']))
 
+    # Try a hack to make system headers like /usr/include/X11/Xlib.h visible.
+    # (This does not really make an effort to make pkg-config files etc visible.
+    # Maybe use data= attribute?)
+    for e in hdrs:
+        repository_ctx.symlink(e, _removeprefix(str(e), 'usr/include/'))
+    for e in libs:
+        repository_ctx.symlink(e, _removeprefix(
+            _removeprefix(str(e), 'usr/lib/x86_64-linux-gnu/'),
+            'usr/lib/'))
 
     repository_ctx.file(
         'paths_debug.tmp',
@@ -163,10 +174,25 @@ def x11_deb_repository(name, urls, sha256):
 
 # x11_repository_deb adds all repos.
 def x11_repository_deb():
+    # master_deb_hash = 'master.deb'
+    master_deb_hash = '331d3b99e5f1f89cb42bac177b82ade8b0689cc2'
+
     x11_deb_repository(
         name="libx11-dev",
-        urls = ["https://github.com/ivucica/rules_libsdl12/raw/master.deb/libx11-dev/libx11-dev_2%253a1.8.4-2+deb12u2_amd64.deb"],
+        urls = ["https://github.com/ivucica/rules_libsdl12/raw/" + master_deb_hash + "/libx11-dev/libx11-dev_2%253a1.8.4-2+deb12u2_amd64.deb"],
         sha256 = "8493220d4309af1907a1f2f6eeb204c8103dafcc368394fbc4a0858c28612ff9",
+    )
+
+    x11_deb_repository(
+        name="libxext-dev",
+        urls = ["https://github.com/ivucica/rules_libsdl12/raw/" + master_deb_hash + "/libxext-dev/libxext-dev_2%253a1.3.4-1%2Bb1_amd64.deb"],
+        sha256 = "591456aba90eeed7a1c1b044d469fd7704bf7d83af9dc574bbe2efc4a2fd1dba",
+    )
+
+    x11_deb_repository(
+        name="libgl-dev",
+        urls = ["https://github.com/ivucica/rules_libsdl12/raw/" + master_deb_hash + "/libgl-dev/libgl-dev_1.6.0-1_amd64.deb"],
+        sha256 = "ebc12df48ae53924e114d9358ef3da4306d7ef8f7179300af52f1faef8b5db3e",
     )
 
 def x11_repository():
