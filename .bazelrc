@@ -1,5 +1,7 @@
 # Use buildbuddy by passing --config=remote.
 # This should be fine for this open source project.
+build:remote --define=libsdl12_linux_deps_bin=true
+
 build:remote --remote_executor=grpcs://remote.buildbuddy.io
 build:remote --host_platform=@buildbuddy_toolchain//:platform
 build:remote --platforms=@buildbuddy_toolchain//:platform
