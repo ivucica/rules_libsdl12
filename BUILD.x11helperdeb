@@ -1,0 +1,11 @@
+# -*- mode: python; -*-
+# vim: set syntax=python:
+
+genrule(
+    name = "data",
+    cmd = "echo ar x $(location @x11bin_deb//file:file) data.tar.xz --output=$$(dirname $@)",
+    srcs = [
+        "@x11bin_deb//file:file",
+    ],
+    outs = ["data.tar.xz"],
+)

@@ -1,7 +1,7 @@
 # -*- mode: python; -*-
 # vim: set syntax=python:
 
-load("//:x11-helper.bzl", "x11_repository", "xcb_repository")
+load("//:x11-helper.bzl", "x11_repository", "xcb_repository", "x11_repository_deb")
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
 def libsdl12_repositories():
@@ -22,3 +22,5 @@ def libsdl12_repositories():
     x11_repository()
     xcb_repository()
 
+    x11_repository_deb()  # TODO: use https://bazel.build/rules/lib/repo/utils#maybe macro to choose one or the other
+    # alternatively, see _go_repository_select_impl to choose based on ctx.os.name or similar

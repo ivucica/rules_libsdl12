@@ -19,6 +19,25 @@ Try building an example:
 
     bazel build //example/simple:simple
 
+#### Linux binary dependencies (experimental)
+
+**Experimental!** Not ready yet!
+
+X11 dependencies can be unpacked from .deb.
+
+-   This is done by invoking `ar` before using built-in .tar.xz unpacking
+    support, because native .deb unpacking support only arrived in later
+    versions of Bazel than what these rules are trying to support.
+-   The binary .debs are stored in `master.deb` branch.
+-   Only `libx11-dev` is currently experimentally built.
+
+To switch to using the binary dependencies instead of systemwide dependencies
+(i.e. to make builds more hermetic), pass in
+`--define=libsdl12_linux_deps_bin=true` to Bazel when building your binaries.
+
+Motivation: fully remote builds will not have access to files you have in local
+filesystem / local repos.
+
 ### Windows MSVC
 
 Bazel expects you to tell it where MSVC is and where MSYS Bash is, so let's use

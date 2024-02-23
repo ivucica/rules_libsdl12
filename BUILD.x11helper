@@ -16,6 +16,14 @@ config_setting(
     values = {"cpu": "x64_windows_msvc"}
 )
 
+# With --define libsdl12_linux_deps_bin=true, a prebuilt set of x64 binary
+# packages for dependencies will be used. Useful for remote builds where local
+# headers and libs will not be installed.
+config_setting(
+    name = "linux_deps_bin",
+    values = {"define": "libsdl12_linux_deps_bin=true"},
+)
+
 cc_import(
     name = "X11",
     hdrs = select({
@@ -44,6 +52,9 @@ cc_import(
           "//:extensions/Xrender.h",
           "//:extensions/render.h",
         ],
+        ":linux_deps_bin": [
+          "@libx11-dev//:hdrs",
+        ],
         ":windows": [],
         ":windows_msys": [],
         ":windows_msvc": [],
@@ -61,6 +72,9 @@ cc_import(
           "//:extensions/randr.h",
           "//:extensions/Xrender.h",
           "//:extensions/render.h",
+        ],
+        ":linux_deps_bin": [
+          # TODO
         ],
         ":windows": [],
         ":windows_msys": [],
