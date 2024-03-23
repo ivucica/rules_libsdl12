@@ -24,3 +24,9 @@ buildbuddy_deps()
 load("@io_buildbuddy_buildbuddy_toolchain//:rules.bzl", "buildbuddy")
 
 buildbuddy(name = "buildbuddy_toolchain")
+
+http_archive(
+    name = "com_google_googletest",
+    urls = ["https://github.com/google/googletest/archive/5ab508a01f9eb089207ee87fd547d290da39d015.zip"],
+    strip_prefix = "googletest-5ab508a01f9eb089207ee87fd547d290da39d015",
+)
