@@ -1,0 +1,7 @@
+cc_test(
+    name = "simple_test",
+    srcs = ["simple.cc"],
+    size = "small",
+    deps = ["//:libsdl12", "//:libsdl12-main", "@com_google_googletest//:gtest_main"],
+)
+
