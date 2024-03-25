@@ -79,24 +79,33 @@ def _x11_deb_repository_rule_impl(repository_ctx):
         r += 'cc_library(name="reallocarray-fix", srcs=["reallocarray-fix.c"])\n'
         extra_lib_deps.append('":reallocarray-fix"')
 
+    if repository_ctx.name == 'libgl-dev':
+        extra_lib_deps.append('"@libgl1//:libgl1"')
+        extra_lib_deps.append('"@libgl1//:libGL"')
+
+    if repository_ctx.name == 'libgl1':
+        r += 'cc_library(name="libGL", srcs=[' + ','.join(['":' + str(e) + '"' for e in libs]) + '], visibility=["//visibility:public"])\n'
+
     # Note: cc_import, cc_library etc have really interesting semantics and
     # the best way to do this should be checked.
 
     if hdrs:
         r += ('\n'.join(['cc_library(',
               '    name="hdrs",',
-                         '    includes=[',  # if we used cc_library, these would be 'includes='; for cc_import, it's hdrs
-              '        ' + ',\n        '.join(['":' + str(repository_ctx.path(e).dirname) + '"' for e in hdrs]) + '\n' +
+              '    includes=[',  # if we used cc_library, these would be 'includes='; for cc_import, it's hdrs
+              '        ' + ',\n        '.join(['":' + _removeprefix(str(repository_ctx.path(e).dirname), str(repository_ctx.path(".")) + "/") + '"' for e in hdrs]) + ',\n' +
+              '        ' + ',\n        '.join(['":' + _removeprefix(str(repository_ctx.path(e).dirname.dirname), str(repository_ctx.path(".")) + "/") + '"' for e in hdrs]) + ',\n' +
               '    ],',
               '    visibility=["//visibility:public"],',
               ')\n']))
 
-    if libs:
+    if libs or extra_lib_deps:
         r += ('\n'.join(['cc_library(',  # maybe cc_import here too?
-              '    name="libs",',
+              '    name="libs",',] + ([
               '    srcs=[',
               '        ' + ',\n        '.join(['":' + str(e) + '"' for e in libs]) + '\n' +
               '    ],',
+              ] if libs else []) + [
               '    deps=[' + ','.join([l for l in extra_lib_deps]) + '],',
               '    visibility=["//visibility:public"],',
               ')\n']))
