@@ -260,6 +260,7 @@ cc_library(
           #"@libasound2-dev//:libs",
           "@libalsaplayer-dev//:libs",
           "@libgl1//:libs",  # pull in libGL.so... although ideally libgl-dev would pull it in instead
+          "@libglu1-mesa-dev//:libs",
         ],
     }),
     visibility = ["//visibility:public"],
