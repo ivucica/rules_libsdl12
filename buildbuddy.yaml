@@ -9,4 +9,4 @@ actions:
         branches:
           - "*"
     bazel_commands:
-      - "test --config=remote //..." # <-- main modification for rules_libsdl12: --config=remote as a default for buildbuddy.yaml
+      - "test --config=remote --remote_grpc_log=$BUILDBUDDY_ARTIFACTS_DIRECTORY/grpc.log //..." # <-- main modification for rules_libsdl12: --config=remote as a default for buildbuddy.yaml
