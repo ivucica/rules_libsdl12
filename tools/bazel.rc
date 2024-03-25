@@ -14,6 +14,7 @@ build:remote --extra_toolchains=@buildbuddy_toolchain//:cc_toolchain
 #build:remote --java_toolchain=@buildbuddy_toolchain//:toolchain_jdk8
 #build:remote --host_java_toolchain=@buildbuddy_toolchain//:toolchain_jdk8
 build:remote --define=EXECUTOR=remote
+build:remote --define=libsdl12_linux_deps_bin=true
 
 build:remote --bes_results_url=https://app.buildbuddy.io/invocation/
 build:remote --bes_backend=grpcs://remote.buildbuddy.io
