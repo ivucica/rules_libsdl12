@@ -82,13 +82,14 @@ def _x11_deb_repository_rule_impl(repository_ctx):
     # Note: cc_import, cc_library etc have really interesting semantics and
     # the best way to do this should be checked.
 
-    r += ('\n'.join(['cc_library(',
-          '    name="hdrs",',
-                     '    includes=[',  # if we used cc_library, these would be 'includes='; for cc_import, it's hdrs
-          '        ' + ',\n        '.join(['":' + str(repository_ctx.path(e).dirname) + '"' for e in hdrs]) + '\n' +
-          '    ],',
-          '    visibility=["//visibility:public"],',
-          ')\n']))
+    if hdrs:
+        r += ('\n'.join(['cc_library(',
+              '    name="hdrs",',
+                         '    includes=[',  # if we used cc_library, these would be 'includes='; for cc_import, it's hdrs
+              '        ' + ',\n        '.join(['":' + str(repository_ctx.path(e).dirname) + '"' for e in hdrs]) + '\n' +
+              '    ],',
+              '    visibility=["//visibility:public"],',
+              ')\n']))
 
     if libs:
         r += ('\n'.join(['cc_library(',  # maybe cc_import here too?
@@ -100,16 +101,19 @@ def _x11_deb_repository_rule_impl(repository_ctx):
               '    visibility=["//visibility:public"],',
               ')\n']))
 
+    static_libs = [e for e in libs if str(e).endswith('.a')]
+
     r += ('\n'.join(['cc_import(',
           '    name="' + repository_ctx.name + '",',
+          ] + ([
                      '    hdrs=[',  # with cc_library, 'includes='.
           '        ' + ',\n        '.join(['":' + str(e) + '"' for e in hdrs]) + '\n' +
-          '    ],'] + ([
+          '    ],'] if hdrs else []) + ([
           '    static_library=(', # =[',
-          '        ' + ',\n        '.join(['":' + str(e) + '"' for e in libs if str(e).endswith('.a')]) + '\n' +
+          '        ' + ',\n        '.join(['":' + str(e) + '"' for e in static_libs]) + '\n' +
           '    ),', #],',
           #'    deps=[' + ','.join([l for l in extra_lib_deps]) + '],', # we can only do this if we have cc_library :(
-          ] if libs else []) + [
+          ] if static_libs else []) + [
           '    visibility=["//visibility:public"],',
           ')\n']))
 
@@ -185,7 +189,7 @@ def x11_deb_repository(name, urls, sha256):
 # x11_repository_deb adds all repos.
 def x11_repository_deb():
     # master_deb_hash = 'master.deb'
-    master_deb_hash = '7c16d8c2cc980f8366b3056a519cad93829542c6'
+    master_deb_hash = '668b3c0608762fb71895e0bbce38680137907bc4'
 
     x11_deb_repository(
         name="libx11-dev",
@@ -275,6 +279,11 @@ def x11_repository_deb():
         sha256="c58945175e46cf0465e8fd72e573f5728e2f42ca1ab5a275b34718c9c6ebf65e",
     )
 
+    x11_deb_repository(
+        name="libgl1",  # libgl-dev's libGL.so is a symlink to an .so shipped in this package
+        urls=["https://github.com/ivucica/rules_libsdl12/raw/" +  master_deb_hash + "/libgl1/libgl1_1.6.0-1_amd64.deb"],
+        sha256="6f89b1702c48e9a2437bb3c1ffac8e1ab2d828fc28b3d14b2eecd4cc19b2c790",
+    )
 
 def x11_repository():
     return native.new_local_repository(

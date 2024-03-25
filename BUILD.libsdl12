@@ -259,6 +259,7 @@ cc_library(
           "@libxdmcp-dev//:libs",
           #"@libasound2-dev//:libs",
           "@libalsaplayer-dev//:libs",
+          "@libgl1//:libs",  # pull in libGL.so... although ideally libgl-dev would pull it in instead
         ],
     }),
     visibility = ["//visibility:public"],
