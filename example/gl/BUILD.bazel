@@ -1,0 +1,6 @@
+cc_binary(
+    name = "gl",
+    srcs = ["gl.c"],
+    deps = ["//:libsdl12", "//:libsdl12-main"],
+)
+
