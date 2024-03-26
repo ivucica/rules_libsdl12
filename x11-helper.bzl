@@ -57,7 +57,8 @@ def _x11_deb_repository_rule_impl(repository_ctx):
         #'../libx11-dev_deb/file/libx11-dev.deb', # <-- seems bad.
         deb_path,
         out_path.basename,
-    ], working_directory = str(out_path.dirname), quiet = False)
+        "--output=" + str(out_path.dirname)],
+        quiet = False)
 
     if res.return_code:
         fail("Unpacking failed: " + res.stderr)
