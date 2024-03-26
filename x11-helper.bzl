@@ -127,6 +127,7 @@ def _x11_deb_repository_rule_impl(repository_ctx):
 
         r += 'cc_library(name="libGL", srcs=[' + ",".join(['":' + str(e) + '"' for e in libs]) + '], visibility=["//visibility:public"], deps=["@libglvnd0//:libGLdispatch"])\n'
         extra_lib_deps.append('"@libglvnd0//:libGLdispatch"')
+        extra_lib_deps.append('"@libglx0//:libGLX"')
 
     if repository_ctx.name == "libglu1-mesa":
         repository_ctx.file("libGLU.so.1.3.1", repository_ctx.read(libs[0]), executable = False, legacy_utf8 = False)
@@ -154,6 +155,35 @@ def _x11_deb_repository_rule_impl(repository_ctx):
         repository_ctx.file('dl_dummy.c', '#include <dlfcn.h>\n#include <gnu/lib-names.h>\nvoid unlikely_to_be_used_fn_name() {dlopen(LIBM_SO, RTLD_LAZY);}')
         r += 'cc_library(name="dl", srcs=["dl_dummy.c"], alwayslink=1, linkopts=["-ldl"])\n'
         r += 'cc_library(name="libGLdispatch", srcs=[' + ",".join(['":' + str(e) + '"' for e in libs]) + '], linkopts=["-ldl"], deps=[":dl"], visibility=["//visibility:public"])\n'
+
+    if repository_ctx.name == "libglx-mesa0":
+        # expected that libs[0] will be libGLX_mesa.so.0{,.0.0}, not libGLX_indirect.so.0
+        libs = [e for e in libs if 'libGLX_mesa' in str(e)]
+        repository_ctx.file("libGLX_mesa.so.0.0.0", repository_ctx.read(libs[0]), executable = False, legacy_utf8 = False)
+        repository_ctx.file("libGLX_mesa.so.0", repository_ctx.read(libs[0]), executable = False, legacy_utf8 = False)
+        repository_ctx.file("libGLX_mesa.so", repository_ctx.read(libs[0]), executable = False, legacy_utf8 = False)
+        libs = [
+            "libGLX_mesa.so",
+            "libGLX_mesa.so.0",
+            "libGLX_mesa.so.0.0.0",
+        ]
+
+        r += 'cc_library(name="libGLX_mesa", srcs=[' + ",".join(['":' + str(e) + '"' for e in libs]) + '], visibility=["//visibility:public"])\n'
+
+    if repository_ctx.name == "libglx0":
+        libs = [e for e in libs if 'libGLX.so.0.0.0' in str(e)]
+        repository_ctx.file("libGLX.so.0.0.0", repository_ctx.read(libs[0]), executable = False, legacy_utf8 = False)
+        repository_ctx.file("libGLX.so.0", repository_ctx.read(libs[0]), executable = False, legacy_utf8 = False)
+        repository_ctx.file("libGLX.so", repository_ctx.read(libs[0]), executable = False, legacy_utf8 = False)
+        libs = [
+            "libGLX.so",
+            "libGLX.so.0",
+            "libGLX.so.0.0.0",
+        ]
+
+        r += 'cc_library(name="libGLX", srcs=[' + ",".join(['":' + str(e) + '"' for e in libs]) + '], visibility=["//visibility:public"], deps=["@libglvnd0//:libGLdispatch", "@libglx-mesa0//:libGLX_mesa"])\n'
+
+
 
     # Note: cc_import, cc_library etc have really interesting semantics and
     # the best way to do this should be checked.
@@ -297,7 +327,7 @@ def x11_deb_repository(name, urls, sha256):
 # x11_repository_deb adds all repos.
 def x11_repository_deb():
     # master_deb_hash = 'master.deb'
-    master_deb_hash = "003372dc6d81b611897b641bc60ba7a7b301b221"
+    master_deb_hash = "3585a1b67f47846f7175602b7144fa513e5dc848"
 
     x11_deb_repository(
         name = "libx11-dev",
@@ -404,6 +434,19 @@ def x11_repository_deb():
         urls = ["https://github.com/ivucica/rules_libsdl12/raw/" + master_deb_hash + "/libglvnd0/libglvnd0_1.3.2-1~ubuntu0.20.04.2_amd64.deb"],
         sha256 = "df7ebdaef90e7e912147f5dd2f6568759b9111890b61936443a8b1fde1982655",
     )
+
+    x11_deb_repository(
+        name = "libglx-mesa0",  # required at runtime for libglx0
+        urls = ["https://github.com/ivucica/rules_libsdl12/raw/" + master_deb_hash + "/libglx-mesa0/libglx-mesa0_21.2.6-0ubuntu0.1~20.04.2_amd64.deb"],
+        sha256 = "b8f2bef5e58bf22b1a1b1b12618d717f71681c91f53525e872d7cf578d079b61",
+    )
+
+    x11_deb_repository(
+        name = "libglx0",  # required at runtime for libgl
+        urls = ["https://github.com/ivucica/rules_libsdl12/raw/" + master_deb_hash + "/libglx0/libglx0_1.3.2-1~ubuntu0.20.04.2_amd64.deb"],
+        sha256 = "2620a3da6755af5df028a6f48c56e754ce90eef58c201dc9a289d5736eaad0c4",
+    )
+
 
 def x11_repository():
     return native.new_local_repository(
