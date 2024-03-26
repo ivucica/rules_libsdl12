@@ -249,6 +249,8 @@ cc_library(
           "@libxdmcp-dev//:libxdmcp-dev",
           "@libasound2-dev//:libasound2-dev",
           "@libalsaplayer-dev//:libalsaplayer-dev",
+          "@libgl-dev//:libgl-dev",
+          "@libglu1-mesa-dev//:libglu1-mesa-dev",
 
           "@libx11-dev//:libs", # missing symbols with staticlib rule... how about a cc_library instead
           "@libxext-dev//:libs",
@@ -259,8 +261,10 @@ cc_library(
           "@libxdmcp-dev//:libs",
           #"@libasound2-dev//:libs",
           "@libalsaplayer-dev//:libs",
+          "@libgl-dev//:libs",
           "@libgl1//:libs",  # pull in libGL.so... although ideally libgl-dev would pull it in instead
           "@libglu1-mesa-dev//:libs",
+          "@libglu1-mesa//:libs",
         ],
     }),
     visibility = ["//visibility:public"],
