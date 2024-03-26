@@ -125,7 +125,8 @@ def _x11_deb_repository_rule_impl(repository_ctx):
             "libGL.so.1.7.0",
         ]
 
-        r += 'cc_library(name="libGL", srcs=[' + ",".join(['":' + str(e) + '"' for e in libs]) + '], visibility=["//visibility:public"])\n'
+        r += 'cc_library(name="libGL", srcs=[' + ",".join(['":' + str(e) + '"' for e in libs]) + '], visibility=["//visibility:public"], deps=["@libglvnd0//:libGLdispatch"])\n'
+        extra_lib_deps.append('"@libglvnd0//:libGLdispatch"')
 
     if repository_ctx.name == "libglu1-mesa":
         repository_ctx.file("libGLU.so.1.3.1", repository_ctx.read(libs[0]), executable = False, legacy_utf8 = False)
@@ -138,6 +139,21 @@ def _x11_deb_repository_rule_impl(repository_ctx):
         ]
 
         r += 'cc_library(name="libGLU", srcs=[' + ",".join(['":' + str(e) + '"' for e in libs]) + '], visibility=["//visibility:public"])\n'
+
+    if repository_ctx.name == "libglvnd0":
+        repository_ctx.file("libGLdispatch.so.0.0.0", repository_ctx.read(libs[0]), executable = False, legacy_utf8 = False)
+        repository_ctx.file("libGLdispatch.so.0", repository_ctx.read(libs[0]), executable = False, legacy_utf8 = False)
+        repository_ctx.file("libGLdispatch.so", repository_ctx.read(libs[0]), executable = False, legacy_utf8 = False)
+        libs = [
+            "libGLdispatch.so",
+            "libGLdispatch.so.0",
+            "libGLdispatch.so.0.0.0",
+        ]
+
+        # THIS DOES NOTHING: Our real problem is BuildBuddy's default platform is Ubuntu 16.04, so linking to GLIBC 2.34 is not going to happen.
+        repository_ctx.file('dl_dummy.c', '#include <dlfcn.h>\n#include <gnu/lib-names.h>\nvoid unlikely_to_be_used_fn_name() {dlopen(LIBM_SO, RTLD_LAZY);}')
+        r += 'cc_library(name="dl", srcs=["dl_dummy.c"], alwayslink=1, linkopts=["-ldl"])\n'
+        r += 'cc_library(name="libGLdispatch", srcs=[' + ",".join(['":' + str(e) + '"' for e in libs]) + '], linkopts=["-ldl"], deps=[":dl"], visibility=["//visibility:public"])\n'
 
     # Note: cc_import, cc_library etc have really interesting semantics and
     # the best way to do this should be checked.
@@ -281,7 +297,7 @@ def x11_deb_repository(name, urls, sha256):
 # x11_repository_deb adds all repos.
 def x11_repository_deb():
     # master_deb_hash = 'master.deb'
-    master_deb_hash = "ea7d86646a8298ce93ceb7dd325a618349c34298"
+    master_deb_hash = "003372dc6d81b611897b641bc60ba7a7b301b221"
 
     x11_deb_repository(
         name = "libx11-dev",
@@ -381,6 +397,12 @@ def x11_repository_deb():
         name = "libglu1-mesa",
         urls = ["https://github.com/ivucica/rules_libsdl12/raw/" + master_deb_hash + "/libglu1-mesa/libglu1-mesa_9.0.2-1.1_amd64.deb"],
         sha256 = "8f81a5fd51c1c35719757f05968b205b0c93ecc80c091781d8bfb5326eb95142",
+    )
+
+    x11_deb_repository(
+        name = "libglvnd0",  # required at runtime for libgl
+        urls = ["https://github.com/ivucica/rules_libsdl12/raw/" + master_deb_hash + "/libglvnd0/libglvnd0_1.3.2-1~ubuntu0.20.04.2_amd64.deb"],
+        sha256 = "df7ebdaef90e7e912147f5dd2f6568759b9111890b61936443a8b1fde1982655",
     )
 
 def x11_repository():
