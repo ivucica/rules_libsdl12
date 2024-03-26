@@ -116,9 +116,27 @@ def _x11_deb_repository_rule_impl(repository_ctx):
                 )
 
     if repository_ctx.name == "libgl1":
+        repository_ctx.file("libGL.so.1.7.0", repository_ctx.read(libs[0]), executable = False, legacy_utf8 = False)
+        repository_ctx.file("libGL.so.1", repository_ctx.read(libs[0]), executable = False, legacy_utf8 = False)
+        repository_ctx.file("libGL.so", repository_ctx.read(libs[0]), executable = False, legacy_utf8 = False)
+        libs = [
+            "libGL.so",
+            "libGL.so.1",
+            "libGL.so.1.7.0",
+        ]
+
         r += 'cc_library(name="libGL", srcs=[' + ",".join(['":' + str(e) + '"' for e in libs]) + '], visibility=["//visibility:public"])\n'
 
     if repository_ctx.name == "libglu1-mesa":
+        repository_ctx.file("libGLU.so.1.3.1", repository_ctx.read(libs[0]), executable = False, legacy_utf8 = False)
+        repository_ctx.file("libGLU.so.1", repository_ctx.read(libs[0]), executable = False, legacy_utf8 = False)
+        repository_ctx.file("libGLU.so", repository_ctx.read(libs[0]), executable = False, legacy_utf8 = False)
+        libs = [
+            "libGLU.so",
+            "libGLU.so.1",
+            "libGLU.so.1.3.1",
+        ]
+
         r += 'cc_library(name="libGLU", srcs=[' + ",".join(['":' + str(e) + '"' for e in libs]) + '], visibility=["//visibility:public"])\n'
 
     # Note: cc_import, cc_library etc have really interesting semantics and
@@ -364,7 +382,6 @@ def x11_repository_deb():
         urls = ["https://github.com/ivucica/rules_libsdl12/raw/" + master_deb_hash + "/libglu1-mesa/libglu1-mesa_9.0.2-1.1_amd64.deb"],
         sha256 = "8f81a5fd51c1c35719757f05968b205b0c93ecc80c091781d8bfb5326eb95142",
     )
-
 
 def x11_repository():
     return native.new_local_repository(
