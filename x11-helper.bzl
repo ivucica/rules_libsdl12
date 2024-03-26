@@ -92,6 +92,10 @@ def _x11_deb_repository_rule_impl(repository_ctx):
         extra_lib_deps.append('"@libgl1//:libgl1"')
         extra_lib_deps.append('"@libgl1//:libGL"')
 
+    if repository_ctx.name == "libglu1-mesa-dev":
+        extra_lib_deps.append('"@libglu1-mesa//:libglu1-mesa"')
+        extra_lib_deps.append('"@libglu1-mesa//:libGLU"')
+
     if True:
         for e in hdrs:
             if str(repository_ctx.path(e)).startswith(str(repository_ctx.path("./usr/include"))):
@@ -113,6 +117,9 @@ def _x11_deb_repository_rule_impl(repository_ctx):
 
     if repository_ctx.name == "libgl1":
         r += 'cc_library(name="libGL", srcs=[' + ",".join(['":' + str(e) + '"' for e in libs]) + '], visibility=["//visibility:public"])\n'
+
+    if repository_ctx.name == "libglu1-mesa":
+        r += 'cc_library(name="libGLU", srcs=[' + ",".join(['":' + str(e) + '"' for e in libs]) + '], visibility=["//visibility:public"])\n'
 
     # Note: cc_import, cc_library etc have really interesting semantics and
     # the best way to do this should be checked.
@@ -256,7 +263,7 @@ def x11_deb_repository(name, urls, sha256):
 # x11_repository_deb adds all repos.
 def x11_repository_deb():
     # master_deb_hash = 'master.deb'
-    master_deb_hash = '668b3c0608762fb71895e0bbce38680137907bc4'
+    master_deb_hash = "ea7d86646a8298ce93ceb7dd325a618349c34298"
 
     x11_deb_repository(
         name = "libx11-dev",
@@ -351,6 +358,13 @@ def x11_repository_deb():
         urls = ["https://github.com/ivucica/rules_libsdl12/raw/" + master_deb_hash + "/libgl1/libgl1_1.6.0-1_amd64.deb"],
         sha256 = "6f89b1702c48e9a2437bb3c1ffac8e1ab2d828fc28b3d14b2eecd4cc19b2c790",
     )
+
+    x11_deb_repository(
+        name = "libglu1-mesa",
+        urls = ["https://github.com/ivucica/rules_libsdl12/raw/" + master_deb_hash + "/libglu1-mesa/libglu1-mesa_9.0.2-1.1_amd64.deb"],
+        sha256 = "8f81a5fd51c1c35719757f05968b205b0c93ecc80c091781d8bfb5326eb95142",
+    )
+
 
 def x11_repository():
     return native.new_local_repository(
