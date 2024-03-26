@@ -450,15 +450,13 @@ def x11_repository_deb():
 
 
 def x11_repository():
-    return
     return native.new_local_repository(
         name = "x11repository",
         build_file = "@rules_libsdl12//:BUILD.x11helper",
-        path = "/usr/include/X11",
+        path = "/usr/include",
     )
 
 def xcb_repository():
-    return
     return native.new_local_repository(
         name = "xcbrepository",
         build_file_content = "\n".join([
