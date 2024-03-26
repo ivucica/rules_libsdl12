@@ -1,6 +1,7 @@
 # "This config is equivalent to the default config that we use if you do not have a buildbuddy.yaml file at the root of your repo."
 actions:
   - name: "Test all targets"
+    container_image: ubuntu-20.04
     triggers:
       push:
         branches:
