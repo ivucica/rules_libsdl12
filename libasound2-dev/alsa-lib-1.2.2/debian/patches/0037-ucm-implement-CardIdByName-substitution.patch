@@ -1,0 +1,498 @@
+From f29b6b05db8fcd17d1f1e5186c778177067b92b7 Mon Sep 17 00:00:00 2001
+From: Jaroslav Kysela <perex@perex.cz>
+Date: Wed, 3 Jun 2020 17:12:19 +0200
+Subject: [PATCH 37/39] ucm: implement CardIdByName substitution
+
+The syntax is ${CardIdByName:CARDNAME[#INDEX]}.
+
+The CARDNAME is the ALSA's soundcard name (short form).
+The INDEX is the instance (0 = first, 1 = second etc.).
+
+Example: ${CardIdByName:HDA Intel PCH}
+(which is identical to ${CardIdByName:HDA Intel PCH#0})
+
+Signed-off-by: Jaroslav Kysela <perex@perex.cz>
+(cherry picked from commit eee879d38121bc8270d6220c8452b89363ff22ec)
+Signed-off-by: Hui Wang <hui.wang@canonical.com>
+---
+ src/ucm/main.c      |   6 ++-
+ src/ucm/parser.c    |  25 +++-------
+ src/ucm/ucm_cond.c  |   2 +-
+ src/ucm/ucm_local.h |  10 ++--
+ src/ucm/ucm_subs.c  |  38 ++++++++++++---
+ src/ucm/utils.c     | 110 +++++++++++++++++++++++++++++++++-----------
+ 6 files changed, 135 insertions(+), 56 deletions(-)
+
+diff --git a/src/ucm/main.c b/src/ucm/main.c
+index 4fdd9c70..9e43ac66 100644
+--- a/src/ucm/main.c
++++ b/src/ucm/main.c
+@@ -333,6 +333,7 @@ static int execute_sequence(snd_use_case_mgr_t *uc_mgr,
+ 	struct sequence_element *s;
+ 	char *cdev = NULL;
+ 	snd_ctl_t *ctl = NULL;
++	struct ctl_list *ctl_list;
+ 	int err = 0;
+ 
+ 	list_for_each(pos, seq) {
+@@ -400,11 +401,12 @@ static int execute_sequence(snd_use_case_mgr_t *uc_mgr,
+ 				}
+ 			}
+ 			if (ctl == NULL) {
+-				err = uc_mgr_open_ctl(uc_mgr, &ctl, cdev);
++				err = uc_mgr_open_ctl(uc_mgr, &ctl_list, cdev, 1);
+ 				if (err < 0) {
+ 					uc_error("unable to open ctl device '%s'", cdev);
+ 					goto __fail;
+ 				}
++				ctl = ctl_list->ctl;
+ 			}
+ 			err = execute_cset(ctl, s->data.cset, s->type);
+ 			if (err < 0) {
+@@ -516,7 +518,7 @@ static int add_auto_values(snd_use_case_mgr_t *uc_mgr)
+ 	char buf[40];
+ 	int err;
+ 
+-	ctl_list = uc_mgr_get_one_ctl(uc_mgr);
++	ctl_list = uc_mgr_get_master_ctl(uc_mgr);
+ 	if (ctl_list) {
+ 		id = snd_ctl_card_info_get_id(ctl_list->ctl_info);
+ 		snprintf(buf, sizeof(buf), "hw:%s", id);
+diff --git a/src/ucm/parser.c b/src/ucm/parser.c
+index 330cf31d..563be4af 100644
+--- a/src/ucm/parser.c
++++ b/src/ucm/parser.c
+@@ -1901,25 +1901,16 @@ static int parse_master_file(snd_use_case_mgr_t *uc_mgr, snd_config_t *cfg)
+ /* get the card info */
+ static int get_card_info(snd_use_case_mgr_t *mgr,
+ 			 const char *ctl_name,
+-			 snd_ctl_t **_handle,
+-			 snd_ctl_card_info_t *info)
++			 snd_ctl_card_info_t **info)
+ {
+-	snd_ctl_t *handle;
++	struct ctl_list *ctl_list;
+ 	int err;
+ 
+-	*_handle = NULL;
+-
+-	err = uc_mgr_open_ctl(mgr, &handle, ctl_name);
++	err = uc_mgr_open_ctl(mgr, &ctl_list, ctl_name, 0);
+ 	if (err < 0)
+ 		return err;
+ 
+-	err = snd_ctl_card_info(handle, info);
+-	if (err < 0) {
+-		uc_error("control hardware info (%s): %s", ctl_name, snd_strerror(err));
+-	} else {
+-		*_handle = handle;
+-	}
+-
++	*info = ctl_list->ctl_info;
+ 	return err;
+ }
+ 
+@@ -1927,7 +1918,6 @@ static int get_card_info(snd_use_case_mgr_t *mgr,
+ static int get_by_card_name(snd_use_case_mgr_t *mgr, const char *card_name)
+ {
+ 	int card, err;
+-	snd_ctl_t *ctl;
+ 	snd_ctl_card_info_t *info;
+ 	const char *_driver, *_name, *_long_name;
+ 
+@@ -1942,11 +1932,11 @@ static int get_by_card_name(snd_use_case_mgr_t *mgr, const char *card_name)
+ 	while (card >= 0) {
+ 		char name[32];
+ 
+-		/* mandatory - clear the list, keep the only one CTL device */
++		/* clear the list, keep the only one CTL device */
+ 		uc_mgr_free_ctl_list(mgr);
+ 
+ 		sprintf(name, "hw:%d", card);
+-		err = get_card_info(mgr, name, &ctl, info);
++		err = get_card_info(mgr, name, &info);
+ 
+ 		if (err == 0) {
+ 			_driver = snd_ctl_card_info_get_driver(info);
+@@ -1972,13 +1962,12 @@ static int get_by_card_name(snd_use_case_mgr_t *mgr, const char *card_name)
+ /* set the driver name and long name by the card ctl name */
+ static int get_by_card(snd_use_case_mgr_t *mgr, const char *ctl_name)
+ {
+-	snd_ctl_t *ctl;
+ 	snd_ctl_card_info_t *info;
+ 	int err;
+ 
+ 	snd_ctl_card_info_alloca(&info);
+ 
+-	err = get_card_info(mgr, ctl_name, &ctl, info);
++	err = get_card_info(mgr, ctl_name, &info);
+ 	if (err)
+ 		return err;
+ 
+diff --git a/src/ucm/ucm_cond.c b/src/ucm/ucm_cond.c
+index 63ee2ba0..21ecf271 100644
+--- a/src/ucm/ucm_cond.c
++++ b/src/ucm/ucm_cond.c
+@@ -228,7 +228,7 @@ static int if_eval_control_exists(snd_use_case_mgr_t *uc_mgr, snd_config_t *eval
+ 		err = uc_mgr_get_substituted_value(uc_mgr, &s, device);
+ 		if (err < 0)
+ 			return err;
+-		err = uc_mgr_open_ctl(uc_mgr, &ctl, s);
++		err = uc_mgr_open_ctl(uc_mgr, &ctl, s, 1);
+ 		free(s);
+ 		if (err < 0)
+ 			return err;
+diff --git a/src/ucm/ucm_local.h b/src/ucm/ucm_local.h
+index 30edd9cb..709f4cbd 100644
+--- a/src/ucm/ucm_local.h
++++ b/src/ucm/ucm_local.h
+@@ -115,6 +115,7 @@ struct ctl_list {
+ 	struct list_head dev_list;
+ 	snd_ctl_t *ctl;
+ 	snd_ctl_card_info_t *ctl_info;
++	int slave;
+ };
+ 
+ struct ucm_dev_name {
+@@ -283,10 +284,13 @@ void uc_mgr_free_verb(snd_use_case_mgr_t *uc_mgr);
+ void uc_mgr_free(snd_use_case_mgr_t *uc_mgr);
+ 
+ int uc_mgr_open_ctl(snd_use_case_mgr_t *uc_mgr,
+-                    snd_ctl_t **ctl,
+-                    const char *device);
++		    struct ctl_list **ctl_list,
++		    const char *device,
++		    int slave);
+ 
+-struct ctl_list *uc_mgr_get_one_ctl(snd_use_case_mgr_t *uc_mgr);
++struct ctl_list *uc_mgr_get_master_ctl(snd_use_case_mgr_t *uc_mgr);
++struct ctl_list *uc_mgr_get_ctl_by_name(snd_use_case_mgr_t *uc_mgr,
++					const char *name, int idx);
+ snd_ctl_t *uc_mgr_get_ctl(snd_use_case_mgr_t *uc_mgr);
+ void uc_mgr_free_ctl_list(snd_use_case_mgr_t *uc_mgr);
+ 
+diff --git a/src/ucm/ucm_subs.c b/src/ucm/ucm_subs.c
+index 0cdaca88..ce6b5eda 100644
+--- a/src/ucm/ucm_subs.c
++++ b/src/ucm/ucm_subs.c
+@@ -73,7 +73,7 @@ static char *rval_card_number(snd_use_case_mgr_t *uc_mgr)
+ 
+ 	if (uc_mgr->conf_format < 3)
+ 		return NULL;
+-	ctl_list = uc_mgr_get_one_ctl(uc_mgr);
++	ctl_list = uc_mgr_get_master_ctl(uc_mgr);
+ 	if (ctl_list == NULL)
+ 		return strdup("");
+ 	snprintf(num, sizeof(num), "%i", snd_ctl_card_info_get_card(ctl_list->ctl_info));
+@@ -84,7 +84,7 @@ static char *rval_card_id(snd_use_case_mgr_t *uc_mgr)
+ {
+ 	struct ctl_list *ctl_list;
+ 
+-	ctl_list = uc_mgr_get_one_ctl(uc_mgr);
++	ctl_list = uc_mgr_get_master_ctl(uc_mgr);
+ 	if (ctl_list == NULL)
+ 		return NULL;
+ 	return strdup(snd_ctl_card_info_get_id(ctl_list->ctl_info));
+@@ -94,7 +94,7 @@ static char *rval_card_driver(snd_use_case_mgr_t *uc_mgr)
+ {
+ 	struct ctl_list *ctl_list;
+ 
+-	ctl_list = uc_mgr_get_one_ctl(uc_mgr);
++	ctl_list = uc_mgr_get_master_ctl(uc_mgr);
+ 	if (ctl_list == NULL)
+ 		return NULL;
+ 	return strdup(snd_ctl_card_info_get_driver(ctl_list->ctl_info));
+@@ -104,7 +104,7 @@ static char *rval_card_name(snd_use_case_mgr_t *uc_mgr)
+ {
+ 	struct ctl_list *ctl_list;
+ 
+-	ctl_list = uc_mgr_get_one_ctl(uc_mgr);
++	ctl_list = uc_mgr_get_master_ctl(uc_mgr);
+ 	if (ctl_list == NULL)
+ 		return NULL;
+ 	return strdup(snd_ctl_card_info_get_name(ctl_list->ctl_info));
+@@ -114,7 +114,7 @@ static char *rval_card_longname(snd_use_case_mgr_t *uc_mgr)
+ {
+ 	struct ctl_list *ctl_list;
+ 
+-	ctl_list = uc_mgr_get_one_ctl(uc_mgr);
++	ctl_list = uc_mgr_get_master_ctl(uc_mgr);
+ 	if (ctl_list == NULL)
+ 		return NULL;
+ 	return strdup(snd_ctl_card_info_get_longname(ctl_list->ctl_info));
+@@ -124,12 +124,37 @@ static char *rval_card_components(snd_use_case_mgr_t *uc_mgr)
+ {
+ 	struct ctl_list *ctl_list;
+ 
+-	ctl_list = uc_mgr_get_one_ctl(uc_mgr);
++	ctl_list = uc_mgr_get_master_ctl(uc_mgr);
+ 	if (ctl_list == NULL)
+ 		return NULL;
+ 	return strdup(snd_ctl_card_info_get_components(ctl_list->ctl_info));
+ }
+ 
++static char *rval_card_id_by_name(snd_use_case_mgr_t *uc_mgr, const char *id)
++{
++	struct ctl_list *ctl_list;
++	char *name, *index;
++	long idx = 0;
++
++	if (uc_mgr->conf_format < 3) {
++		uc_error("CardIdByName substitution is supported in v3+ syntax");
++		return NULL;
++	}
++
++	name = alloca(strlen(id) + 1);
++	strcpy(name, id);
++	index = strchr(name, '#');
++	if (index) {
++		*index = '\0';
++		if (safe_strtol(index + 1, &idx))
++			return NULL;
++	}
++	ctl_list = uc_mgr_get_ctl_by_name(uc_mgr, name, idx);
++	if (ctl_list == NULL)
++		return NULL;
++	return strdup(snd_ctl_card_info_get_id(ctl_list->ctl_info));
++}
++
+ static char *rval_env(snd_use_case_mgr_t *uc_mgr ATTRIBUTE_UNUSED, const char *id)
+ {
+ 	char *e;
+@@ -265,6 +290,7 @@ int uc_mgr_get_substituted_value(snd_use_case_mgr_t *uc_mgr,
+ 			MATCH_VARIABLE2(value, "${env:", rval_env);
+ 			MATCH_VARIABLE2(value, "${sys:", rval_sysfs);
+ 			MATCH_VARIABLE2(value, "${var:", rval_var);
++			MATCH_VARIABLE2(value, "${CardIdByName:", rval_card_id_by_name);
+ 			err = -EINVAL;
+ 			tmp = strchr(value, '}');
+ 			if (tmp) {
+diff --git a/src/ucm/utils.c b/src/ucm/utils.c
+index 1cfa7a35..f39c9525 100644
+--- a/src/ucm/utils.c
++++ b/src/ucm/utils.c
+@@ -49,26 +49,73 @@ void uc_mgr_stdout(const char *fmt,...)
+ 	va_end(va);
+ }
+ 
+-struct ctl_list *uc_mgr_get_one_ctl(snd_use_case_mgr_t *uc_mgr)
++struct ctl_list *uc_mgr_get_master_ctl(snd_use_case_mgr_t *uc_mgr)
+ {
+ 	struct list_head *pos;
+-	struct ctl_list *ctl_list = NULL;
++	struct ctl_list *ctl_list = NULL, *ctl_list2;
+ 
+ 	list_for_each(pos, &uc_mgr->ctl_list) {
++		ctl_list2 = list_entry(pos, struct ctl_list, list);
++		if (ctl_list2->slave)
++			continue;
+ 		if (ctl_list) {
+ 			uc_error("multiple control device names were found!");
+ 			return NULL;
+ 		}
+-		ctl_list = list_entry(pos, struct ctl_list, list);
++		ctl_list = ctl_list2;
+ 	}
+ 	return ctl_list;
+ }
+ 
++struct ctl_list *uc_mgr_get_ctl_by_name(snd_use_case_mgr_t *uc_mgr, const char *name, int idx)
++{
++	struct list_head *pos;
++	struct ctl_list *ctl_list = NULL;
++	const char *s;
++	char cname[32];
++	int idx2, card, err;
++
++	idx2 = idx;
++	list_for_each(pos, &uc_mgr->ctl_list) {
++		ctl_list = list_entry(pos, struct ctl_list, list);
++		s = snd_ctl_card_info_get_name(ctl_list->ctl_info);
++		if (s == NULL)
++			continue;
++		if (strcmp(s, name) == 0) {
++			if (idx2 == 0)
++				return ctl_list;
++			idx2--;
++		}
++	}
++
++	idx2 = idx;
++	card = -1;
++	if (snd_card_next(&card) < 0 || card < 0)
++		return NULL;
++
++	while (card >= 0) {
++		sprintf(cname, "hw:%d", card);
++		err = uc_mgr_open_ctl(uc_mgr, &ctl_list, cname, 1);
++		if (err < 0)
++			continue;	/* really? */
++		s = snd_ctl_card_info_get_name(ctl_list->ctl_info);
++		if (s && strcmp(s, name) == 0) {
++			if (idx2 == 0)
++				return ctl_list;
++			idx2--;
++		}
++		if (snd_card_next(&card) < 0)
++			break;
++	}
++
++	return NULL;
++}
++
+ snd_ctl_t *uc_mgr_get_ctl(snd_use_case_mgr_t *uc_mgr)
+ {
+ 	struct ctl_list *ctl_list;
+ 
+-	ctl_list = uc_mgr_get_one_ctl(uc_mgr);
++	ctl_list = uc_mgr_get_master_ctl(uc_mgr);
+ 	if (ctl_list)
+ 		return ctl_list->ctl;
+ 	return NULL;
+@@ -127,10 +174,11 @@ static int uc_mgr_ctl_add_dev(struct ctl_list *ctl_list, const char *device)
+ }
+ 
+ static int uc_mgr_ctl_add(snd_use_case_mgr_t *uc_mgr,
+-			  struct ctl_list *ctl_list,
++			  struct ctl_list **ctl_list,
+ 			  snd_ctl_t *ctl, int card,
+ 			  snd_ctl_card_info_t *info,
+-			  const char *device)
++			  const char *device,
++			  int slave)
+ {
+ 	struct ctl_list *cl = NULL;
+ 	const char *id = snd_ctl_card_info_get_id(info);
+@@ -139,7 +187,7 @@ static int uc_mgr_ctl_add(snd_use_case_mgr_t *uc_mgr,
+ 
+ 	if (id == NULL || id[0] == '\0')
+ 		return -ENOENT;
+-	if (!ctl_list) {
++	if (!(*ctl_list)) {
+ 		cl = malloc(sizeof(*cl));
+ 		if (cl == NULL)
+ 			return -ENOMEM;
+@@ -150,41 +198,49 @@ static int uc_mgr_ctl_add(snd_use_case_mgr_t *uc_mgr,
+ 			return -ENOMEM;
+ 		}
+ 		snd_ctl_card_info_copy(cl->ctl_info, info);
+-		ctl_list = cl;
++		cl->slave = slave;
++		*ctl_list = cl;
++	} else {
++		if (!slave)
++			(*ctl_list)->slave = slave;
+ 	}
+ 	if (card >= 0) {
+ 		snprintf(dev, sizeof(dev), "hw:%d", card);
+ 		hit |= !!(device && (strcmp(dev, device) == 0));
+-		err = uc_mgr_ctl_add_dev(ctl_list, dev);
++		err = uc_mgr_ctl_add_dev(*ctl_list, dev);
+ 		if (err < 0)
+ 			goto __nomem;
+ 	}
+ 	snprintf(dev, sizeof(dev), "hw:%s", id);
+ 	hit |= !!(device && (strcmp(dev, device) == 0));
+-	err = uc_mgr_ctl_add_dev(ctl_list, dev);
++	err = uc_mgr_ctl_add_dev(*ctl_list, dev);
+ 	if (err < 0)
+ 		goto __nomem;
+ 	/* the UCM name not based on the card name / id */
+ 	if (!hit && device) {
+-		err = uc_mgr_ctl_add_dev(ctl_list, device);
++		err = uc_mgr_ctl_add_dev(*ctl_list, device);
+ 		if (err < 0)
+ 			goto __nomem;
+ 	}
+ 
+-	list_add_tail(&ctl_list->list, &uc_mgr->ctl_list);
++	list_add_tail(&(*ctl_list)->list, &uc_mgr->ctl_list);
+ 	return 0;
+ 
+ __nomem:
+-	if (ctl_list == cl)
++	if (*ctl_list == cl) {
+ 		uc_mgr_free_ctl(cl);
++		*ctl_list = NULL;
++	}
+ 	return -ENOMEM;
+ }
+ 
+ int uc_mgr_open_ctl(snd_use_case_mgr_t *uc_mgr,
+-		    snd_ctl_t **ctl,
+-		    const char *device)
++		    struct ctl_list **ctll,
++		    const char *device,
++		    int slave)
+ {
+ 	struct list_head *pos1, *pos2;
++	snd_ctl_t *ctl;
+ 	struct ctl_list *ctl_list;
+ 	struct ctl_dev *ctl_dev;
+ 	snd_ctl_card_info_t *info;
+@@ -199,24 +255,25 @@ int uc_mgr_open_ctl(snd_use_case_mgr_t *uc_mgr,
+ 		list_for_each(pos2, &ctl_list->dev_list) {
+ 			ctl_dev = list_entry(pos2, struct ctl_dev, list);
+ 			if (strcmp(ctl_dev->device, device) == 0) {
+-				*ctl = ctl_list->ctl;
++				*ctll = ctl_list;
++				if (!slave)
++					ctl_list->slave = 0;
+ 				return 0;
+ 			}
+ 		}
+ 	}
+ 
+-	err = snd_ctl_open(ctl, device, 0);
++	err = snd_ctl_open(&ctl, device, 0);
+ 	if (err < 0)
+ 		return err;
+ 
+ 	id = NULL;
+-	err = snd_ctl_card_info(*ctl, info);
++	err = snd_ctl_card_info(ctl, info);
+ 	if (err == 0)
+ 		id = snd_ctl_card_info_get_id(info);
+ 	if (err < 0 || id == NULL || id[0] == '\0') {
+ 		uc_error("control hardware info (%s): %s", device, snd_strerror(err));
+-		snd_ctl_close(*ctl);
+-		*ctl = NULL;
++		snd_ctl_close(ctl);
+ 		return err;
+ 	}
+ 
+@@ -225,24 +282,25 @@ int uc_mgr_open_ctl(snd_use_case_mgr_t *uc_mgr,
+ 		ctl_list = list_entry(pos1, struct ctl_list, list);
+ 		if (strcmp(id, snd_ctl_card_info_get_id(ctl_list->ctl_info)) == 0) {
+ 			card = snd_card_get_index(id);
+-			err = uc_mgr_ctl_add(uc_mgr, ctl_list, *ctl, card, info, device);
++			err = uc_mgr_ctl_add(uc_mgr, &ctl_list, ctl, card, info, device, slave);
+ 			if (err < 0)
+ 				goto __nomem;
+-			snd_ctl_close(*ctl);
+-			*ctl = ctl_list->ctl;
++			snd_ctl_close(ctl);
++			*ctll = ctl_list;
+ 			return 0;
+ 		}
+ 	}
+ 
+-	err = uc_mgr_ctl_add(uc_mgr, NULL, *ctl, -1, info, device);
++	ctl_list = NULL;
++	err = uc_mgr_ctl_add(uc_mgr, &ctl_list, ctl, -1, info, device, slave);
+ 	if (err < 0)
+ 		goto __nomem;
+ 
++	*ctll = ctl_list;
+ 	return 0;
+ 
+ __nomem:
+-	snd_ctl_close(*ctl);
+-	*ctl = NULL;
++	snd_ctl_close(ctl);
+ 	return -ENOMEM;
+ }
+ 
+-- 
+2.25.1
+

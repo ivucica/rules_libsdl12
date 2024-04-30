@@ -1,0 +1,60 @@
+From cffc6419d85668b8feb1536b1b15803eb9a9a1a7 Mon Sep 17 00:00:00 2001
+From: Jaroslav Kysela <perex@perex.cz>
+Date: Mon, 25 May 2020 19:19:56 +0200
+Subject: [PATCH 12/25] ucm: rename _once command to _boot command
+
+Signed-off-by: Jaroslav Kysela <perex@perex.cz>
+(cherry picked from commit 14636be4a87ea1cbb13bf8942d07d2066d626e71)
+Signed-off-by: Hui Wang <hui.wang@canonical.com>
+---
+ include/use-case.h | 2 +-
+ src/ucm/main.c     | 8 ++++----
+ 2 files changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/include/use-case.h b/include/use-case.h
+index aa85290f..8bd3c880 100644
+--- a/include/use-case.h
++++ b/include/use-case.h
+@@ -402,7 +402,7 @@ int snd_use_case_geti(snd_use_case_mgr_t *uc_mgr,
+  * \return Zero if success, otherwise a negative error code
+  *
+  * Known identifiers:
+- *   - _once			- execute the once sequence (value = NULL)
++ *   - _boot			- execute the boot sequence (value = NULL)
+  *   - _defaults		- execute the 'defaults' sequence (value = NULL)
+  *   - _verb			- set current verb = value
+  *   - _enadev			- enable given device = value
+diff --git a/src/ucm/main.c b/src/ucm/main.c
+index 041b90ea..9c85462b 100644
+--- a/src/ucm/main.c
++++ b/src/ucm/main.c
+@@ -1846,13 +1846,13 @@ int snd_use_case_geti(snd_use_case_mgr_t *uc_mgr,
+         return err;
+ }
+ 
+-static int set_once_user(snd_use_case_mgr_t *uc_mgr,
++static int set_boot_user(snd_use_case_mgr_t *uc_mgr,
+ 			 const char *value)
+ {
+ 	int err;
+ 
+ 	if (value != NULL && *value) {
+-		uc_error("error: wrong value for _once (%s)", value);
++		uc_error("error: wrong value for _boot (%s)", value);
+ 		return -EINVAL;
+ 	}
+ 	err = execute_sequence(uc_mgr, &uc_mgr->once_list,
+@@ -2085,8 +2085,8 @@ int snd_use_case_set(snd_use_case_mgr_t *uc_mgr,
+ 	int err = 0;
+ 
+ 	pthread_mutex_lock(&uc_mgr->mutex);
+-	if (strcmp(identifier, "_once") == 0)
+-		err = set_once_user(uc_mgr, value);
++	if (strcmp(identifier, "_boot") == 0)
++		err = set_boot_user(uc_mgr, value);
+ 	else if (strcmp(identifier, "_defaults") == 0)
+ 		err = set_defaults_user(uc_mgr, value);
+ 	else if (strcmp(identifier, "_verb") == 0)
+-- 
+2.25.1
+

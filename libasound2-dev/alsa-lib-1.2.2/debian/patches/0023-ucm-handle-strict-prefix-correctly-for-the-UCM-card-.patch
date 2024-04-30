@@ -1,0 +1,30 @@
+From 4f6915433e2002d2f1773c1fa2ae5932ef0dea1b Mon Sep 17 00:00:00 2001
+From: Jaroslav Kysela <perex@perex.cz>
+Date: Tue, 26 May 2020 15:26:26 +0200
+Subject: [PATCH 23/25] ucm: handle strict: prefix correctly for the UCM card
+ name
+
+Signed-off-by: Jaroslav Kysela <perex@perex.cz>
+(cherry picked from commit f688817e2c040e559c6e2ff0f540520cae1c9f37)
+Signed-off-by: Hui Wang <hui.wang@canonical.com>
+---
+ src/ucm/parser.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/src/ucm/parser.c b/src/ucm/parser.c
+index d5c0b78b..620f061d 100644
+--- a/src/ucm/parser.c
++++ b/src/ucm/parser.c
+@@ -2038,7 +2038,8 @@ int uc_mgr_import_master_config(snd_use_case_mgr_t *uc_mgr)
+ 	char longname[MAX_CARD_LONG_NAME];
+ 	int err;
+ 
+-	if (replace_string(&uc_mgr->conf_dir_name, uc_mgr->card_name) == NULL)
++	if (replace_string(&uc_mgr->conf_dir_name,
++			   strncmp(name, "strict:", 7) ? name : name + 7) == NULL)
+ 		return -ENOMEM;
+ 
+ 	if (strncmp(name, "hw:", 3) == 0) {
+-- 
+2.25.1
+

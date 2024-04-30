@@ -1,0 +1,27 @@
+From 414e4a759b2946d2f60746ed104d425be4ddb9fc Mon Sep 17 00:00:00 2001
+From: Jaroslav Kysela <perex@perex.cz>
+Date: Wed, 12 May 2021 09:53:18 +0200
+Subject: [PATCH] ucm: fix regexec() REG_NOMATCH state handling for define
+ regex
+
+Signed-off-by: Jaroslav Kysela <perex@perex.cz>
+---
+ src/ucm/ucm_regex.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/src/ucm/ucm_regex.c b/src/ucm/ucm_regex.c
+index be8f277a..1471f076 100644
+--- a/src/ucm/ucm_regex.c
++++ b/src/ucm/ucm_regex.c
+@@ -166,6 +166,8 @@ int uc_mgr_define_regex(snd_use_case_mgr_t *uc_mgr, const char *name,
+ 	err = regexec(&re, s, ARRAY_SIZE(match), match, 0);
+ 	if (err < 0)
+ 		err = -errno;
++	else if (err == REG_NOMATCH)
++		err = 0;
+ 	else
+ 		err = set_variables(uc_mgr, s, ARRAY_SIZE(match), match, name);
+ 	free(s);
+-- 
+2.25.1
+

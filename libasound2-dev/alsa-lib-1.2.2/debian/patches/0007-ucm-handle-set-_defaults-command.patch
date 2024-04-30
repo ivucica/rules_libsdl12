@@ -1,0 +1,107 @@
+From e2e099a2771507047eba7fe83f1d69ee20805160 Mon Sep 17 00:00:00 2001
+From: Jaroslav Kysela <perex@perex.cz>
+Date: Thu, 14 May 2020 18:32:05 +0200
+Subject: [PATCH 07/25] ucm: handle 'set _defaults' command
+
+Signed-off-by: Jaroslav Kysela <perex@perex.cz>
+(cherry picked from commit 0c3776a354f998ef17333af338bffc4ed09007cf)
+Signed-off-by: Hui Wang <hui.wang@canonical.com>
+---
+ include/use-case.h |  1 +
+ src/ucm/main.c     | 47 +++++++++++++++++++++++++++++++++++++---------
+ 2 files changed, 39 insertions(+), 9 deletions(-)
+
+diff --git a/include/use-case.h b/include/use-case.h
+index 7e9dea3c..aa85290f 100644
+--- a/include/use-case.h
++++ b/include/use-case.h
+@@ -403,6 +403,7 @@ int snd_use_case_geti(snd_use_case_mgr_t *uc_mgr,
+  *
+  * Known identifiers:
+  *   - _once			- execute the once sequence (value = NULL)
++ *   - _defaults		- execute the 'defaults' sequence (value = NULL)
+  *   - _verb			- set current verb = value
+  *   - _enadev			- enable given device = value
+  *   - _disdev			- disable given device = value
+diff --git a/src/ucm/main.c b/src/ucm/main.c
+index 053aa79b..71ad4ecc 100644
+--- a/src/ucm/main.c
++++ b/src/ucm/main.c
+@@ -530,6 +530,27 @@ static int add_auto_values(snd_use_case_mgr_t *uc_mgr)
+ 	return 0;
+ }
+ 
++/**
++ * \brief execute default commands
++ * \param uc_mgr Use case manager
++ * \return zero on success, otherwise a negative error code
++ */
++static int set_defaults(snd_use_case_mgr_t *uc_mgr)
++{
++	int err;
++
++	if (uc_mgr->default_list_executed)
++		return 0;
++	err = execute_sequence(uc_mgr, &uc_mgr->default_list,
++			       &uc_mgr->value_list, NULL, NULL);
++	if (err < 0) {
++		uc_error("Unable to execute default sequence");
++		return err;
++	}
++	uc_mgr->default_list_executed = 1;
++	return 0;
++}
++
+ /**
+  * \brief Import master config and execute the default sequence
+  * \param uc_mgr Use case manager
+@@ -838,15 +859,9 @@ static int set_verb(snd_use_case_mgr_t *uc_mgr,
+ 	int err;
+ 
+ 	if (enable) {
+-		if (!uc_mgr->default_list_executed) {
+-			err = execute_sequence(uc_mgr, &uc_mgr->default_list,
+-						&uc_mgr->value_list, NULL, NULL);
+-			if (err < 0) {
+-				uc_error("Unable to execute default sequence");
+-				return err;
+-			}
+-			uc_mgr->default_list_executed = 1;
+-		}
++		err = set_defaults(uc_mgr);
++		if (err < 0)
++			return err;
+ 		seq = &verb->enable_list;
+ 	} else {
+ 		seq = &verb->disable_list;
+@@ -1848,6 +1863,18 @@ static int set_once_user(snd_use_case_mgr_t *uc_mgr,
+ 	return err;
+ }
+ 
++static int set_defaults_user(snd_use_case_mgr_t *uc_mgr,
++			     const char *value)
++{
++	int err;
++
++	if (value != NULL && *value) {
++		uc_error("error: wrong value for _defaults (%s)", value);
++		return -EINVAL;
++	}
++	return set_defaults(uc_mgr);
++}
++
+ static int handle_transition_verb(snd_use_case_mgr_t *uc_mgr,
+                                   struct use_case_verb *new_verb)
+ {
+@@ -2061,6 +2088,8 @@ int snd_use_case_set(snd_use_case_mgr_t *uc_mgr,
+ 	pthread_mutex_lock(&uc_mgr->mutex);
+ 	if (strcmp(identifier, "_once") == 0)
+ 		err = set_once_user(uc_mgr, value);
++	else if (strcmp(identifier, "_defaults") == 0)
++		err = set_defaults_user(uc_mgr, value);
+ 	else if (strcmp(identifier, "_verb") == 0)
+ 	        err = set_verb_user(uc_mgr, value);
+         else if (strcmp(identifier, "_enadev") == 0)
+-- 
+2.25.1
+

@@ -1,0 +1,29 @@
+From 42d13e5ae4aadf691aa8be6a98a4a42bc35ee7c4 Mon Sep 17 00:00:00 2001
+From: root <asavah@avh.od.ua>
+Date: Sat, 16 May 2020 11:55:54 +0300
+Subject: [PATCH 08/25] ucm: initialize mgr->once_list
+
+BugLink: https://github.com/alsa-project/alsa-lib/pull/50
+
+Signed-off-by: Jaroslav Kysela <perex@perex.cz>
+(cherry picked from commit 449bf7e1910f6b3c82270682d863e61d7e24fa7a)
+Signed-off-by: Hui Wang <hui.wang@canonical.com>
+---
+ src/ucm/main.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/src/ucm/main.c b/src/ucm/main.c
+index 71ad4ecc..44e96308 100644
+--- a/src/ucm/main.c
++++ b/src/ucm/main.c
+@@ -960,6 +960,7 @@ int snd_use_case_mgr_open(snd_use_case_mgr_t **uc_mgr,
+ 	if (mgr == NULL)
+ 		return -ENOMEM;
+ 	INIT_LIST_HEAD(&mgr->verb_list);
++	INIT_LIST_HEAD(&mgr->once_list);
+ 	INIT_LIST_HEAD(&mgr->default_list);
+ 	INIT_LIST_HEAD(&mgr->value_list);
+ 	INIT_LIST_HEAD(&mgr->active_modifiers);
+-- 
+2.25.1
+

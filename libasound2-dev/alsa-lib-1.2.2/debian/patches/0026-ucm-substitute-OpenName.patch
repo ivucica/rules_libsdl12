@@ -1,0 +1,43 @@
+From 9a7f58e166ef0ac081b4f9336969c18aba7c5c2a Mon Sep 17 00:00:00 2001
+From: Jaroslav Kysela <perex@perex.cz>
+Date: Tue, 26 May 2020 15:55:12 +0200
+Subject: [PATCH 26/39] ucm: substitute ${OpenName}
+
+Signed-off-by: Jaroslav Kysela <perex@perex.cz>
+(cherry picked from commit 72b35bff02bba8b256c5d03e23aa57bb30ec33c6)
+Signed-off-by: Hui Wang <hui.wang@canonical.com>
+---
+ src/ucm/ucm_subs.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/src/ucm/ucm_subs.c b/src/ucm/ucm_subs.c
+index 9efa461f..97004226 100644
+--- a/src/ucm/ucm_subs.c
++++ b/src/ucm/ucm_subs.c
+@@ -29,6 +29,15 @@
+ #include <sys/stat.h>
+ #include <limits.h>
+ 
++static char *rval_open_name(snd_use_case_mgr_t *uc_mgr)
++{
++	if (uc_mgr->conf_format < 3)
++		return NULL;
++	if (uc_mgr->card_name && uc_mgr->card_name[0])
++		return strdup(uc_mgr->card_name);
++	return NULL;
++}
++
+ static char *rval_conf_topdir(snd_use_case_mgr_t *uc_mgr)
+ {
+ 	const char *dir;
+@@ -229,6 +238,7 @@ int uc_mgr_get_substituted_value(snd_use_case_mgr_t *uc_mgr,
+ 		if (*value == '$' && *(value+1) == '{') {
+ 			bool allow_empty = false;
+ 
++			MATCH_VARIABLE(value, "${OpenName}", rval_open_name, false);
+ 			MATCH_VARIABLE(value, "${ConfTopDir}", rval_conf_topdir, false);
+ 			MATCH_VARIABLE(value, "${ConfDir}", rval_conf_dir, false);
+ 			MATCH_VARIABLE(value, "${ConfName}", rval_conf_name, false);
+-- 
+2.25.1
+

@@ -1,0 +1,43 @@
+From 5c93cef2541a8f86ca5528b6f3b5e2c5e51230ee Mon Sep 17 00:00:00 2001
+From: Jaroslav Kysela <perex@perex.cz>
+Date: Tue, 26 May 2020 15:37:42 +0200
+Subject: [PATCH 25/25] ucm: Define/DefineRegex is supported in Syntax 3
+
+Signed-off-by: Jaroslav Kysela <perex@perex.cz>
+(cherry picked from commit 690cdab6b4541bc2c4c47c935a28e84e304b7776)
+Signed-off-by: Hui Wang <hui.wang@canonical.com>
+---
+ src/ucm/parser.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/src/ucm/parser.c b/src/ucm/parser.c
+index 620f061d..be89cce8 100644
+--- a/src/ucm/parser.c
++++ b/src/ucm/parser.c
+@@ -255,6 +255,11 @@ static int evaluate_regex(snd_use_case_mgr_t *uc_mgr,
+ 		return -EINVAL;
+ 	}
+ 
++	if (uc_mgr->conf_format < 3) {
++		uc_error("DefineRegex is supported in v3+ syntax");
++		return -EINVAL;
++	}
++
+ 	snd_config_for_each(i, next, d) {
+ 		n = snd_config_iterator_entry(i);
+ 		err = snd_config_get_id(n, &id);
+@@ -292,6 +297,11 @@ static int evaluate_define(snd_use_case_mgr_t *uc_mgr,
+ 		return -EINVAL;
+ 	}
+ 
++	if (uc_mgr->conf_format < 3) {
++		uc_error("Define is supported in v3+ syntax");
++		return -EINVAL;
++	}
++
+ 	snd_config_for_each(i, next, d) {
+ 		n = snd_config_iterator_entry(i);
+ 		err = snd_config_get_id(n, &id);
+-- 
+2.25.1
+

@@ -1,0 +1,30 @@
+From 4029d2de399d22828217d1359caf0d36c0ebf87b Mon Sep 17 00:00:00 2001
+From: Jaroslav Kysela <perex@perex.cz>
+Date: Mon, 25 May 2020 18:32:43 +0200
+Subject: [PATCH 21/25] ucm: allow to specify the toplevel directory using '/'
+ as first character in File path
+
+Signed-off-by: Jaroslav Kysela <perex@perex.cz>
+(cherry picked from commit bf83baa8fcc44e8239c4f652f05f561d61eace5b)
+Signed-off-by: Hui Wang <hui.wang@canonical.com>
+---
+ src/ucm/parser.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/src/ucm/parser.c b/src/ucm/parser.c
+index e1f6f1ae..89943b3c 100644
+--- a/src/ucm/parser.c
++++ b/src/ucm/parser.c
+@@ -134,7 +134,8 @@ int uc_mgr_config_load_file(snd_use_case_mgr_t *uc_mgr,
+ 	int err;
+ 
+ 	configuration_filename(uc_mgr, filename, sizeof(filename),
+-			       uc_mgr->conf_dir_name, file, "");
++			       file[0] == '/' ? "" : uc_mgr->conf_dir_name,
++			       file, "");
+ 	err = uc_mgr_config_load(uc_mgr->conf_format, filename, cfg);
+ 	if (err < 0) {
+ 		uc_error("error: failed to open file %s : %d", filename, -errno);
+-- 
+2.25.1
+

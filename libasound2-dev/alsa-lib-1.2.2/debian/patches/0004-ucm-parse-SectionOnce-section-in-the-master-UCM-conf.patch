@@ -1,0 +1,126 @@
+From bec06748bb6c9d56947c1ff5480389d0da18a1cf Mon Sep 17 00:00:00 2001
+From: Jaroslav Kysela <perex@perex.cz>
+Date: Thu, 14 May 2020 16:03:00 +0200
+Subject: [PATCH 04/25] ucm: parse SectionOnce section in the master UCM
+ configuration file
+
+Signed-off-by: Jaroslav Kysela <perex@perex.cz>
+(cherry picked from commit e0da1d2a2ab5998e50683e00c916c72d416f46a8)
+Signed-off-by: Hui Wang <hui.wang@canonical.com>
+---
+ src/ucm/parser.c    | 41 +++++++++++++++++++++++++++++++++++++----
+ src/ucm/ucm_local.h |  3 +++
+ src/ucm/utils.c     |  1 +
+ 3 files changed, 41 insertions(+), 4 deletions(-)
+
+diff --git a/src/ucm/parser.c b/src/ucm/parser.c
+index 8d6eea31..4b48b879 100644
+--- a/src/ucm/parser.c
++++ b/src/ucm/parser.c
+@@ -1510,13 +1510,33 @@ static int parse_master_section(snd_use_case_mgr_t *uc_mgr, snd_config_t *cfg,
+ 	return parse_verb_file(uc_mgr, use_case_name, comment, file);
+ }
+ 
++/*
++ * parse controls which should be run only at initial boot
++ */
++static int parse_controls_once(snd_use_case_mgr_t *uc_mgr, snd_config_t *cfg)
++{
++	int err;
++
++	if (!list_empty(&uc_mgr->once_list)) {
++		uc_error("Once list is not empty");
++		return -EINVAL;
++	}
++	err = parse_sequence(uc_mgr, &uc_mgr->once_list, cfg);
++	if (err < 0) {
++		uc_error("Unable to parse SectionOnce");
++		return err;
++	}
++
++	return 0;
++}
++
+ /*
+  * parse controls
+  */
+ static int parse_controls(snd_use_case_mgr_t *uc_mgr, snd_config_t *cfg)
+ {
+ 	int err;
+-	
++
+ 	if (!list_empty(&uc_mgr->default_list)) {
+ 		uc_error("Default list is not empty");
+ 		return -EINVAL;
+@@ -1526,7 +1546,7 @@ static int parse_controls(snd_use_case_mgr_t *uc_mgr, snd_config_t *cfg)
+ 		uc_error("Unable to parse SectionDefaults");
+ 		return err;
+ 	}
+-	
++
+ 	return 0;
+ }
+ 
+@@ -1558,11 +1578,16 @@ static int parse_controls(snd_use_case_mgr_t *uc_mgr, snd_config_t *cfg)
+  *	CaptureCTL "hw:CARD=0"
+  * }
+  *
++ * # The initial boot (run once) configuration.
++ *
++ * SectionOnce {
++ *      cset "name='Master Playback Switch',index=2 1,1"
++ *	cset "name='Master Playback Volume',index=2 25,25"
++ * }
++ *
+  * # This file also stores the default sound card state.
+  *
+  * SectionDefaults [
+- *	cset "name='Master Playback Switch',index=2 1,1"
+- *	cset "name='Master Playback Volume',index=2 25,25"
+  *	cset "name='Master Mono Playback',index=1 0"
+  *	cset "name='Master Mono Playback Volume',index=1 0"
+  *	cset "name='PCM Switch',index=2 1,1"
+@@ -1636,6 +1661,14 @@ static int parse_master_file(snd_use_case_mgr_t *uc_mgr, snd_config_t *cfg)
+ 			continue;
+ 		}
+ 
++		/* find default control values section (first boot only) */
++		if (strcmp(id, "SectionOnce") == 0) {
++			err = parse_controls_once(uc_mgr, n);
++			if (err < 0)
++				return err;
++			continue;
++		}
++
+ 		/* find default control values section and parse it */
+ 		if (strcmp(id, "SectionDefaults") == 0) {
+ 			err = parse_controls(uc_mgr, n);
+diff --git a/src/ucm/ucm_local.h b/src/ucm/ucm_local.h
+index acec4bf6..78457584 100644
+--- a/src/ucm/ucm_local.h
++++ b/src/ucm/ucm_local.h
+@@ -221,6 +221,9 @@ struct snd_use_case_mgr {
+ 	/* use case verb, devices and modifier configs parsed from files */
+ 	struct list_head verb_list;
+ 
++	/* boot settings - sequence */
++	struct list_head once_list;
++
+ 	/* default settings - sequence */
+ 	struct list_head default_list;
+ 
+diff --git a/src/ucm/utils.c b/src/ucm/utils.c
+index 50b2a1df..526fe0e7 100644
+--- a/src/ucm/utils.c
++++ b/src/ucm/utils.c
+@@ -562,6 +562,7 @@ void uc_mgr_free_verb(snd_use_case_mgr_t *uc_mgr)
+ 		list_del(&verb->list);
+ 		free(verb);
+ 	}
++	uc_mgr_free_sequence(&uc_mgr->once_list);
+ 	uc_mgr_free_sequence(&uc_mgr->default_list);
+ 	uc_mgr_free_value(&uc_mgr->value_list);
+ 	free(uc_mgr->comment);
+-- 
+2.25.1
+

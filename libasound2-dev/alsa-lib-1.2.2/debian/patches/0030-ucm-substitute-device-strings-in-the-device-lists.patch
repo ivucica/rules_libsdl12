@@ -1,0 +1,32 @@
+From 1c3e4ec2617fa784d4df826583bdd6a3ac163560 Mon Sep 17 00:00:00 2001
+From: Jaroslav Kysela <perex@perex.cz>
+Date: Wed, 27 May 2020 14:04:13 +0200
+Subject: [PATCH 30/39] ucm: substitute device strings in the device lists
+
+Signed-off-by: Jaroslav Kysela <perex@perex.cz>
+(cherry picked from commit 991990cdf2ee418338888895e3b0f1ad21beed34)
+Signed-off-by: Hui Wang <hui.wang@canonical.com>
+---
+ src/ucm/parser.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/src/ucm/parser.c b/src/ucm/parser.c
+index bcf192a0..1bd91f76 100644
+--- a/src/ucm/parser.c
++++ b/src/ucm/parser.c
+@@ -493,7 +493,11 @@ static int parse_device_list(snd_use_case_mgr_t *uc_mgr ATTRIBUTE_UNUSED,
+ 		sdev = calloc(1, sizeof(struct dev_list_node));
+ 		if (sdev == NULL)
+ 			return -ENOMEM;
+-		err = parse_string(n, &sdev->name);
++		if (uc_mgr->conf_format < 3) {
++			err = parse_string(n, &sdev->name);
++		} else {
++			err = parse_string_substitute(uc_mgr, n, &sdev->name);
++		}
+ 		if (err < 0) {
+ 			free(sdev);
+ 			return err;
+-- 
+2.25.1
+

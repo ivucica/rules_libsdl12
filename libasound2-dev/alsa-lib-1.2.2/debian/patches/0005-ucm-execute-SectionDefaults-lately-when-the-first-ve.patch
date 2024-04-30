@@ -1,0 +1,81 @@
+From eff213250194f1619309594b6fd9f33ad6c133cb Mon Sep 17 00:00:00 2001
+From: Jaroslav Kysela <perex@perex.cz>
+Date: Thu, 14 May 2020 16:12:23 +0200
+Subject: [PATCH 05/25] ucm: execute SectionDefaults lately (when the first
+ verb is set)
+
+We need a way to set the SectionOnce at first before SectionDefaults.
+It also does not make sense to run SectionDefaults when the API is
+used only to query for values or so.
+
+Execute the SectionDefaults commands only when the first verb
+is set (before the verb specific commands).
+
+Signed-off-by: Jaroslav Kysela <perex@perex.cz>
+(cherry picked from commit afb5a9cf611902dce79b58e7707ec49539c2f4aa)
+Signed-off-by: Hui Wang <hui.wang@canonical.com>
+---
+ src/ucm/main.c      | 20 ++++++++++++--------
+ src/ucm/ucm_local.h |  1 +
+ 2 files changed, 13 insertions(+), 8 deletions(-)
+
+diff --git a/src/ucm/main.c b/src/ucm/main.c
+index 23e15bd8..e5f91887 100644
+--- a/src/ucm/main.c
++++ b/src/ucm/main.c
+@@ -542,14 +542,7 @@ static int import_master_config(snd_use_case_mgr_t *uc_mgr)
+ 	err = uc_mgr_import_master_config(uc_mgr);
+ 	if (err < 0)
+ 		return err;
+-	err = add_auto_values(uc_mgr);
+-	if (err < 0)
+-		return err;
+-	err = execute_sequence(uc_mgr, &uc_mgr->default_list,
+-			       &uc_mgr->value_list, NULL, NULL);
+-	if (err < 0)
+-		uc_error("Unable to execute default sequence");
+-	return err;
++	return add_auto_values(uc_mgr);
+ }
+ 
+ /**
+@@ -845,6 +838,15 @@ static int set_verb(snd_use_case_mgr_t *uc_mgr,
+ 	int err;
+ 
+ 	if (enable) {
++		if (!uc_mgr->default_list_executed) {
++			err = execute_sequence(uc_mgr, &uc_mgr->default_list,
++						&uc_mgr->value_list, NULL, NULL);
++			if (err < 0) {
++				uc_error("Unable to execute default sequence");
++				return err;
++			}
++			uc_mgr->default_list_executed = 1;
++		}
+ 		seq = &verb->enable_list;
+ 	} else {
+ 		seq = &verb->disable_list;
+@@ -985,6 +987,8 @@ int snd_use_case_mgr_reload(snd_use_case_mgr_t *uc_mgr)
+ 
+ 	uc_mgr_free_verb(uc_mgr);
+ 
++	uc_mgr->default_list_executed = 0;
++
+ 	/* reload all use cases */
+ 	err = import_master_config(uc_mgr);
+ 	if (err < 0) {
+diff --git a/src/ucm/ucm_local.h b/src/ucm/ucm_local.h
+index 78457584..849019bd 100644
+--- a/src/ucm/ucm_local.h
++++ b/src/ucm/ucm_local.h
+@@ -226,6 +226,7 @@ struct snd_use_case_mgr {
+ 
+ 	/* default settings - sequence */
+ 	struct list_head default_list;
++	int default_list_executed;
+ 
+ 	/* default settings - value list */
+ 	struct list_head value_list;
+-- 
+2.25.1
+

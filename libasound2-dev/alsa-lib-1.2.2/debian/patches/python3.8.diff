@@ -1,0 +1,16 @@
+# Description: fixes the build with python 3.8
+# Upstream: https://github.com/alsa-project/alsa-lib/issues/33
+# Author: Matthias Klose
+Index: b/configure.ac
+===================================================================
+--- a/configure.ac
++++ b/configure.ac
+@@ -423,7 +423,7 @@ if test "$build_python" = "yes" -a "$bui
+   pythonlibs0=
+   pythoninc0=
+   if test "$build_python2" != "yes"; then
+-    pythonlibs0=$(python3-config --libs)
++    pythonlibs0=$(python3-config --libs --embed)
+     pythoninc0=$(python3-config --includes)
+   fi
+   if test -z "$pythonlibs0"; then

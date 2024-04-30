@@ -1,0 +1,46 @@
+From 5a3a0958d2554348a7239f96f94fb8ab8b6b8a4d Mon Sep 17 00:00:00 2001
+From: Jaroslav Kysela <perex@perex.cz>
+Date: Wed, 27 May 2020 14:12:12 +0200
+Subject: [PATCH 31/39] ucm: substitute component sequence string
+
+Signed-off-by: Jaroslav Kysela <perex@perex.cz>
+(cherry picked from commit df498d89c76c3e73a11ea43ae6b40bc689969314)
+Signed-off-by: Hui Wang <hui.wang@canonical.com>
+---
+ src/ucm/parser.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
+
+diff --git a/src/ucm/parser.c b/src/ucm/parser.c
+index 1bd91f76..80dc610e 100644
+--- a/src/ucm/parser.c
++++ b/src/ucm/parser.c
+@@ -570,17 +570,22 @@ struct use_case_device *find_component_dev(snd_use_case_mgr_t *uc_mgr,
+  * disable sequence is needed by its parenet device.
+  */
+ static int parse_component_seq(snd_use_case_mgr_t *uc_mgr,
+-			  snd_config_t *n, int enable,
+-			  struct component_sequence *cmpt_seq)
++			       snd_config_t *n, int enable,
++			       struct component_sequence *cmpt_seq)
+ {
+-	const char *val;
++	char *val;
+ 	int err;
+ 
+-	err = snd_config_get_string(n, &val);
++	if (uc_mgr->conf_format < 3) {
++		err = parse_string(n, &val);
++	} else {
++		err = parse_string_substitute(uc_mgr, n, &val);
++	}
+ 	if (err < 0)
+ 		return err;
+ 
+ 	cmpt_seq->device = find_component_dev(uc_mgr, val);
++	free(val);
+ 	if (!cmpt_seq->device) {
+ 		uc_error("error: Cannot find component device %s", val);
+ 		return -EINVAL;
+-- 
+2.25.1
+

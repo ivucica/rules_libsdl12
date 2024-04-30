@@ -1,0 +1,28 @@
+From ff72a1f8876dcac6264aa8f7bc6b44166c76316d Mon Sep 17 00:00:00 2001
+From: Jaroslav Kysela <perex@perex.cz>
+Date: Mon, 22 Jun 2020 09:02:11 +0200
+Subject: [PATCH 41/44] ucm: fix the possible buffer overflow (substitution)
+
+Signed-off-by: Jaroslav Kysela <perex@perex.cz>
+(cherry picked from commit 089bb8762fd59333670e99a0938e65d613679907)
+Signed-off-by: Hui Wang <hui.wang@canonical.com>
+---
+ src/ucm/ucm_subs.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/ucm/ucm_subs.c b/src/ucm/ucm_subs.c
+index aea4e21d..c1f1e2a3 100644
+--- a/src/ucm/ucm_subs.c
++++ b/src/ucm/ucm_subs.c
+@@ -329,7 +329,7 @@ __match2:
+ 		tmp = strchr(value + idsize, '}');
+ 		if (tmp) {
+ 			rvalsize = tmp - (value + idsize);
+-			if (rvalsize > sizeof(v2)) {
++			if (rvalsize >= sizeof(v2)) {
+ 				err = -ENOMEM;
+ 				goto __error;
+ 			}
+-- 
+2.25.1
+

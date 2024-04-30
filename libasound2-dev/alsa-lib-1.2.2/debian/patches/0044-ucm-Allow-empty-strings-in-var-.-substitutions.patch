@@ -1,0 +1,74 @@
+From 44212cbc22cd682c8a26a4df6cded0bc38f53e57 Mon Sep 17 00:00:00 2001
+From: Hans de Goede <hdegoede@redhat.com>
+Date: Sat, 27 Jun 2020 20:30:52 +0200
+Subject: [PATCH 44/44] ucm: Allow empty strings in "${var:...}" substitutions
+
+Recent ucm-conf changes introduce checks like this one in various places:
+
+If.mspk {
+        Condition {
+                Type String
+                Empty "${var:MonoSpeaker}"
+        }
+        True ...
+        False ...
+}
+
+The 'Empty "${var:MonoSpeaker}"' part can only every succeed if we do:
+
+Define.MonoSpeaker ""
+
+But so far that would result in an error like this one:
+
+ALSA lib ucm_subs.c:367:(uc_mgr_get_substituted_value) variable '${var:MonoSpeaker}' is not defined in this context!
+ALSA lib main.c:983:(snd_use_case_mgr_open) error: failed to import cht-bsw-rt5672 use case configuration -22
+alsaucm: error failed to open sound card cht-bsw-rt5672: Invalid argument
+
+This commit fixes this by allowing empty values for "${var:...}"
+substitutions.
+
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Tested-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Signed-off-by: Jaroslav Kysela <perex@perex.cz>
+(cherry picked from commit f4e48d0d158a9aac47e2239b862ef6d5643833cc)
+Signed-off-by: Hui Wang <hui.wang@canonical.com>
+---
+ src/ucm/ucm_subs.c | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
+
+diff --git a/src/ucm/ucm_subs.c b/src/ucm/ucm_subs.c
+index c1f1e2a3..e3d9f32a 100644
+--- a/src/ucm/ucm_subs.c
++++ b/src/ucm/ucm_subs.c
+@@ -257,9 +257,10 @@ static char *rval_var(snd_use_case_mgr_t *uc_mgr, const char *id)
+ 		goto __rval;						\
+ 	}
+ 
+-#define MATCH_VARIABLE2(name, id, fcn)					\
++#define MATCH_VARIABLE2(name, id, fcn, empty_ok)			\
+ 	if (strncmp((name), (id), sizeof(id) - 1) == 0) {		\
+ 		idsize = sizeof(id) - 1;				\
++		allow_empty = (empty_ok);				\
+ 		fcn2 = (fcn);						\
+ 		goto __match2;						\
+ 	}
+@@ -309,11 +310,11 @@ __std:
+ 		MATCH_VARIABLE(value, "${CardName}", rval_card_name, false);
+ 		MATCH_VARIABLE(value, "${CardLongName}", rval_card_longname, false);
+ 		MATCH_VARIABLE(value, "${CardComponents}", rval_card_components, true);
+-		MATCH_VARIABLE2(value, "${env:", rval_env);
+-		MATCH_VARIABLE2(value, "${sys:", rval_sysfs);
+-		MATCH_VARIABLE2(value, "${var:", rval_var);
+-		MATCH_VARIABLE2(value, "${CardNumberByName:", rval_card_number_by_name);
+-		MATCH_VARIABLE2(value, "${CardIdByName:", rval_card_id_by_name);
++		MATCH_VARIABLE2(value, "${env:", rval_env, false);
++		MATCH_VARIABLE2(value, "${sys:", rval_sysfs, false);
++		MATCH_VARIABLE2(value, "${var:", rval_var, true);
++		MATCH_VARIABLE2(value, "${CardNumberByName:", rval_card_number_by_name, false);
++		MATCH_VARIABLE2(value, "${CardIdByName:", rval_card_id_by_name, false);
+ __merr:
+ 		err = -EINVAL;
+ 		tmp = strchr(value, '}');
+-- 
+2.25.1
+

@@ -1,0 +1,28 @@
+From b947d9cdeeaa1860f9338255031f177592181dd2 Mon Sep 17 00:00:00 2001
+From: Jaroslav Kysela <perex@perex.cz>
+Date: Tue, 19 May 2020 10:55:35 +0200
+Subject: [PATCH 10/25] ucm: fix compilation error in set_defaults_user()
+
+Signed-off-by: Jaroslav Kysela <perex@perex.cz>
+(cherry picked from commit 2d6eff39273e55bb7f9af79e093bc066383123d6)
+Signed-off-by: Hui Wang <hui.wang@canonical.com>
+---
+ src/ucm/main.c | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/src/ucm/main.c b/src/ucm/main.c
+index 44e96308..041b90ea 100644
+--- a/src/ucm/main.c
++++ b/src/ucm/main.c
+@@ -1867,8 +1867,6 @@ static int set_once_user(snd_use_case_mgr_t *uc_mgr,
+ static int set_defaults_user(snd_use_case_mgr_t *uc_mgr,
+ 			     const char *value)
+ {
+-	int err;
+-
+ 	if (value != NULL && *value) {
+ 		uc_error("error: wrong value for _defaults (%s)", value);
+ 		return -EINVAL;
+-- 
+2.25.1
+

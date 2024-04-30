@@ -1,0 +1,31 @@
+From 0f87b814e7e1dc38c1f2a4af533148ed86bb1569 Mon Sep 17 00:00:00 2001
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Date: Mon, 8 Jun 2020 15:09:23 +0800
+Subject: [PATCH] conf: USB-Audio: Add HP Thunderbolt Dock in the IEC958
+ blacklist
+
+Both headset and speaker on HP Thunderbolt Dock don't support IEC958
+interface.
+
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Signed-off-by: Jaroslav Kysela <perex@perex.cz>
+---
+ src/conf/cards/USB-Audio.conf | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/src/conf/cards/USB-Audio.conf b/src/conf/cards/USB-Audio.conf
+index 1c67793..23daab8 100644
+--- a/src/conf/cards/USB-Audio.conf
++++ b/src/conf/cards/USB-Audio.conf
+@@ -58,6 +58,8 @@ USB-Audio.pcm.iec958_device {
+ 	"Scarlett 2i4 USB" 999
+ 	"Sennheiser USB headset" 999
+ 	"SWTOR Gaming Headset by Razer" 999
++	"Thunderbolt Dock Audio Headset" 999
++	"Thunderbolt Dock Audio Module" 999
+ 	"USB Device 0x46d_0x821" 999
+ 	"USB Device 0x46d_0x992" 999
+ 	"WD15 Dock" 999
+-- 
+2.17.1
+

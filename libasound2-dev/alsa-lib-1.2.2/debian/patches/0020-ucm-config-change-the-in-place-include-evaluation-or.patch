@@ -1,0 +1,31 @@
+From 4c275efae03953ec27e36f7bd09418cf1367771c Mon Sep 17 00:00:00 2001
+From: Jaroslav Kysela <perex@perex.cz>
+Date: Wed, 20 May 2020 19:34:15 +0200
+Subject: [PATCH 20/25] ucm: config - change the in-place include evaluation
+ order
+
+Signed-off-by: Jaroslav Kysela <perex@perex.cz>
+(cherry picked from commit f33e596fa6e2003dc366dcb3e57bf667bc4bd383)
+Signed-off-by: Hui Wang <hui.wang@canonical.com>
+---
+ src/ucm/parser.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/src/ucm/parser.c b/src/ucm/parser.c
+index df936f4f..e1f6f1ae 100644
+--- a/src/ucm/parser.c
++++ b/src/ucm/parser.c
+@@ -369,6 +369,10 @@ int uc_mgr_evaluate_inplace(snd_use_case_mgr_t *uc_mgr,
+ 		err2 = evaluate_include(uc_mgr, cfg);
+ 		if (err2 < 0)
+ 			return err2;
++		/* include may define another variables */
++		/* conditions may depend on them */
++		if (err2 == 0)
++			continue;
+ 		err3 = evaluate_condition(uc_mgr, cfg);
+ 		if (err3 < 0)
+ 			return err3;
+-- 
+2.25.1
+

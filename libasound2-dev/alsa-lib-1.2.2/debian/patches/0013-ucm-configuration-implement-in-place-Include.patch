@@ -1,0 +1,744 @@
+From d391c7d96687321ea5570c82e38fc16cea2630f8 Mon Sep 17 00:00:00 2001
+From: Jaroslav Kysela <perex@perex.cz>
+Date: Sat, 16 May 2020 15:47:19 +0200
+Subject: [PATCH 13/25] ucm: configuration - implement in-place Include
+
+An example:
+
+	Include {
+		File "Inc.conf"
+		Before.SectionDevice "Mic"
+	}
+
+Signed-off-by: Jaroslav Kysela <perex@perex.cz>
+(cherry picked from commit 3edfebc522b701c559678ca5b3ecd0f2babbefd8)
+Signed-off-by: Hui Wang <hui.wang@canonical.com>
+---
+ src/ucm/Makefile.am   |   2 +-
+ src/ucm/parser.c      |  99 ++++++++++++----
+ src/ucm/ucm_cond.c    | 141 ++---------------------
+ src/ucm/ucm_include.c | 259 ++++++++++++++++++++++++++++++++++++++++++
+ src/ucm/ucm_local.h   |  12 ++
+ src/ucm/utils.c       |  30 +++--
+ 6 files changed, 375 insertions(+), 168 deletions(-)
+ create mode 100644 src/ucm/ucm_include.c
+
+diff --git a/src/ucm/Makefile.am b/src/ucm/Makefile.am
+index 41a679c3..416db229 100644
+--- a/src/ucm/Makefile.am
++++ b/src/ucm/Makefile.am
+@@ -1,6 +1,6 @@
+ EXTRA_LTLIBRARIES = libucm.la
+ 
+-libucm_la_SOURCES = utils.c parser.c ucm_cond.c ucm_subs.c main.c
++libucm_la_SOURCES = utils.c parser.c ucm_cond.c ucm_subs.c ucm_include.c main.c
+ 
+ noinst_HEADERS = ucm_local.h
+ 
+diff --git a/src/ucm/parser.c b/src/ucm/parser.c
+index 39aaf2f1..16e26f79 100644
+--- a/src/ucm/parser.c
++++ b/src/ucm/parser.c
+@@ -124,6 +124,25 @@ static void configuration_filename(snd_use_case_mgr_t *uc_mgr,
+ 	configuration_filename2(fn, fn_len, 2, dir, file, suffix);
+ }
+ 
++/*
++ *
++ */
++int uc_mgr_config_load_file(snd_use_case_mgr_t *uc_mgr,
++			     const char *file, snd_config_t **cfg)
++{
++	char filename[PATH_MAX];
++	int err;
++
++	configuration_filename(uc_mgr, filename, sizeof(filename),
++			       uc_mgr->conf_dir_name, file, "");
++	err = uc_mgr_config_load(uc_mgr->conf_format, filename, cfg);
++	if (err < 0) {
++		uc_error("error: failed to open file %s : %d", filename, -errno);
++		return err;
++	}
++	return 0;
++}
++
+ /*
+  * Replace mallocated string
+  */
+@@ -174,6 +193,26 @@ int parse_get_safe_id(snd_config_t *n, const char **id)
+ 	return 0;
+ }
+ 
++/*
++ * Evaluate include (in-place)
++ */
++static int evaluate_include(snd_use_case_mgr_t *uc_mgr,
++			    snd_config_t *cfg)
++{
++	snd_config_t *n;
++	int err;
++
++	err = snd_config_search(cfg, "Include", &n);
++	if (err == -ENOENT)
++		return 1;
++	if (err < 0)
++		return err;
++
++	err = uc_mgr_evaluate_include(uc_mgr, cfg, n);
++	snd_config_delete(n);
++	return err;
++}
++
+ /*
+  * Evaluate condition (in-place)
+  */
+@@ -185,7 +224,7 @@ static int evaluate_condition(snd_use_case_mgr_t *uc_mgr,
+ 
+ 	err = snd_config_search(cfg, "If", &n);
+ 	if (err == -ENOENT)
+-		return 0;
++		return 1;
+ 	if (err < 0)
+ 		return err;
+ 
+@@ -194,6 +233,26 @@ static int evaluate_condition(snd_use_case_mgr_t *uc_mgr,
+ 	return err;
+ }
+ 
++/*
++ * In-place evaluate
++ */
++int uc_mgr_evaluate_inplace(snd_use_case_mgr_t *uc_mgr,
++			    snd_config_t *cfg)
++{
++	int err1 = 0, err2 = 0;
++
++	while (err1 == 0 || err2 == 0) {
++		/* include at first */
++		err1 = evaluate_include(uc_mgr, cfg);
++		if (err1 < 0)
++			return err1;
++		err2 = evaluate_condition(uc_mgr, cfg);
++		if (err2 < 0)
++			return err2;
++	}
++	return 0;
++}
++
+ /*
+  * Parse transition
+  */
+@@ -629,8 +688,8 @@ static int parse_value(snd_use_case_mgr_t *uc_mgr ATTRIBUTE_UNUSED,
+ 		return -EINVAL;
+ 	}
+ 
+-	/* in-place condition evaluation */
+-	err = evaluate_condition(uc_mgr, cfg);
++	/* in-place evaluation */
++	err = uc_mgr_evaluate_inplace(uc_mgr, cfg);
+ 	if (err < 0)
+ 		return err;
+ 
+@@ -749,8 +808,8 @@ static int parse_modifier(snd_use_case_mgr_t *uc_mgr,
+ 	list_add_tail(&modifier->list, &verb->modifier_list);
+ 	modifier->name = strdup(name);
+ 
+-	/* in-place condition evaluation */
+-	err = evaluate_condition(uc_mgr, cfg);
++	/* in-place evaluation */
++	err = uc_mgr_evaluate_inplace(uc_mgr, cfg);
+ 	if (err < 0)
+ 		return err;
+ 
+@@ -900,8 +959,8 @@ static int parse_device(snd_use_case_mgr_t *uc_mgr,
+ 	list_add_tail(&device->list, &verb->device_list);
+ 	device->name = strdup(name);
+ 
+-	/* in-place condition evaluation */
+-	err = evaluate_condition(uc_mgr, cfg);
++	/* in-place evaluation */
++	err = uc_mgr_evaluate_inplace(uc_mgr, cfg);
+ 	if (err < 0)
+ 		return err;
+ 
+@@ -1238,8 +1297,8 @@ static int parse_verb(snd_use_case_mgr_t *uc_mgr,
+ 	snd_config_t *n;
+ 	int err;
+ 	
+-	/* in-place condition evaluation */
+-	err = evaluate_condition(uc_mgr, cfg);
++	/* in-place evaluation */
++	err = uc_mgr_evaluate_inplace(uc_mgr, cfg);
+ 	if (err < 0)
+ 		return err;
+ 
+@@ -1312,7 +1371,6 @@ static int parse_verb_file(snd_use_case_mgr_t *uc_mgr,
+ 	snd_config_t *n;
+ 	struct use_case_verb *verb;
+ 	snd_config_t *cfg;
+-	char filename[PATH_MAX];
+ 	int err;
+ 
+ 	/* allocate verb */
+@@ -1342,17 +1400,12 @@ static int parse_verb_file(snd_use_case_mgr_t *uc_mgr,
+ 	}
+ 
+ 	/* open Verb file for reading */
+-	configuration_filename(uc_mgr, filename, sizeof(filename),
+-			       uc_mgr->conf_dir_name, file, "");
+-	err = uc_mgr_config_load(uc_mgr->conf_format, filename, &cfg);
+-	if (err < 0) {
+-		uc_error("error: failed to open verb file %s : %d",
+-			filename, -errno);
++	err = uc_mgr_config_load_file(uc_mgr, file, &cfg);
++	if (err < 0)
+ 		return err;
+-	}
+ 
+-	/* in-place condition evaluation */
+-	err = evaluate_condition(uc_mgr, cfg);
++	/* in-place evaluation */
++	err = uc_mgr_evaluate_inplace(uc_mgr, cfg);
+ 	if (err < 0)
+ 		return err;
+ 
+@@ -1463,8 +1516,8 @@ static int parse_master_section(snd_use_case_mgr_t *uc_mgr, snd_config_t *cfg,
+ 		return -EINVAL;
+ 	}
+ 
+-	/* in-place condition evaluation */
+-	err = evaluate_condition(uc_mgr, cfg);
++	/* in-place evaluation */
++	err = uc_mgr_evaluate_inplace(uc_mgr, cfg);
+ 	if (err < 0)
+ 		return err;
+ 
+@@ -1630,8 +1683,8 @@ static int parse_master_file(snd_use_case_mgr_t *uc_mgr, snd_config_t *cfg)
+ 		snd_config_delete(n);
+ 	}
+ 
+-	/* in-place condition evaluation */
+-	err = evaluate_condition(uc_mgr, cfg);
++	/* in-place evaluation */
++	err = uc_mgr_evaluate_inplace(uc_mgr, cfg);
+ 	if (err < 0)
+ 		return err;
+ 
+diff --git a/src/ucm/ucm_cond.c b/src/ucm/ucm_cond.c
+index 40ea8bdf..f0baa06a 100644
+--- a/src/ucm/ucm_cond.c
++++ b/src/ucm/ucm_cond.c
+@@ -347,103 +347,6 @@ static void config_dump(snd_config_t *cfg)
+ }
+ #endif
+ 
+-static int compound_merge(const char *id,
+-			  snd_config_t *dst, snd_config_t *src,
+-			  snd_config_t *before, snd_config_t *after)
+-{
+-	snd_config_iterator_t i, next;
+-	snd_config_t *n, *_before = NULL, *_after = NULL;
+-	const char *s;
+-	char tmpid[32];
+-	int err, array, idx;
+-
+-	if (snd_config_get_type(src) != SND_CONFIG_TYPE_COMPOUND) {
+-		uc_error("compound type expected for If True/False block");
+-		return -EINVAL;
+-	}
+-
+-	if (before) {
+-		err = get_string(before, id, &s);
+-		if (err < 0 && err != -ENOENT)
+-			return err;
+-		if (err == 0) {
+-			err = snd_config_search(dst, s, &_before);
+-			if (err < 0 && err != -ENOENT)
+-				return err;
+-		}
+-	}
+-	if (after) {
+-		err = get_string(after, id, &s);
+-		if (err < 0 && err != -ENOENT)
+-			return err;
+-		if (err == 0) {
+-			err = snd_config_search(dst, s, &_after);
+-			if (err < 0 && err != -ENOENT)
+-				return err;
+-		}
+-	}
+-
+-	if (_before && _after) {
+-		uc_error("defined both before and after identifiers in the If block");
+-		return -EINVAL;
+-	}
+-
+-	array = snd_config_is_array(dst);
+-	if (array < 0) {
+-		uc_error("destination configuration node is not a compound");
+-		return array;
+-	}
+-	if (array && snd_config_is_array(src) <= 0) {
+-		uc_error("source configuration node is not an array");
+-		return -EINVAL;
+-	}
+-
+-	idx = 0;
+-	snd_config_for_each(i, next, src) {
+-		n = snd_config_iterator_entry(i);
+-		err = snd_config_remove(n);
+-		if (err < 0)
+-			return err;
+-		/* for array, use a temporary non-clashing identifier */
+-		if (array > 0) {
+-			snprintf(tmpid, sizeof(tmpid), "_tmp_%d", idx++);
+-			err = snd_config_set_id(n, tmpid);
+-			if (err < 0)
+-				return err;
+-		}
+-		if (_before) {
+-			err = snd_config_add_before(_before, n);
+-			if (err < 0)
+-				return err;
+-			_before = NULL;
+-			_after = n;
+-		} else if (_after) {
+-			err = snd_config_add_after(_after, n);
+-			if (err < 0)
+-				return err;
+-			_after = n;
+-		} else {
+-			err = snd_config_add(dst, n);
+-			if (err < 0)
+-				return err;
+-		}
+-	}
+-
+-	/* set new indexes for the final array */
+-	if (array > 0) {
+-		idx = 0;
+-		snd_config_for_each(i, next, dst) {
+-			n = snd_config_iterator_entry(i);
+-			snprintf(tmpid, sizeof(tmpid), "%d", idx++);
+-			err = snd_config_set_id(n, tmpid);
+-			if (err < 0)
+-				return err;
+-		}
+-	}
+-
+-	return 0;
+-}
+-
+ /*
+  * put back the result from all conditions to the parent
+  */
+@@ -451,9 +354,8 @@ int uc_mgr_evaluate_condition(snd_use_case_mgr_t *uc_mgr,
+ 			      snd_config_t *parent,
+ 			      snd_config_t *cond)
+ {
+-	snd_config_iterator_t i, i2, next, next2;
+-	snd_config_t *a, *n, *n2, *parent2, *before, *after;
+-	const char *id;
++	snd_config_iterator_t i, next;
++	snd_config_t *a, *n, *before, *after;
+ 	int err;
+ 
+ 	if (uc_mgr->conf_format < 2) {
+@@ -474,38 +376,13 @@ int uc_mgr_evaluate_condition(snd_use_case_mgr_t *uc_mgr,
+ 			return err;
+ 		if (a == NULL)
+ 			continue;
+-		err = snd_config_search(a, "If", &n2);
+-		if (err < 0 && err != -ENOENT) {
+-			uc_error("If block error (If)");
+-			return -EINVAL;
+-		} else if (err == 0) {
+-			err = uc_mgr_evaluate_condition(uc_mgr, a, n2);
+-			if (err < 0)
+-				return err;
+-			snd_config_delete(n2);
+-		}
+-		snd_config_for_each(i2, next2, a) {
+-			n2 = snd_config_iterator_entry(i2);
+-			err = snd_config_remove(n2);
+-			if (err < 0)
+-				return err;
+-			err = snd_config_get_id(n2, &id);
+-			if (err < 0) {
+-__add:
+-				err = snd_config_add(parent, n2);
+-				if (err < 0)
+-					return err;
+-				continue;
+-			} else {
+-				err = snd_config_search(parent, id, &parent2);
+-				if (err == -ENOENT)
+-					goto __add;
+-				err = compound_merge(id, parent2, n2, before, after);
+-				if (err < 0)
+-					return err;
+-			}
+-			snd_config_delete(n2);
+-		}
++		err = uc_mgr_evaluate_inplace(uc_mgr, a);
++		if (err < 0)
++			return err;
++		err = uc_mgr_config_tree_merge(parent, a, before, after);
++		if (err < 0)
++			return err;
++		snd_config_delete(a);
+ 	}
+ 	return 0;
+ }
+diff --git a/src/ucm/ucm_include.c b/src/ucm/ucm_include.c
+new file mode 100644
+index 00000000..cd8fb57d
+--- /dev/null
++++ b/src/ucm/ucm_include.c
+@@ -0,0 +1,259 @@
++/*
++ *  This library is free software; you can redistribute it and/or
++ *  modify it under the terms of the GNU Lesser General Public
++ *  License as published by the Free Software Foundation; either
++ *  version 2 of the License, or (at your option) any later version.
++ *
++ *  This library is distributed in the hope that it will be useful,
++ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++ *  Lesser General Public License for more details.
++ *
++ *  You should have received a copy of the GNU Lesser General Public
++ *  License along with this library; if not, write to the Free Software
++ *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
++ *
++ *  Support for the verb/device/modifier core logic and API,
++ *  command line tool and file parser was kindly sponsored by
++ *  Texas Instruments Inc.
++ *  Support for multiple active modifiers and devices,
++ *  transition sequences, multiple client access and user defined use
++ *  cases was kindly sponsored by Wolfson Microelectronics PLC.
++ *
++ *  Copyright (C) 2020 Red Hat Inc.
++ *  Authors: Jaroslav Kysela <perex@perex.cz>
++ */
++
++#include "ucm_local.h"
++
++static int get_string(snd_config_t *compound, const char *key, const char **str)
++{
++	snd_config_t *node;
++	int err;
++
++	err = snd_config_search(compound, key, &node);
++	if (err < 0)
++		return err;
++	return snd_config_get_string(node, str);
++}
++
++static int include_eval_one(snd_use_case_mgr_t *uc_mgr,
++			    snd_config_t *inc,
++			    snd_config_t **result,
++			    snd_config_t **before,
++			    snd_config_t **after)
++{
++	const char *file;
++	int err;
++
++	*result = NULL;
++
++	if (snd_config_get_type(inc) != SND_CONFIG_TYPE_COMPOUND) {
++		uc_error("compound type expected for Include.1");
++		return -EINVAL;
++	}
++
++	err = get_string(inc, "File", &file);
++	if (err < 0) {
++		uc_error("file expected (Include)");
++		return -EINVAL;
++	}
++
++	err = snd_config_search(inc, "Before", before);
++	if (err < 0 && err != -ENOENT) {
++		uc_error("before block identifier error");
++		return -EINVAL;
++	}
++
++	err = snd_config_search(inc, "After", after);
++	if (err < 0 && err != -ENOENT) {
++		uc_error("before block identifier error");
++		return -EINVAL;
++	}
++
++	return uc_mgr_config_load_file(uc_mgr, file, result);
++}
++
++
++
++#if 0
++static void config_dump(snd_config_t *cfg)
++{
++	snd_output_t *out;
++	snd_output_stdio_attach(&out, stderr, 0);
++	snd_output_printf(out, "-----\n");
++	snd_config_save(cfg, out);
++	snd_output_close(out);
++}
++#endif
++
++static int compound_merge(const char *id,
++			  snd_config_t *dst, snd_config_t *src,
++			  snd_config_t *before, snd_config_t *after)
++{
++	snd_config_iterator_t i, next;
++	snd_config_t *n, *_before = NULL, *_after = NULL;
++	const char *s;
++	char tmpid[32];
++	int err, array, idx;
++
++	if (snd_config_get_type(src) != SND_CONFIG_TYPE_COMPOUND) {
++		uc_error("compound type expected for the merged block");
++		return -EINVAL;
++	}
++
++	if (before) {
++		err = get_string(before, id, &s);
++		if (err < 0 && err != -ENOENT)
++			return err;
++		if (err == 0) {
++			err = snd_config_search(dst, s, &_before);
++			if (err < 0 && err != -ENOENT)
++				return err;
++		}
++	}
++	if (after) {
++		err = get_string(after, id, &s);
++		if (err < 0 && err != -ENOENT)
++			return err;
++		if (err == 0) {
++			err = snd_config_search(dst, s, &_after);
++			if (err < 0 && err != -ENOENT)
++				return err;
++		}
++	}
++
++	if (_before && _after) {
++		uc_error("defined both before and after identifiers in the If or Include block");
++		return -EINVAL;
++	}
++
++	array = snd_config_is_array(dst);
++	if (array < 0) {
++		uc_error("destination configuration node is not a compound");
++		return array;
++	}
++	if (array && snd_config_is_array(src) <= 0) {
++		uc_error("source configuration node is not an array");
++		return -EINVAL;
++	}
++
++	idx = 0;
++	snd_config_for_each(i, next, src) {
++		n = snd_config_iterator_entry(i);
++		err = snd_config_remove(n);
++		if (err < 0)
++			return err;
++		/* for array, use a temporary non-clashing identifier */
++		if (array > 0) {
++			snprintf(tmpid, sizeof(tmpid), "_tmp_%d", idx++);
++			err = snd_config_set_id(n, tmpid);
++			if (err < 0)
++				return err;
++		}
++		if (_before) {
++			err = snd_config_add_before(_before, n);
++			if (err < 0)
++				return err;
++			_before = NULL;
++			_after = n;
++		} else if (_after) {
++			err = snd_config_add_after(_after, n);
++			if (err < 0)
++				return err;
++			_after = n;
++		} else {
++			err = snd_config_add(dst, n);
++			if (err < 0)
++				return err;
++		}
++	}
++
++	/* set new indexes for the final array */
++	if (array > 0) {
++		idx = 0;
++		snd_config_for_each(i, next, dst) {
++			n = snd_config_iterator_entry(i);
++			snprintf(tmpid, sizeof(tmpid), "%d", idx++);
++			err = snd_config_set_id(n, tmpid);
++			if (err < 0)
++				return err;
++		}
++	}
++
++	return 0;
++}
++
++int uc_mgr_config_tree_merge(snd_config_t *parent, snd_config_t *new_ctx,
++			     snd_config_t *before, snd_config_t *after)
++{
++	snd_config_iterator_t i, next;
++	snd_config_t *n, *parent2;
++	const char *id;
++	int err;
++
++	snd_config_for_each(i, next, new_ctx) {
++		n = snd_config_iterator_entry(i);
++		err = snd_config_remove(n);
++		if (err < 0)
++			return err;
++		err = snd_config_get_id(n, &id);
++		if (err < 0) {
++__add:
++			err = snd_config_add(parent, n);
++			if (err < 0)
++				return err;
++			continue;
++		} else {
++			err = snd_config_search(parent, id, &parent2);
++			if (err == -ENOENT)
++				goto __add;
++			err = compound_merge(id, parent2, n, before, after);
++			if (err < 0)
++				return err;
++		}
++		snd_config_delete(n);
++	}
++	return 0;
++}
++
++/*
++ * put back the included configuration to the parent
++ */
++int uc_mgr_evaluate_include(snd_use_case_mgr_t *uc_mgr,
++			      snd_config_t *parent,
++			      snd_config_t *inc)
++{
++	snd_config_iterator_t i, next;
++	snd_config_t *a, *n, *before, *after;
++	int err;
++
++	if (uc_mgr->conf_format < 3) {
++		uc_error("in-place include is supported in v3+ syntax");
++		return -EINVAL;
++	}
++
++	if (snd_config_get_type(inc) != SND_CONFIG_TYPE_COMPOUND) {
++		uc_error("compound type expected for Include");
++		return -EINVAL;
++	}
++
++	snd_config_for_each(i, next, inc) {
++		n = snd_config_iterator_entry(i);
++		before = after = NULL;
++		err = include_eval_one(uc_mgr, n, &a, &before, &after);
++		if (err < 0)
++			return err;
++		if (a == NULL)
++			continue;
++		err = uc_mgr_evaluate_inplace(uc_mgr, a);
++		if (err < 0)
++			return err;
++		err = uc_mgr_config_tree_merge(parent, a, before, after);
++		if (err < 0)
++			return err;
++		snd_config_delete(a);
++		
++	}
++	return 0;
++}
+diff --git a/src/ucm/ucm_local.h b/src/ucm/ucm_local.h
+index 849019bd..a9948704 100644
+--- a/src/ucm/ucm_local.h
++++ b/src/ucm/ucm_local.h
+@@ -262,7 +262,9 @@ struct snd_use_case_mgr {
+ void uc_mgr_error(const char *fmt, ...);
+ void uc_mgr_stdout(const char *fmt, ...);
+ 
++const char *uc_mgr_config_dir(int format);
+ int uc_mgr_config_load(int format, const char *file, snd_config_t **cfg);
++int uc_mgr_config_load_file(snd_use_case_mgr_t *uc_mgr,  const char *file, snd_config_t **cfg);
+ int uc_mgr_import_master_config(snd_use_case_mgr_t *uc_mgr);
+ int uc_mgr_scan_master_configs(const char **_list[]);
+ 
+@@ -291,6 +293,16 @@ int uc_mgr_get_substituted_value(snd_use_case_mgr_t *uc_mgr,
+ 				 char **_rvalue,
+ 				 const char *value);
+ 
++int uc_mgr_config_tree_merge(snd_config_t *parent, snd_config_t *new_ctx,
++			     snd_config_t *before, snd_config_t *after);
++
++int uc_mgr_evaluate_inplace(snd_use_case_mgr_t *uc_mgr,
++			    snd_config_t *cfg);
++
++int uc_mgr_evaluate_include(snd_use_case_mgr_t *uc_mgr,
++			    snd_config_t *parent,
++			    snd_config_t *inc);
++
+ int uc_mgr_evaluate_condition(snd_use_case_mgr_t *uc_mgr,
+ 			      snd_config_t *parent,
+ 			      snd_config_t *cond);
+diff --git a/src/ucm/utils.c b/src/ucm/utils.c
+index 526fe0e7..b3e2bd3f 100644
+--- a/src/ucm/utils.c
++++ b/src/ucm/utils.c
+@@ -246,12 +246,28 @@ __nomem:
+ 	return -ENOMEM;
+ }
+ 
++const char *uc_mgr_config_dir(int format)
++{
++	const char *path;
++
++	if (format >= 2) {
++		path = getenv(ALSA_CONFIG_UCM2_VAR);
++		if (!path || path[0] == '\0')
++			path = ALSA_CONFIG_DIR "/ucm2";
++	} else {
++		path = getenv(ALSA_CONFIG_UCM_VAR);
++		if (!path || path[0] == '\0')
++			path = ALSA_CONFIG_DIR "/ucm";
++	}
++	return path;
++}
++
+ int uc_mgr_config_load(int format, const char *file, snd_config_t **cfg)
+ {
+ 	FILE *fp;
+ 	snd_input_t *in;
+ 	snd_config_t *top;
+-	const char *path, *default_paths[2];
++	const char *default_paths[2];
+ 	int err;
+ 
+ 	fp = fopen(file, "r");
+@@ -268,17 +284,7 @@ int uc_mgr_config_load(int format, const char *file, snd_config_t **cfg)
+ 	if (err < 0)
+ 		goto __err1;
+ 
+-	if (format >= 2) {
+-		path = getenv(ALSA_CONFIG_UCM2_VAR);
+-		if (!path || path[0] == '\0')
+-			path = ALSA_CONFIG_DIR "/ucm2";
+-	} else {
+-		path = getenv(ALSA_CONFIG_UCM_VAR);
+-		if (!path || path[0] == '\0')
+-			path = ALSA_CONFIG_DIR "/ucm";
+-	}
+-
+-	default_paths[0] = path;
++	default_paths[0] = uc_mgr_config_dir(format);
+ 	default_paths[1] = NULL;
+ 	err = _snd_config_load_with_include(top, in, 0, default_paths);
+ 	if (err < 0) {
+-- 
+2.25.1
+

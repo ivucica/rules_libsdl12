@@ -1,0 +1,67 @@
+From 0db63257db090dc2e4df4f654ffda0181340b160 Mon Sep 17 00:00:00 2001
+From: Jaroslav Kysela <perex@perex.cz>
+Date: Tue, 6 Oct 2020 10:40:40 +0200
+Subject: [PATCH] ucm: add a check for the empty configuration
+
+Return an error if the UCM configuration is empty (no verbs
+or no boot sequence).
+
+Signed-off-by: Jaroslav Kysela <perex@perex.cz>
+(cherry picked from commit 22d5ca8b6bcd767d09de11b0afdd82c618f4be24)
+Signed-off-by: Hui Wang <hui.wang@canonical.com>
+---
+ src/ucm/main.c | 26 +++++++++++++++++++++++---
+ 1 file changed, 23 insertions(+), 3 deletions(-)
+
+diff --git a/src/ucm/main.c b/src/ucm/main.c
+index 9e43ac66..00b41708 100644
+--- a/src/ucm/main.c
++++ b/src/ucm/main.c
+@@ -568,6 +568,20 @@ static int import_master_config(snd_use_case_mgr_t *uc_mgr)
+ 	return add_auto_values(uc_mgr);
+ }
+ 
++/**
++ * \brief Check, if the UCM configuration is empty
++ * \param uc_mgr Use case Manager
++ * \return zero on success, otherwise a negative error code
++ */
++static int check_empty_configuration(snd_use_case_mgr_t *uc_mgr)
++{
++	if (!list_empty(&uc_mgr->verb_list))
++		return 0;
++	if (!list_empty(&uc_mgr->once_list))
++		return 0;
++	return -ENXIO;
++}
++
+ /**
+  * \brief Universal find - string in a list
+  * \param list List of structures
+@@ -981,14 +995,20 @@ int snd_use_case_mgr_open(snd_use_case_mgr_t **uc_mgr,
+ 	err = import_master_config(mgr);
+ 	if (err < 0) {
+ 		uc_error("error: failed to import %s use case configuration %d",
+-			card_name, err);
+-		goto err;
++			 card_name, err);
++		goto _err;
++	}
++
++	err = check_empty_configuration(mgr);
++	if (err < 0) {
++		uc_error("error: failed to import %s (empty configuration)", card_name);
++		goto _err;
+ 	}
+ 
+ 	*uc_mgr = mgr;
+ 	return 0;
+ 
+-err:
++_err:
+ 	uc_mgr_free(mgr);
+ 	return err;
+ }
+-- 
+2.25.1
+

@@ -1,0 +1,23 @@
+#!/usr/bin/make -f
+# debian/rules for the Debian libxrandr package.
+# Copyright © 2004 Scott James Remnant <scott@netsplit.com>
+# Copyright © 2005 Daniel Stone <daniel@fooishbar.org>
+# Copyright © 2005 David Nusinow <dnusinow@debian.org>
+
+# Uncomment this to turn on verbose mode.
+#export DH_VERBOSE=1
+
+# set this to the name of the main shlib's binary package
+PACKAGE = libxrandr2
+
+%:
+	dh $@ --with quilt --builddirectory=build/
+
+override_dh_install:
+	dh_install --fail-missing -XlibXrandr.la
+
+override_dh_strip:
+	dh_strip --dbgsym-migration="$(PACKAGE)-dbg (<< 2:1.5.1-1~)"
+
+override_dh_makeshlibs:
+	dh_makeshlibs -V'libxrandr2 (>= 2:1.5)' -- -c4

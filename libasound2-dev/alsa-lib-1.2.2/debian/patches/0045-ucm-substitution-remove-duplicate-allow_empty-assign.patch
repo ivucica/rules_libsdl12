@@ -1,0 +1,38 @@
+From 8ef277c99d7e6ec0c0be11a0f6c949ca402fba16 Mon Sep 17 00:00:00 2001
+From: Jaroslav Kysela <perex@perex.cz>
+Date: Tue, 30 Jun 2020 09:22:12 +0200
+Subject: [PATCH 45/47] ucm: substitution - remove duplicate allow_empty
+ assignment
+
+Signed-off-by: Jaroslav Kysela <perex@perex.cz>
+(cherry picked from commit 485930ea5dc8a14e0d215de44557372ca41b15f4)
+Signed-off-by: Hui Wang <hui.wang@canonical.com>
+---
+ src/ucm/ucm_subs.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/src/ucm/ucm_subs.c b/src/ucm/ucm_subs.c
+index e3d9f32a..a29ea5a8 100644
+--- a/src/ucm/ucm_subs.c
++++ b/src/ucm/ucm_subs.c
+@@ -298,7 +298,6 @@ __std:
+ 		} else if (value[1] != '{') {
+ 			goto __std;
+ 		}
+-		allow_empty = false;
+ 		fcn2 = NULL;
+ 		MATCH_VARIABLE(value, "${OpenName}", rval_open_name, false);
+ 		MATCH_VARIABLE(value, "${ConfTopDir}", rval_conf_topdir, false);
+@@ -360,7 +359,8 @@ __rval:
+ 			}
+ 			strncpy(r, value, idsize);
+ 			r[idsize] = '\0';
+-			uc_error("variable '%s' is not defined in this context!", r);
++			uc_error("variable '%s' is %s in this context!", r,
++				 rval ? "empty" : "not defined");
+ 			err = -EINVAL;
+ 			goto __error;
+ 		}
+-- 
+2.25.1
+

@@ -1,0 +1,28 @@
+From 7e945124315f2bda6f971f86cdd4d3dd9f091680 Mon Sep 17 00:00:00 2001
+From: Jaroslav Kysela <perex@perex.cz>
+Date: Tue, 26 May 2020 15:14:15 +0200
+Subject: [PATCH 22/25] ucm: substitute also value strings
+
+Signed-off-by: Jaroslav Kysela <perex@perex.cz>
+(cherry picked from commit efe2469ac3bb05babce9ec240518cda0b9ac9534)
+Signed-off-by: Hui Wang <hui.wang@canonical.com>
+---
+ src/ucm/parser.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/ucm/parser.c b/src/ucm/parser.c
+index 89943b3c..d5c0b78b 100644
+--- a/src/ucm/parser.c
++++ b/src/ucm/parser.c
+@@ -840,7 +840,7 @@ static int parse_value(snd_use_case_mgr_t *uc_mgr ATTRIBUTE_UNUSED,
+ 			}
+ 			break;
+ 		case SND_CONFIG_TYPE_STRING:
+-			err = parse_string(n, &s);
++			err = parse_string_substitute(uc_mgr, n, &s);
+ 			if (err < 0) {
+ 				uc_error("error: unable to parse a string for id '%s'!", id);
+ 				return err;
+-- 
+2.25.1
+

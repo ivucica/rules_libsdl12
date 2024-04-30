@@ -1,0 +1,3 @@
+usr/include/glvnd/*.h
+usr/lib/*/libGLdispatch.so
+usr/lib/*/pkgconfig/libglvnd.pc

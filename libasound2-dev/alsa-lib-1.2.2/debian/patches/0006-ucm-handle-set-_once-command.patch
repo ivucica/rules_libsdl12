@@ -1,0 +1,68 @@
+From 2fe52cc9bb37239a4c229e930323544b865b2988 Mon Sep 17 00:00:00 2001
+From: Jaroslav Kysela <perex@perex.cz>
+Date: Thu, 14 May 2020 16:23:17 +0200
+Subject: [PATCH 06/25] ucm: handle 'set _once' command
+
+Signed-off-by: Jaroslav Kysela <perex@perex.cz>
+(cherry picked from commit a570634a2202cba51e658b96c1d980eb806df6ca)
+Signed-off-by: Hui Wang <hui.wang@canonical.com>
+---
+ include/use-case.h |  1 +
+ src/ucm/main.c     | 22 +++++++++++++++++++++-
+ 2 files changed, 22 insertions(+), 1 deletion(-)
+
+diff --git a/include/use-case.h b/include/use-case.h
+index 134303af..7e9dea3c 100644
+--- a/include/use-case.h
++++ b/include/use-case.h
+@@ -402,6 +402,7 @@ int snd_use_case_geti(snd_use_case_mgr_t *uc_mgr,
+  * \return Zero if success, otherwise a negative error code
+  *
+  * Known identifiers:
++ *   - _once			- execute the once sequence (value = NULL)
+  *   - _verb			- set current verb = value
+  *   - _enadev			- enable given device = value
+  *   - _disdev			- disable given device = value
+diff --git a/src/ucm/main.c b/src/ucm/main.c
+index e5f91887..053aa79b 100644
+--- a/src/ucm/main.c
++++ b/src/ucm/main.c
+@@ -1830,6 +1830,24 @@ int snd_use_case_geti(snd_use_case_mgr_t *uc_mgr,
+         return err;
+ }
+ 
++static int set_once_user(snd_use_case_mgr_t *uc_mgr,
++			 const char *value)
++{
++	int err;
++
++	if (value != NULL && *value) {
++		uc_error("error: wrong value for _once (%s)", value);
++		return -EINVAL;
++	}
++	err = execute_sequence(uc_mgr, &uc_mgr->once_list,
++			       &uc_mgr->value_list, NULL, NULL);
++	if (err < 0) {
++		uc_error("Unable to execute once sequence");
++		return err;
++	}
++	return err;
++}
++
+ static int handle_transition_verb(snd_use_case_mgr_t *uc_mgr,
+                                   struct use_case_verb *new_verb)
+ {
+@@ -2041,7 +2059,9 @@ int snd_use_case_set(snd_use_case_mgr_t *uc_mgr,
+ 	int err = 0;
+ 
+ 	pthread_mutex_lock(&uc_mgr->mutex);
+-	if (strcmp(identifier, "_verb") == 0)
++	if (strcmp(identifier, "_once") == 0)
++		err = set_once_user(uc_mgr, value);
++	else if (strcmp(identifier, "_verb") == 0)
+ 	        err = set_verb_user(uc_mgr, value);
+         else if (strcmp(identifier, "_enadev") == 0)
+                 err = set_device_user(uc_mgr, value, 1);
+-- 
+2.25.1
+

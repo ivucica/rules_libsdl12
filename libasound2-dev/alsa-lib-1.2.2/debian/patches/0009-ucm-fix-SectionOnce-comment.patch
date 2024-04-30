@@ -1,0 +1,32 @@
+From c220eb2c0da9361a26d8b9bc6abad8cd11843a64 Mon Sep 17 00:00:00 2001
+From: Jaroslav Kysela <perex@perex.cz>
+Date: Tue, 19 May 2020 08:31:39 +0200
+Subject: [PATCH 09/25] ucm: fix SectionOnce comment
+
+Signed-off-by: Jaroslav Kysela <perex@perex.cz>
+(cherry picked from commit 3cab9018cf7885b43011ea35e42ae6d572dba0a2)
+Signed-off-by: Hui Wang <hui.wang@canonical.com>
+---
+ src/ucm/parser.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/src/ucm/parser.c b/src/ucm/parser.c
+index 4b48b879..fc346e92 100644
+--- a/src/ucm/parser.c
++++ b/src/ucm/parser.c
+@@ -1580,10 +1580,10 @@ static int parse_controls(snd_use_case_mgr_t *uc_mgr, snd_config_t *cfg)
+  *
+  * # The initial boot (run once) configuration.
+  *
+- * SectionOnce {
++ * SectionOnce [
+  *      cset "name='Master Playback Switch',index=2 1,1"
+  *	cset "name='Master Playback Volume',index=2 25,25"
+- * }
++ * ]
+  *
+  * # This file also stores the default sound card state.
+  *
+-- 
+2.25.1
+

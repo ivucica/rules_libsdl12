@@ -1,0 +1,251 @@
+From 0d2bbe47e159d775ac00f1b34355f7e6ec966a61 Mon Sep 17 00:00:00 2001
+From: Jaroslav Kysela <perex@perex.cz>
+Date: Wed, 20 May 2020 19:04:36 +0200
+Subject: [PATCH 16/25] ucm: configuration - allow to define the configuration
+ variables
+
+It may be useful for the library files to use the runtime configuration
+variables.
+
+Example:
+
+ Define.Var1 "hw:${CardId},2"
+ Value.PlaybackPCM "${var:Var1}"
+
+Signed-off-by: Jaroslav Kysela <perex@perex.cz>
+(cherry picked from commit ed4567d1c932d003fc8d55b9a542599fe380528b)
+Signed-off-by: Hui Wang <hui.wang@canonical.com>
+---
+ src/ucm/main.c      |  1 +
+ src/ucm/parser.c    | 57 +++++++++++++++++++++++++++++++++++++++++----
+ src/ucm/ucm_local.h | 10 ++++++++
+ src/ucm/ucm_subs.c  | 16 +++++++++++++
+ src/ucm/utils.c     | 51 ++++++++++++++++++++++++++++++++++++++++
+ 5 files changed, 130 insertions(+), 5 deletions(-)
+
+diff --git a/src/ucm/main.c b/src/ucm/main.c
+index 9c85462b..4fdd9c70 100644
+--- a/src/ucm/main.c
++++ b/src/ucm/main.c
+@@ -966,6 +966,7 @@ int snd_use_case_mgr_open(snd_use_case_mgr_t **uc_mgr,
+ 	INIT_LIST_HEAD(&mgr->active_modifiers);
+ 	INIT_LIST_HEAD(&mgr->active_devices);
+ 	INIT_LIST_HEAD(&mgr->ctl_list);
++	INIT_LIST_HEAD(&mgr->variable_list);
+ 	pthread_mutex_init(&mgr->mutex, NULL);
+ 
+ 	mgr->card_name = strdup(card_name);
+diff --git a/src/ucm/parser.c b/src/ucm/parser.c
+index 16e26f79..71da8074 100644
+--- a/src/ucm/parser.c
++++ b/src/ucm/parser.c
+@@ -193,6 +193,49 @@ int parse_get_safe_id(snd_config_t *n, const char **id)
+ 	return 0;
+ }
+ 
++/*
++ * Evaluate variable definitions (in-place delete)
++ */
++static int evaluate_define(snd_use_case_mgr_t *uc_mgr,
++			   snd_config_t *cfg)
++{
++	snd_config_iterator_t i, next;
++	snd_config_t *d, *n;
++	const char *id;
++	char *var, *s;
++	int err;
++
++	err = snd_config_search(cfg, "Define", &d);
++	if (err == -ENOENT)
++		return 1;
++	if (err < 0)
++		return err;
++
++	if (snd_config_get_type(d) != SND_CONFIG_TYPE_COMPOUND) {
++		uc_error("compound type expected for Define");
++		return -EINVAL;
++	}
++
++	snd_config_for_each(i, next, d) {
++		n = snd_config_iterator_entry(i);
++		err = snd_config_get_id(n, &id);
++		if (err < 0)
++			return err;
++		err = snd_config_get_ascii(n, &var);
++		if (err < 0)
++			return err;
++		err = uc_mgr_get_substituted_value(uc_mgr, &s, var);
++		free(var);
++		if (err < 0)
++			return err;
++		uc_mgr_set_variable(uc_mgr, id, s);
++		free(s);
++	}
++
++	snd_config_delete(d);
++	return 0;
++}
++
+ /*
+  * Evaluate include (in-place)
+  */
+@@ -239,16 +282,20 @@ static int evaluate_condition(snd_use_case_mgr_t *uc_mgr,
+ int uc_mgr_evaluate_inplace(snd_use_case_mgr_t *uc_mgr,
+ 			    snd_config_t *cfg)
+ {
+-	int err1 = 0, err2 = 0;
++	int err1 = 0, err2 = 0, err3 = 0;
+ 
+-	while (err1 == 0 || err2 == 0) {
+-		/* include at first */
+-		err1 = evaluate_include(uc_mgr, cfg);
++	while (err1 == 0 || err2 == 0 || err3 == 0) {
++		/* variables at first */
++		err1 = evaluate_define(uc_mgr, cfg);
+ 		if (err1 < 0)
+ 			return err1;
+-		err2 = evaluate_condition(uc_mgr, cfg);
++		/* include at second */
++		err2 = evaluate_include(uc_mgr, cfg);
+ 		if (err2 < 0)
+ 			return err2;
++		err3 = evaluate_condition(uc_mgr, cfg);
++		if (err3 < 0)
++			return err3;
+ 	}
+ 	return 0;
+ }
+diff --git a/src/ucm/ucm_local.h b/src/ucm/ucm_local.h
+index a9948704..2aea43e4 100644
+--- a/src/ucm/ucm_local.h
++++ b/src/ucm/ucm_local.h
+@@ -239,6 +239,9 @@ struct snd_use_case_mgr {
+ 	/* locking */
+ 	pthread_mutex_t mutex;
+ 
++	/* UCM internal variables defined in configuration files */
++	struct list_head variable_list;
++
+ 	/* list of opened control devices */
+ 	struct list_head ctl_list;
+ 
+@@ -289,6 +292,13 @@ void uc_mgr_free_ctl_list(snd_use_case_mgr_t *uc_mgr);
+ 
+ int uc_mgr_add_value(struct list_head *base, const char *key, char *val);
+ 
++const char *uc_mgr_get_variable(snd_use_case_mgr_t *uc_mgr,
++				const char *name);
++
++int uc_mgr_set_variable(snd_use_case_mgr_t *uc_mgr,
++			const char *name,
++			const char *val);
++
+ int uc_mgr_get_substituted_value(snd_use_case_mgr_t *uc_mgr,
+ 				 char **_rvalue,
+ 				 const char *value);
+diff --git a/src/ucm/ucm_subs.c b/src/ucm/ucm_subs.c
+index 944a8ceb..9efa461f 100644
+--- a/src/ucm/ucm_subs.c
++++ b/src/ucm/ucm_subs.c
+@@ -167,6 +167,21 @@ static char *rval_sysfs(snd_use_case_mgr_t *uc_mgr ATTRIBUTE_UNUSED, const char
+ 	return strdup(path);
+ }
+ 
++static char *rval_var(snd_use_case_mgr_t *uc_mgr, const char *id)
++{
++	const char *v;
++
++	if (uc_mgr->conf_format < 3) {
++		uc_error("variable substitution is supported in v3+ syntax");
++		return NULL;
++	}
++
++	v = uc_mgr_get_variable(uc_mgr, id);
++	if (v)
++		return strdup(v);
++	return NULL;
++}
++
+ #define MATCH_VARIABLE(name, id, fcn, empty_ok)				\
+ 	if (strncmp((name), (id), sizeof(id) - 1) == 0) { 		\
+ 		rval = fcn(uc_mgr);					\
+@@ -224,6 +239,7 @@ int uc_mgr_get_substituted_value(snd_use_case_mgr_t *uc_mgr,
+ 			MATCH_VARIABLE(value, "${CardComponents}", rval_card_components, true);
+ 			MATCH_VARIABLE2(value, "${env:", rval_env);
+ 			MATCH_VARIABLE2(value, "${sys:", rval_sysfs);
++			MATCH_VARIABLE2(value, "${var:", rval_var);
+ 			err = -EINVAL;
+ 			tmp = strchr(value, '}');
+ 			if (tmp) {
+diff --git a/src/ucm/utils.c b/src/ucm/utils.c
+index b3e2bd3f..1cfa7a35 100644
+--- a/src/ucm/utils.c
++++ b/src/ucm/utils.c
+@@ -547,6 +547,56 @@ int uc_mgr_remove_device(struct use_case_verb *verb, const char *name)
+ 	return -ENOENT;
+ }
+ 
++const char *uc_mgr_get_variable(snd_use_case_mgr_t *uc_mgr, const char *name)
++{
++	struct list_head *pos;
++	struct ucm_value *value;
++
++	list_for_each(pos, &uc_mgr->variable_list) {
++		value = list_entry(pos, struct ucm_value, list);
++		if (strcmp(value->name, name) == 0)
++			return value->data;
++	}
++	return NULL;
++}
++
++int uc_mgr_set_variable(snd_use_case_mgr_t *uc_mgr, const char *name,
++			const char *val)
++{
++	struct list_head *pos;
++	struct ucm_value *curr;
++	char *val2;
++
++	list_for_each(pos, &uc_mgr->variable_list) {
++		curr = list_entry(pos, struct ucm_value, list);
++		if (strcmp(curr->name, name) == 0) {
++			val2 = strdup(val);
++			if (val2 == NULL)
++				return -ENOMEM;
++			free(curr->data);
++			curr->data = val2;
++			return 0;
++		}
++	}
++
++	curr = calloc(1, sizeof(struct ucm_value));
++	if (curr == NULL)
++		return -ENOMEM;
++	curr->name = strdup(name);
++	if (curr->name == NULL) {
++		free(curr);
++		return -ENOMEM;
++	}
++	curr->data = strdup(val);
++	if (curr->data == NULL) {
++		free(curr->name);
++		free(curr);
++		return -ENOMEM;
++	}
++	list_add_tail(&curr->list, &uc_mgr->variable_list);
++	return 0;
++}
++
+ void uc_mgr_free_verb(snd_use_case_mgr_t *uc_mgr)
+ {
+ 	struct list_head *pos, *npos;
+@@ -571,6 +621,7 @@ void uc_mgr_free_verb(snd_use_case_mgr_t *uc_mgr)
+ 	uc_mgr_free_sequence(&uc_mgr->once_list);
+ 	uc_mgr_free_sequence(&uc_mgr->default_list);
+ 	uc_mgr_free_value(&uc_mgr->value_list);
++	uc_mgr_free_value(&uc_mgr->variable_list);
+ 	free(uc_mgr->comment);
+ 	free(uc_mgr->conf_dir_name);
+ 	free(uc_mgr->conf_file_name);
+-- 
+2.25.1
+

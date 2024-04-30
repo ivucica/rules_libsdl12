@@ -1,0 +1,78 @@
+From 703b40321a4bda033f6e2ff200a250b9851c7e04 Mon Sep 17 00:00:00 2001
+From: Jaroslav Kysela <perex@perex.cz>
+Date: Fri, 8 May 2020 12:00:42 +0200
+Subject: [PATCH 01/25] conf: add snd_config_is_array() function
+
+Signed-off-by: Jaroslav Kysela <perex@perex.cz>
+(cherry picked from commit 0c99c073d39c8446c9527f3e610801d2c1ecd831)
+Signed-off-by: Hui Wang <hui.wang@canonical.com>
+---
+ include/conf.h |  1 +
+ src/conf.c     | 39 +++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 40 insertions(+)
+
+diff --git a/include/conf.h b/include/conf.h
+index 456b272e..823ac639 100644
+--- a/include/conf.h
++++ b/include/conf.h
+@@ -139,6 +139,7 @@ int snd_config_imake_safe_string(snd_config_t **config, const char *key, const c
+ int snd_config_imake_pointer(snd_config_t **config, const char *key, const void *ptr);
+ 
+ snd_config_type_t snd_config_get_type(const snd_config_t *config);
++int snd_config_is_array(const snd_config_t *config);
+ 
+ int snd_config_set_id(snd_config_t *config, const char *id);
+ int snd_config_set_integer(snd_config_t *config, long value);
+diff --git a/src/conf.c b/src/conf.c
+index 50d04034..c8e3bfde 100644
+--- a/src/conf.c
++++ b/src/conf.c
+@@ -1783,6 +1783,45 @@ snd_config_type_t snd_config_get_type(const snd_config_t *config)
+ 	return config->type;
+ }
+ 
++static int check_array_item(const char *id, int index)
++{
++	const char *p;
++	long val;
++
++	for (p = id; *p; p++) {
++		if (*p < '0' || *p > '9')
++			return 0;
++	}
++
++	if (safe_strtol(id, &val))
++		return 0;
++	return val == index;
++}
++
++/**
++ * \brief Returns if the compound is an array.
++ * \param config Handle to the configuration node.
++ * \return A positive value when true, zero when false, otherwise a negative error code.
++ */
++int snd_config_is_array(const snd_config_t *config)
++{
++	int idx;
++	snd_config_iterator_t i, next;
++	snd_config_t *node;
++
++	assert(config);
++	if (config->type != SND_CONFIG_TYPE_COMPOUND)
++		return -EINVAL;
++	idx = 0;
++	snd_config_for_each(i, next, config) {
++		node = snd_config_iterator_entry(i);
++		if (!check_array_item(node->id, idx))
++			return 0;
++		idx++;
++	}
++	return 1;
++}
++
+ /**
+  * \brief Returns the id of a configuration node.
+  * \param[in] config Handle to the configuration node.
+-- 
+2.25.1
+

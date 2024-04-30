@@ -1,0 +1,37 @@
+From 97d0eaa126907d1eb82a2c3b6c23dd3f71684945 Mon Sep 17 00:00:00 2001
+From: Jaroslav Kysela <perex@perex.cz>
+Date: Wed, 24 Jun 2020 19:17:49 +0200
+Subject: [PATCH 43/44] ucm: implement AlwaysTrue Condition.Type
+
+Signed-off-by: Jaroslav Kysela <perex@perex.cz>
+(cherry picked from commit 7c9f0fa436855211c3498284a16a560ebbe8a383)
+Signed-off-by: Hui Wang <hui.wang@canonical.com>
+---
+ src/ucm/ucm_cond.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/src/ucm/ucm_cond.c b/src/ucm/ucm_cond.c
+index 21ecf271..646d49c5 100644
+--- a/src/ucm/ucm_cond.c
++++ b/src/ucm/ucm_cond.c
+@@ -283,12 +283,15 @@ static int if_eval(snd_use_case_mgr_t *uc_mgr, snd_config_t *eval)
+ 		return -EINVAL;
+ 	}
+ 
+-	if (strcmp(type, "ControlExists") == 0)
+-		return if_eval_control_exists(uc_mgr, eval);
++	if (strcmp(type, "AlwaysTrue") == 0)
++		return 1;
+ 
+ 	if (strcmp(type, "String") == 0)
+ 		return if_eval_string(uc_mgr, eval);
+ 
++	if (strcmp(type, "ControlExists") == 0)
++		return if_eval_control_exists(uc_mgr, eval);
++
+ 	if (strcmp(type, "RegexMatch") == 0)
+ 		return if_eval_regex_match(uc_mgr, eval);
+ 
+-- 
+2.25.1
+

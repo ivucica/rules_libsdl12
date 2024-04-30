@@ -1,0 +1,43 @@
+From 62f53f327b45226b57834e69aaa8555fed44943c Mon Sep 17 00:00:00 2001
+From: Jaroslav Kysela <perex@perex.cz>
+Date: Tue, 26 May 2020 15:32:36 +0200
+Subject: [PATCH 24/25] ucm: String condition - implement Empty
+
+Signed-off-by: Jaroslav Kysela <perex@perex.cz>
+(cherry picked from commit a53a104f79f76b3f7c74f951d371508b938f01be)
+Signed-off-by: Hui Wang <hui.wang@canonical.com>
+---
+ src/ucm/ucm_cond.c | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
+
+diff --git a/src/ucm/ucm_cond.c b/src/ucm/ucm_cond.c
+index f0baa06a..63ee2ba0 100644
+--- a/src/ucm/ucm_cond.c
++++ b/src/ucm/ucm_cond.c
+@@ -44,6 +44,23 @@ static int if_eval_string(snd_use_case_mgr_t *uc_mgr, snd_config_t *eval)
+ 	char *s1, *s2;
+ 	int err;
+ 
++	if (uc_mgr->conf_format >= 3) {
++		err = get_string(eval, "Empty", &string1);
++		if (err < 0 && err != -ENOENT) {
++			uc_error("String error (If.Condition.Empty)");
++			return -EINVAL;
++		}
++
++		if (string1) {
++			err = uc_mgr_get_substituted_value(uc_mgr, &s1, string1);
++			if (err < 0)
++				return err;
++			err = s1 == NULL || s1[0] == '\0';
++			free(s1);
++			return err;
++		}
++	}
++
+ 	err = get_string(eval, "String1", &string1);
+ 	if (err < 0 && err != -ENOENT) {
+ 		uc_error("String error (If.Condition.String1)");
+-- 
+2.25.1
+

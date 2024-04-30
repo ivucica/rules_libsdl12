@@ -1,0 +1,57 @@
+From 2c78f72aa424f7fa5cf1a78612fbb9149b658141 Mon Sep 17 00:00:00 2001
+From: Jaroslav Kysela <perex@perex.cz>
+Date: Wed, 27 May 2020 15:04:31 +0200
+Subject: [PATCH 33/39] ucm: substitute Comment in Transition and Device
+
+Signed-off-by: Jaroslav Kysela <perex@perex.cz>
+(cherry picked from commit 8d26f25ad3ed9e102ee467d39bd00b5e954b4461)
+Signed-off-by: Hui Wang <hui.wang@canonical.com>
+---
+ src/ucm/parser.c | 16 +++++++++++-----
+ 1 file changed, 11 insertions(+), 5 deletions(-)
+
+diff --git a/src/ucm/parser.c b/src/ucm/parser.c
+index b061ce91..fb785776 100644
+--- a/src/ucm/parser.c
++++ b/src/ucm/parser.c
+@@ -410,10 +410,16 @@ static int parse_transition(snd_use_case_mgr_t *uc_mgr,
+ 			return -ENOMEM;
+ 		INIT_LIST_HEAD(&tseq->transition_list);
+ 
+-		tseq->name = strdup(id);
+-		if (tseq->name == NULL) {
++		if (uc_mgr->conf_format < 3) {
++			tseq->name = strdup(id);
++			if (tseq->name == NULL)
++				err = -ENOMEM;
++		} else {
++			err = uc_mgr_get_substituted_value(uc_mgr, &tseq->name, id);
++		}
++		if (err < 0) {
+ 			free(tseq);
+-			return -ENOMEM;
++			return err;
+ 		}
+ 	
+ 		err = parse_sequence(uc_mgr, &tseq->transition_list, n);
+@@ -940,7 +946,7 @@ static int parse_modifier(snd_use_case_mgr_t *uc_mgr,
+ 			continue;
+ 
+ 		if (strcmp(id, "Comment") == 0) {
+-			err = parse_string(n, &modifier->comment);
++			err = parse_string_substitute3(uc_mgr, n, &modifier->comment);
+ 			if (err < 0) {
+ 				uc_error("error: failed to get modifier comment");
+ 				return err;
+@@ -1085,7 +1091,7 @@ static int parse_device(snd_use_case_mgr_t *uc_mgr,
+ 			continue;
+ 
+ 		if (strcmp(id, "Comment") == 0) {
+-			err = parse_string(n, &device->comment);
++			err = parse_string_substitute3(uc_mgr, n, &device->comment);
+ 			if (err < 0) {
+ 				uc_error("error: failed to get device comment");
+ 				return err;
+-- 
+2.25.1
+

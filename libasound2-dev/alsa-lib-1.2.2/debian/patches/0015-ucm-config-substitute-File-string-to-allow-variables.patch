@@ -1,0 +1,46 @@
+From 5f1627c69d3c160cefa32ea755dfc41a9c352a75 Mon Sep 17 00:00:00 2001
+From: Jaroslav Kysela <perex@perex.cz>
+Date: Tue, 19 May 2020 15:09:47 +0200
+Subject: [PATCH 15/25] ucm: config - substitute File string to allow variables
+ in include
+
+Signed-off-by: Jaroslav Kysela <perex@perex.cz>
+(cherry picked from commit 6cc6024ac51b21a8a18a0b870a06303e308c7272)
+Signed-off-by: Hui Wang <hui.wang@canonical.com>
+---
+ src/ucm/ucm_include.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
+
+diff --git a/src/ucm/ucm_include.c b/src/ucm/ucm_include.c
+index cd8fb57d..d1be28f7 100644
+--- a/src/ucm/ucm_include.c
++++ b/src/ucm/ucm_include.c
+@@ -44,6 +44,7 @@ static int include_eval_one(snd_use_case_mgr_t *uc_mgr,
+ 			    snd_config_t **after)
+ {
+ 	const char *file;
++	char *s;
+ 	int err;
+ 
+ 	*result = NULL;
+@@ -71,11 +72,14 @@ static int include_eval_one(snd_use_case_mgr_t *uc_mgr,
+ 		return -EINVAL;
+ 	}
+ 
+-	return uc_mgr_config_load_file(uc_mgr, file, result);
++	err = uc_mgr_get_substituted_value(uc_mgr, &s, file);
++	if (err < 0)
++		return err;
++	err = uc_mgr_config_load_file(uc_mgr, s, result);
++	free(s);
++	return err;
+ }
+ 
+-
+-
+ #if 0
+ static void config_dump(snd_config_t *cfg)
+ {
+-- 
+2.25.1
+

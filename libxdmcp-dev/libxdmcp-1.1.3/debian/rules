@@ -1,0 +1,41 @@
+#!/usr/bin/make -f
+# debian/rules for the Debian libxdmcp package.
+# Copyright © 2004 Scott James Remnant <scott@netsplit.com>
+# Copyright © 2005 Daniel Stone <daniel@fooishbar.org>
+# Copyright © 2005 David Nusinow <dnusinow@debian.org>
+
+# Uncomment this to turn on verbose mode.
+#export DH_VERBOSE=1
+
+# set this to the name of the main shlib's binary package
+PACKAGE = libxdmcp6
+
+# generation of usr/share/doc/libxdmcp-dev/xdmcp.txt.gz is locale dependent
+export LC_ALL=C.UTF-8
+
+.PHONY: build
+build:
+	dh build --with quilt,autoreconf --builddirectory=build/ --parallel
+
+%:
+	dh $@ --with quilt,autoreconf --builddirectory=build/ --parallel
+
+override_dh_auto_configure:
+	dh_auto_configure -- \
+		--disable-silent-rules \
+		--with-xmlto \
+		--without-fop
+
+override_dh_auto_install:
+	dh_auto_install
+	find debian/tmp/usr/share/doc/libXdmcp -name '*.xml' -delete
+
+override_dh_install:
+	dh_install --fail-missing --exclude=libXdmcp.la --exclude .html --exclude .css --exclude .db
+
+override_dh_strip:
+	dh_strip -p$(PACKAGE) --dbg-package=$(PACKAGE)-dbg
+	dh_strip -N$(PACKAGE)
+
+override_dh_makeshlibs:
+	dh_makeshlibs --add-udeb=$(PACKAGE)-udeb

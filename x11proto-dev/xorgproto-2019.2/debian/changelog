@@ -1,0 +1,41 @@
+xorgproto (2019.2-1ubuntu1) focal; urgency=medium
+
+  * add-fullscreen.diff: Add XF86XK_FullScreen to keysyms.
+
+ -- Timo Aaltonen <tjaalton@debian.org>  Mon, 09 Mar 2020 14:10:51 +0200
+
+xorgproto (2019.2-1) unstable; urgency=medium
+
+  * New upstream release.
+  * control: Use debhelper-compat, bump to 12.
+  * rules, install: Add new docs, remove more cruft.
+  * watch: Update upstream vcs url.
+  * control: Bump policy to 4.5.0.
+
+ -- Timo Aaltonen <tjaalton@debian.org>  Wed, 26 Feb 2020 18:33:26 +0200
+
+xorgproto (2018.4-4) unstable; urgency=medium
+
+  * Fix Vcs-* control fields.
+  * Stop shipping obsolete PROXY_MANAGEMENT, DEC-XTRAP and XFree86-Misc
+    headers (closes: #893975)
+  * Don't pretend to replace/provide x11proto-print-dev, we aren't shipping
+    those headers.
+
+ -- Julien Cristau <jcristau@debian.org>  Tue, 03 Apr 2018 10:19:04 +0200
+
+xorgproto (2018.4-3) unstable; urgency=medium
+
+  [ Helmut Grohne ]
+  * Mark all those transitional dummy packages that forward to
+    x11proto-dev Multi-Arch: foreign. (Closes: #893943)
+
+ -- Timo Aaltonen <tjaalton@debian.org>  Sat, 24 Mar 2018 10:00:13 +0200
+
+xorgproto (2018.4-2) unstable; urgency=medium
+
+  * Initial release. (Closes: #890973)
+    - upstream merged all protocol headers into a single repository,
+      this replaces all now-obsolete x11proto-* packages
+
+ -- Timo Aaltonen <tjaalton@debian.org>  Fri, 02 Mar 2018 11:46:05 +0200

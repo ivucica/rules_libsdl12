@@ -1,0 +1,41 @@
+From b41b79ca87d049612f664a38c5555c708871f067 Mon Sep 17 00:00:00 2001
+From: Jaroslav Kysela <perex@perex.cz>
+Date: Wed, 20 May 2020 12:17:39 +0200
+Subject: [PATCH 19/25] ucm: allow syntax version 3
+
+Signed-off-by: Jaroslav Kysela <perex@perex.cz>
+(cherry picked from commit 9c88ead1bb2f26f5a404cd44fc3ae8538581867a)
+Signed-off-by: Hui Wang <hui.wang@canonical.com>
+---
+ src/ucm/parser.c    | 1 +
+ src/ucm/ucm_local.h | 2 +-
+ 2 files changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/src/ucm/parser.c b/src/ucm/parser.c
+index 2fa742a7..df936f4f 100644
+--- a/src/ucm/parser.c
++++ b/src/ucm/parser.c
+@@ -1804,6 +1804,7 @@ static int parse_master_file(snd_use_case_mgr_t *uc_mgr, snd_config_t *cfg)
+ 		}
+ 		/* delete this field to avoid strcmp() call in the loop */
+ 		snd_config_delete(n);
++		uc_mgr->conf_format = l;
+ 	}
+ 
+ 	/* in-place evaluation */
+diff --git a/src/ucm/ucm_local.h b/src/ucm/ucm_local.h
+index 25a50b4d..30edd9cb 100644
+--- a/src/ucm/ucm_local.h
++++ b/src/ucm/ucm_local.h
+@@ -40,7 +40,7 @@
+ #include <pthread.h>
+ #include "use-case.h"
+ 
+-#define SYNTAX_VERSION_MAX	2
++#define SYNTAX_VERSION_MAX	3
+ 
+ #define MAX_CARD_SHORT_NAME	32
+ #define MAX_CARD_LONG_NAME	80
+-- 
+2.25.1
+
