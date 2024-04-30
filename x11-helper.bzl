@@ -327,123 +327,121 @@ def x11_deb_repository(name, urls, sha256):
 # x11_repository_deb adds all repos.
 def x11_repository_deb():
     # master_deb_hash = 'master.deb'
-    master_deb_hash = "3585a1b67f47846f7175602b7144fa513e5dc848"
+    master_deb_hash = "8a3188cd87e2961b0f8db2015e7e5d40c345a3ad"
 
     x11_deb_repository(
         name = "libx11-dev",
-        urls = ["https://github.com/ivucica/rules_libsdl12/raw/" + master_deb_hash + "/libx11-dev/libx11-dev_2%253a1.8.4-2+deb12u2_amd64.deb"],
-        sha256 = "8493220d4309af1907a1f2f6eeb204c8103dafcc368394fbc4a0858c28612ff9",
+        urls = ["https://github.com/ivucica/rules_libsdl12/raw/" +  master_deb_hash + "/libx11-dev/libx11-dev_2%3a1.6.9-2ubuntu1.6_amd64.deb"],
+        sha256 = "dfdc060c5550fbffefbead0976a8bb89ac3bbb80b80878fdfc06df26860fbc23",
     )
 
     x11_deb_repository(
         name = "libxext-dev",
-        urls = ["https://github.com/ivucica/rules_libsdl12/raw/" + master_deb_hash + "/libxext-dev/libxext-dev_2%253a1.3.4-1%2Bb1_amd64.deb"],
-        sha256 = "591456aba90eeed7a1c1b044d469fd7704bf7d83af9dc574bbe2efc4a2fd1dba",
-    )
-
-    x11_deb_repository(
-        name = "libgl-dev",
-        urls = ["https://github.com/ivucica/rules_libsdl12/raw/" + master_deb_hash + "/libgl-dev/libgl-dev_1.6.0-1_amd64.deb"],
-        sha256 = "ebc12df48ae53924e114d9358ef3da4306d7ef8f7179300af52f1faef8b5db3e",
+        urls = ["https://github.com/ivucica/rules_libsdl12/raw/" +  master_deb_hash + "/libxext-dev/libxext-dev_2%3a1.3.4-0ubuntu1_amd64.deb"],
+        sha256 = "b39e2d033916a4e2c1e970465517e285c3e532d3e2f451b720e67ba09cbb2733",
     )
 
     x11_deb_repository(
         name = "x11proto-dev",
-        urls = ["https://github.com/ivucica/rules_libsdl12/raw/" + master_deb_hash + "/x11proto-dev/x11proto-dev_2023.2-1_all.deb"],
-        sha256 = "4b9a0df6ffa80436add5fe64c24dd68a3174dddc42c67f5c007835b674d21c59",
-    )
-
-    x11_deb_repository(
-        name = "libxrandr-dev",
-        urls = ["https://github.com/ivucica/rules_libsdl12/raw/" + master_deb_hash + "/libxrandr-dev/libxrandr-dev_2%3a1.5.2-2+b1_amd64.deb"],
-        sha256 = "a0048d088226403419d9b0856e2d6d29a4facdd1708b6ceda095d7190f819ff3",
+        urls = ["https://github.com/ivucica/rules_libsdl12/raw/" +  master_deb_hash + "/x11proto-dev/x11proto-dev_2019.2-1ubuntu1_all.deb"],
+        sha256 = "4144072931cbfbb422b465ae4775ce906d01ea816d432ed820b301e08cfef975",
     )
 
     x11_deb_repository(
         name = "libxrender-dev",
-        urls = ["https://github.com/ivucica/rules_libsdl12/raw/" + master_deb_hash + "/libxrender-dev/libxrender-dev_1%3a0.9.10-1.1_amd64.deb"],
-        sha256 = "51be2e92b7bb9a81f8dbcad7a0086a58c779761c17f8aa13893b843bced0ae9b",
+        urls = ["https://github.com/ivucica/rules_libsdl12/raw/" +  master_deb_hash + "/libxrender-dev/libxrender-dev_1%3a0.9.10-1_amd64.deb"],
+        sha256 = "aeb7abe8409afbb484c06882c158e7e695743d678387064ef95bdb3d6edbce15",
     )
 
     x11_deb_repository(
         name = "libxcb1-dev",
-        urls = ["https://github.com/ivucica/rules_libsdl12/raw/" + master_deb_hash + "/libxcb1-dev/libxcb1-dev_1.15-1_amd64.deb"],
-        sha256 = "c078c024114fdada06d3158af1771d7ed8763ab434cfbcbe6a334aa8a9cae358",
+        urls = ["https://github.com/ivucica/rules_libsdl12/raw/" +  master_deb_hash + "/libxcb1-dev/libxcb1-dev_1.14-2_amd64.deb"],
+        sha256 = "824b00562519ccfdd9dd5faa58bbc5cb60b7a6b4eea09eca58c989bd921f88d5",
     )
 
     x11_deb_repository(
-        name = "libx11-xcb-dev",
-        urls = ["https://github.com/ivucica/rules_libsdl12/raw/" + master_deb_hash + "/libx11-xcb-dev/libx11-xcb-dev_1.8.4-2+deb12u2_amd64.deb"],
-        sha256 = "47e203c32aea08b81dc8fb3c25052b2431da184f7716b7d4ff92628dfe675534",
+        name = "libxrandr-dev",
+        urls = ["https://github.com/ivucica/rules_libsdl12/raw/" +  master_deb_hash + "/libxrandr-dev/libxrandr-dev_2%3a1.5.2-0ubuntu1_amd64.deb"],
+        sha256 = "8e3d54f0605a4aa192d8413ed0f3e2c82dff606b81499710208190cd965a31f2",
     )
 
     x11_deb_repository(
         name = "libxau-dev",
-        urls = ["https://github.com/ivucica/rules_libsdl12/raw/" + master_deb_hash + "/libxau-dev/libxau-dev_1.0.9-1_amd64.deb"],
-        sha256 = "d1a7f5d484e0879b3b2e8d512894744505e53d078712ce65903fef2ecfd824bb",
+        urls = ["https://github.com/ivucica/rules_libsdl12/raw/" +  master_deb_hash + "/libxau-dev/libxau-dev_1%3a1.0.9-0ubuntu1_amd64.deb"],
+        sha256 = "61d3505d0db08c398e91ca5b51f928aa5dbb4d384ccfa2e5c6f0419a57ecf524",
+    )
+
+    x11_deb_repository(
+        name = "libx11-xcb-dev",
+        urls = ["https://github.com/ivucica/rules_libsdl12/raw/" +  master_deb_hash + "/libx11-xcb-dev/libx11-xcb-dev_2%3a1.6.9-2ubuntu1.6_amd64.deb"],
+        sha256 = "93fdbd64619ace78387946ccdec07c88294015aa8b3052cd2c3a6b28ce21e239",
     )
 
     x11_deb_repository(
         name = "libxdmcp-dev",
-        urls = [
-            "https://github.com/ivucica/rules_libsdl12/raw/" + master_deb_hash + "/libxdmcp-dev/libxdmcp-dev_1.1.2-3_amd64.deb",
-        ],
-        sha256 = "c6733e5f6463afd261998e408be6eb37f24ce0a64b63bed50a87ddb18ebc1699",
+        urls = ["https://github.com/ivucica/rules_libsdl12/raw/" +  master_deb_hash + "/libxdmcp-dev/libxdmcp-dev_1%3a1.1.3-0ubuntu1_amd64.deb"],
+        sha256 = "977cb912f49638434a2bdb8947ac44897f25e5552448576c7d7a5f9a0d9bf1a3",
+    )
+
+    x11_deb_repository(
+        name = "xorg-sgml-doctools",
+        urls = ["https://github.com/ivucica/rules_libsdl12/raw/" +  master_deb_hash + "/xorg-sgml-doctools/xorg-sgml-doctools_1%3a1.11-1_all.deb"],
+        sha256 = "2f6463489813c2a08e077a6502453c3252453f7cbdab9f323006e081b33e7ad3",
     )
 
     # Not X11, but temporarily it is ok to have it live here.
     x11_deb_repository(
         name = "libalsaplayer-dev",
-        urls = ["https://github.com/ivucica/rules_libsdl12/raw/" + master_deb_hash + "/libalsaplayer-dev/libalsaplayer-dev_0.99.81-2+b3_amd64.deb"],
-        sha256 = "c7be38adb91e8fcb809a17bb7deba4d8f2cd3b805d1c3a14ff491d6a3f332d03",
+        urls = ["https://github.com/ivucica/rules_libsdl12/raw/" +  master_deb_hash + "/libalsaplayer-dev/libalsaplayer-dev_0.99.81-2build2_amd64.deb"],
+        sha256 = "ffb8cf7209bf7c111e4d28c5704df8c58223a69c12799a603d39727ce67b0763",
     )
 
     x11_deb_repository(
         name = "libasound2-dev",
-        urls = ["https://github.com/ivucica/rules_libsdl12/raw/" + master_deb_hash + "/libasound2-dev/libasound2-dev_1.2.8-1+b1_amd64.deb"],
-        sha256 = "6eddd5b43c03cdd769f6b6f4506abcbc84c19d4bada2b3036d1fd921a9875d7a",
+        urls = ["https://github.com/ivucica/rules_libsdl12/raw/" +  master_deb_hash + "/libasound2-dev/libasound2-dev_1.2.2-2.1ubuntu2.5_amd64.deb"],
+        sha256 = "f10cbb3ccdab80e162e64255e3dfe1e04b02fe1d59d082a7a3d760f0623da9dc",
     )
 
     # X11 adjacent, temporarily it is ok to have it live here.
     x11_deb_repository(
         name = "libgl-dev",
-        urls = ["https://github.com/ivucica/rules_libsdl12/raw/" + master_deb_hash + "/libgl-dev/libgl-dev_1.6.0-1_amd64.deb"],
-        sha256 = "ebc12df48ae53924e114d9358ef3da4306d7ef8f7179300af52f1faef8b5db3e",
+        urls = ["https://github.com/ivucica/rules_libsdl12/raw/" +  master_deb_hash + "/libgl-dev/libgl-dev_1.3.2-1~ubuntu0.20.04.2_amd64.deb"],
+        sha256 = "435e6e224ac2c4a15f4f5409bd35f776d195ab08a86475ae7933af005e392c71",
     )
 
     x11_deb_repository(
         name = "libglu1-mesa-dev",
-        urls = ["https://github.com/ivucica/rules_libsdl12/raw/" + master_deb_hash + "/libglu1-mesa-dev/libglu1-mesa-dev_9.0.2-1.1_amd64.deb"],
-        sha256 = "c58945175e46cf0465e8fd72e573f5728e2f42ca1ab5a275b34718c9c6ebf65e",
+        urls = ["https://github.com/ivucica/rules_libsdl12/raw/" +  master_deb_hash + "/libglu1-mesa-dev/libglu1-mesa-dev_9.0.1-1build1_amd64.deb"],
+        sha256 = "abeb351931541392d0dee175d5effb0f35bc2728ec037360c2392555c4c60ac6",
     )
 
     x11_deb_repository(
         name = "libgl1",  # libgl-dev's libGL.so is a symlink to an .so shipped in this package
-        urls = ["https://github.com/ivucica/rules_libsdl12/raw/" + master_deb_hash + "/libgl1/libgl1_1.6.0-1_amd64.deb"],
-        sha256 = "6f89b1702c48e9a2437bb3c1ffac8e1ab2d828fc28b3d14b2eecd4cc19b2c790",
+        urls = ["https://github.com/ivucica/rules_libsdl12/raw/" +  master_deb_hash + "/libgl1/libgl1_1.3.2-1~ubuntu0.20.04.2_amd64.deb"],
+        sha256 = "bf37a7087ce67518b0d1e377c9058ef19db431599cec653a743e8379fa1a4a37",
     )
 
     x11_deb_repository(
         name = "libglu1-mesa",
-        urls = ["https://github.com/ivucica/rules_libsdl12/raw/" + master_deb_hash + "/libglu1-mesa/libglu1-mesa_9.0.2-1.1_amd64.deb"],
-        sha256 = "8f81a5fd51c1c35719757f05968b205b0c93ecc80c091781d8bfb5326eb95142",
+        urls = ["https://github.com/ivucica/rules_libsdl12/raw/" +  master_deb_hash + "/libglu1-mesa/libglu1-mesa_9.0.1-1build1_amd64.deb"],
+        sha256 = "3db22def57927f3d11d676e7160856a723fa8c3553b76971327de5b707c86973",
     )
 
     x11_deb_repository(
         name = "libglvnd0",  # required at runtime for libgl
-        urls = ["https://github.com/ivucica/rules_libsdl12/raw/" + master_deb_hash + "/libglvnd0/libglvnd0_1.3.2-1~ubuntu0.20.04.2_amd64.deb"],
+        urls = ["https://github.com/ivucica/rules_libsdl12/raw/" +  master_deb_hash + "/libglvnd0/libglvnd0_1.3.2-1~ubuntu0.20.04.2_amd64.deb"],
         sha256 = "df7ebdaef90e7e912147f5dd2f6568759b9111890b61936443a8b1fde1982655",
     )
 
     x11_deb_repository(
         name = "libglx-mesa0",  # required at runtime for libglx0
-        urls = ["https://github.com/ivucica/rules_libsdl12/raw/" + master_deb_hash + "/libglx-mesa0/libglx-mesa0_21.2.6-0ubuntu0.1~20.04.2_amd64.deb"],
+        urls = ["https://github.com/ivucica/rules_libsdl12/raw/" +  master_deb_hash + "/libglx-mesa0/libglx-mesa0_21.2.6-0ubuntu0.1~20.04.2_amd64.deb"],
         sha256 = "b8f2bef5e58bf22b1a1b1b12618d717f71681c91f53525e872d7cf578d079b61",
     )
 
     x11_deb_repository(
         name = "libglx0",  # required at runtime for libgl
-        urls = ["https://github.com/ivucica/rules_libsdl12/raw/" + master_deb_hash + "/libglx0/libglx0_1.3.2-1~ubuntu0.20.04.2_amd64.deb"],
+        urls = ["https://github.com/ivucica/rules_libsdl12/raw/" +  master_deb_hash + "/libglx0/libglx0_1.3.2-1~ubuntu0.20.04.2_amd64.deb"],
         sha256 = "2620a3da6755af5df028a6f48c56e754ce90eef58c201dc9a289d5736eaad0c4",
     )
 
