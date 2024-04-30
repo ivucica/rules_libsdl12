@@ -326,18 +326,18 @@ def x11_deb_repository(name, urls, sha256):
 
 # x11_repository_deb adds all repos.
 def x11_repository_deb():
-    # master_deb_hash = 'master.deb'
-    master_deb_hash = "8a3188cd87e2961b0f8db2015e7e5d40c345a3ad"
+    master_deb_hash = 'master.deb'
+    #master_deb_hash = "8a3188cd87e2961b0f8db2015e7e5d40c345a3ad"
 
     x11_deb_repository(
         name = "libx11-dev",
-        urls = ["https://github.com/ivucica/rules_libsdl12/raw/" +  master_deb_hash + "/libx11-dev/libx11-dev_2%3a1.6.9-2ubuntu1.6_amd64.deb"],
+        urls = ["https://github.com/ivucica/rules_libsdl12/raw/" +  master_deb_hash + "/libx11-dev/libx11-dev_2%253a1.6.9-2ubuntu1.6_amd64.deb"],
         sha256 = "dfdc060c5550fbffefbead0976a8bb89ac3bbb80b80878fdfc06df26860fbc23",
     )
 
     x11_deb_repository(
         name = "libxext-dev",
-        urls = ["https://github.com/ivucica/rules_libsdl12/raw/" +  master_deb_hash + "/libxext-dev/libxext-dev_2%3a1.3.4-0ubuntu1_amd64.deb"],
+        urls = ["https://github.com/ivucica/rules_libsdl12/raw/" +  master_deb_hash + "/libxext-dev/libxext-dev_2%253a1.3.4-0ubuntu1_amd64.deb"],
         sha256 = "b39e2d033916a4e2c1e970465517e285c3e532d3e2f451b720e67ba09cbb2733",
     )
 
@@ -349,7 +349,7 @@ def x11_repository_deb():
 
     x11_deb_repository(
         name = "libxrender-dev",
-        urls = ["https://github.com/ivucica/rules_libsdl12/raw/" +  master_deb_hash + "/libxrender-dev/libxrender-dev_1%3a0.9.10-1_amd64.deb"],
+        urls = ["https://github.com/ivucica/rules_libsdl12/raw/" +  master_deb_hash + "/libxrender-dev/libxrender-dev_1%253a0.9.10-1_amd64.deb"],
         sha256 = "aeb7abe8409afbb484c06882c158e7e695743d678387064ef95bdb3d6edbce15",
     )
 
@@ -361,31 +361,31 @@ def x11_repository_deb():
 
     x11_deb_repository(
         name = "libxrandr-dev",
-        urls = ["https://github.com/ivucica/rules_libsdl12/raw/" +  master_deb_hash + "/libxrandr-dev/libxrandr-dev_2%3a1.5.2-0ubuntu1_amd64.deb"],
+        urls = ["https://github.com/ivucica/rules_libsdl12/raw/" +  master_deb_hash + "/libxrandr-dev/libxrandr-dev_2%253a1.5.2-0ubuntu1_amd64.deb"],
         sha256 = "8e3d54f0605a4aa192d8413ed0f3e2c82dff606b81499710208190cd965a31f2",
     )
 
     x11_deb_repository(
         name = "libxau-dev",
-        urls = ["https://github.com/ivucica/rules_libsdl12/raw/" +  master_deb_hash + "/libxau-dev/libxau-dev_1%3a1.0.9-0ubuntu1_amd64.deb"],
+        urls = ["https://github.com/ivucica/rules_libsdl12/raw/" +  master_deb_hash + "/libxau-dev/libxau-dev_1%253a1.0.9-0ubuntu1_amd64.deb"],
         sha256 = "61d3505d0db08c398e91ca5b51f928aa5dbb4d384ccfa2e5c6f0419a57ecf524",
     )
 
     x11_deb_repository(
         name = "libx11-xcb-dev",
-        urls = ["https://github.com/ivucica/rules_libsdl12/raw/" +  master_deb_hash + "/libx11-xcb-dev/libx11-xcb-dev_2%3a1.6.9-2ubuntu1.6_amd64.deb"],
+        urls = ["https://github.com/ivucica/rules_libsdl12/raw/" +  master_deb_hash + "/libx11-xcb-dev/libx11-xcb-dev_2%253a1.6.9-2ubuntu1.6_amd64.deb"],
         sha256 = "93fdbd64619ace78387946ccdec07c88294015aa8b3052cd2c3a6b28ce21e239",
     )
 
     x11_deb_repository(
         name = "libxdmcp-dev",
-        urls = ["https://github.com/ivucica/rules_libsdl12/raw/" +  master_deb_hash + "/libxdmcp-dev/libxdmcp-dev_1%3a1.1.3-0ubuntu1_amd64.deb"],
+        urls = ["https://github.com/ivucica/rules_libsdl12/raw/" +  master_deb_hash + "/libxdmcp-dev/libxdmcp-dev_1%253a1.1.3-0ubuntu1_amd64.deb"],
         sha256 = "977cb912f49638434a2bdb8947ac44897f25e5552448576c7d7a5f9a0d9bf1a3",
     )
 
     x11_deb_repository(
         name = "xorg-sgml-doctools",
-        urls = ["https://github.com/ivucica/rules_libsdl12/raw/" +  master_deb_hash + "/xorg-sgml-doctools/xorg-sgml-doctools_1%3a1.11-1_all.deb"],
+        urls = ["https://github.com/ivucica/rules_libsdl12/raw/" +  master_deb_hash + "/xorg-sgml-doctools/xorg-sgml-doctools_1%253a1.11-1_all.deb"],
         sha256 = "2f6463489813c2a08e077a6502453c3252453f7cbdab9f323006e081b33e7ad3",
     )
 
