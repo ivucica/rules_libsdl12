@@ -87,6 +87,20 @@ def _x11_deb_repository_rule_impl(repository_ctx):
         repository_ctx.file("reallocarray-fix.c", "#include <stdlib.h>\nvoid* reallocarray(void *ptr, size_t nmemb, size_t size) { return realloc(ptr, nmemb * size); }")
         r += 'cc_library(name="reallocarray-fix", srcs=["reallocarray-fix.c"])\n'
         extra_lib_deps.append('":reallocarray-fix"')
+        extra_lib_deps.append('"@libx11-6//:libx11-6"')
+        extra_lib_deps.append('"@libx11-6//:libX11"')
+
+    if repository_ctx.name == "libxcb1-dev":
+        extra_lib_deps.append('"@libxcb1//:libxcb1"')
+        extra_lib_deps.append('"@libxcb1//:libxcb"')
+
+    if repository_ctx.name == "libxau-dev":
+        extra_lib_deps.append('"@libxau6//:libxau6"')
+        extra_lib_deps.append('"@libxau6//:libXau"')
+
+    if repository_ctx.name == "libxdmcp-dev":
+        extra_lib_deps.append('"@libxdmcp6//:libxdmcp6"')
+        extra_lib_deps.append('"@libxdmcp6//:libXdmcp"')
 
     if repository_ctx.name == "libgl-dev":
         extra_lib_deps.append('"@libgl1//:libgl1"')
@@ -95,6 +109,10 @@ def _x11_deb_repository_rule_impl(repository_ctx):
     if repository_ctx.name == "libglu1-mesa-dev":
         extra_lib_deps.append('"@libglu1-mesa//:libglu1-mesa"')
         extra_lib_deps.append('"@libglu1-mesa//:libGLU"')
+
+    if repository_ctx.name == "libgl1":
+        extra_lib_deps.append('"@libglapi-mesa//:libglapi-mesa"')
+        extra_lib_deps.append('"@libglapi-mesa//:libglapi"')
 
     if True:
         for e in hdrs:
@@ -114,6 +132,54 @@ def _x11_deb_repository_rule_impl(repository_ctx):
                     _removeprefix(str(repository_ctx.path(e)), str(repository_ctx.path(".")) + "/"),
                     _removeprefix(str(repository_ctx.path(e)), str(repository_ctx.path("./usr/include")) + "/"),
                 )
+
+    if repository_ctx.name == "libx11-6":
+        repository_ctx.file("libX11.so.6.3.0", repository_ctx.read(libs[0]), executable = False, legacy_utf8 = False)
+        repository_ctx.file("libX11.so.6", repository_ctx.read(libs[0]), executable = False, legacy_utf8 = False)
+        repository_ctx.file("libX11.so", repository_ctx.read(libs[0]), executable = False, legacy_utf8 = False)
+        libs = [
+            "libX11.so",
+            "libX11.so.6",
+            "libX11.so.6.3.0",
+        ]
+
+        r += 'cc_library(name="libX11", srcs=[' + ",".join(['":' + str(e) + '"' for e in libs]) + '], visibility=["//visibility:public"])\n'
+
+    if repository_ctx.name == "libxcb1":
+        repository_ctx.file("libxcb.so.1.1.0", repository_ctx.read(libs[0]), executable = False, legacy_utf8 = False)
+        repository_ctx.file("libxcb.so.1", repository_ctx.read(libs[0]), executable = False, legacy_utf8 = False)
+        repository_ctx.file("libxcb.so", repository_ctx.read(libs[0]), executable = False, legacy_utf8 = False)
+        libs = [
+            "libxcb.so",
+            "libxcb.so.1",
+            "libxcb.so.1.1.0",
+        ]
+
+        r += 'cc_library(name="libxcb", srcs=[' + ",".join(['":' + str(e) + '"' for e in libs]) + '], visibility=["//visibility:public"])\n'
+
+    if repository_ctx.name == "libxau6":
+        repository_ctx.file("libXau.so.6.0.0", repository_ctx.read(libs[0]), executable = False, legacy_utf8 = False)
+        repository_ctx.file("libXau.so.6", repository_ctx.read(libs[0]), executable = False, legacy_utf8 = False)
+        repository_ctx.file("libXau.so", repository_ctx.read(libs[0]), executable = False, legacy_utf8 = False)
+        libs = [
+            "libXau.so",
+            "libXau.so.6",
+            "libXau.so.6.0.0",
+        ]
+
+        r += 'cc_library(name="libXau", srcs=[' + ",".join(['":' + str(e) + '"' for e in libs]) + '], visibility=["//visibility:public"])\n'
+
+    if repository_ctx.name == "libxdmcp6":
+        repository_ctx.file("libXdmcp.so.6.0.0", repository_ctx.read(libs[0]), executable = False, legacy_utf8 = False)
+        repository_ctx.file("libXdmcp.so.6", repository_ctx.read(libs[0]), executable = False, legacy_utf8 = False)
+        repository_ctx.file("libXdmcp.so", repository_ctx.read(libs[0]), executable = False, legacy_utf8 = False)
+        libs = [
+            "libXdmcp.so",
+            "libXdmcp.so.6",
+            "libXdmcp.so.6.0.0",
+        ]
+
+        r += 'cc_library(name="libXdmcp", srcs=[' + ",".join(['":' + str(e) + '"' for e in libs]) + '], visibility=["//visibility:public"])\n'
 
     if repository_ctx.name == "libgl1":
         repository_ctx.file("libGL.so.1.7.0", repository_ctx.read(libs[0]), executable = False, legacy_utf8 = False)
@@ -183,6 +249,17 @@ def _x11_deb_repository_rule_impl(repository_ctx):
 
         r += 'cc_library(name="libGLX", srcs=[' + ",".join(['":' + str(e) + '"' for e in libs]) + '], visibility=["//visibility:public"], deps=["@libglvnd0//:libGLdispatch", "@libglx-mesa0//:libGLX_mesa"])\n'
 
+    if repository_ctx.name == "libglapi-mesa":
+        repository_ctx.file("libglapi.so.0.0.0", repository_ctx.read(libs[0]), executable = False, legacy_utf8 = False)
+        repository_ctx.file("libglapi.so.0", repository_ctx.read(libs[0]), executable = False, legacy_utf8 = False)
+        repository_ctx.file("libglapi.so", repository_ctx.read(libs[0]), executable = False, legacy_utf8 = False)
+        libs = [
+            "libglapi.so",
+            "libglapi.so.0",
+            "libglapi.so.0.0.0",
+        ]
+
+        r += 'cc_library(name="libglapi", srcs=[' + ",".join(['":' + str(e) + '"' for e in libs]) + '], visibility=["//visibility:public"])\n'
 
 
     # Note: cc_import, cc_library etc have really interesting semantics and
@@ -326,8 +403,8 @@ def x11_deb_repository(name, urls, sha256):
 
 # x11_repository_deb adds all repos.
 def x11_repository_deb():
-    master_deb_hash = 'master.deb'
-    #master_deb_hash = "8a3188cd87e2961b0f8db2015e7e5d40c345a3ad"
+    #master_deb_hash = 'master.deb'
+    master_deb_hash = "27bd8c4629b5f466b42ee03a9c46e4d839aaa930"
 
     x11_deb_repository(
         name = "libx11-dev",
@@ -339,6 +416,12 @@ def x11_repository_deb():
         name = "libxext-dev",
         urls = ["https://github.com/ivucica/rules_libsdl12/raw/" +  master_deb_hash + "/libxext-dev/libxext-dev_2%253a1.3.4-0ubuntu1_amd64.deb"],
         sha256 = "b39e2d033916a4e2c1e970465517e285c3e532d3e2f451b720e67ba09cbb2733",
+    )
+
+    x11_deb_repository(
+        name = "libx11-6",
+        urls = ["https://github.com/ivucica/rules_libsdl12/raw/" +  master_deb_hash + "/libx11-6/libx11-6_2%253a1.6.9-2ubuntu1.6_amd64.deb"],
+        sha256 = "20d7c0a8ea7a138d49d777a5db8e652071a3c47c78136450ec7417b5232b84ac",
     )
 
     x11_deb_repository(
@@ -387,6 +470,24 @@ def x11_repository_deb():
         name = "xorg-sgml-doctools",
         urls = ["https://github.com/ivucica/rules_libsdl12/raw/" +  master_deb_hash + "/xorg-sgml-doctools/xorg-sgml-doctools_1%253a1.11-1_all.deb"],
         sha256 = "2f6463489813c2a08e077a6502453c3252453f7cbdab9f323006e081b33e7ad3",
+    )
+
+    x11_deb_repository(
+        name = "libxcb1",
+        urls = ["https://github.com/ivucica/rules_libsdl12/raw/" +  master_deb_hash + "/libxcb1/libxcb1_1.14-2_amd64.deb"],
+        sha256 = "3fcab5cc6a70bcb1e4157748f9c626be21bc18b4c8459447e4c213cba98b9831",
+    )
+
+    x11_deb_repository(
+        name = "libxau6",
+        urls = ["https://github.com/ivucica/rules_libsdl12/raw/" +  master_deb_hash + "/libxau6/libxau6_1%253a1.0.9-0ubuntu1_amd64.deb"],
+        sha256 = "58a0d78302a35e4584f96cd598af16b563ae7aae4af589e2a7cee6dc6666d979",
+    )
+
+    x11_deb_repository(
+        name = "libxdmcp6",
+        urls = ["https://github.com/ivucica/rules_libsdl12/raw/" +  master_deb_hash + "/libxdmcp6/libxdmcp6_1%253a1.1.3-0ubuntu1_amd64.deb"],
+        sha256 = "8a612b0fb60a41b92698f87258bc5ec6467da88e38d3de79411e02921c42af87",
     )
 
     # Not X11, but temporarily it is ok to have it live here.
@@ -443,6 +544,12 @@ def x11_repository_deb():
         name = "libglx0",  # required at runtime for libgl
         urls = ["https://github.com/ivucica/rules_libsdl12/raw/" +  master_deb_hash + "/libglx0/libglx0_1.3.2-1~ubuntu0.20.04.2_amd64.deb"],
         sha256 = "2620a3da6755af5df028a6f48c56e754ce90eef58c201dc9a289d5736eaad0c4",
+    )
+
+    x11_deb_repository(
+        name = "libglapi-mesa",
+        urls = ["https://github.com/ivucica/rules_libsdl12/raw/" +  master_deb_hash + "/libglapi-mesa/libglapi-mesa_21.2.6-0ubuntu0.1~20.04.2_amd64.deb"],
+        sha256 = "30d27c6b71753bea3f144d91756ca440a9f7cf3842497a3af4cf228e615c15b2",
     )
 
 
