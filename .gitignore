@@ -4,4 +4,4 @@ bazel-rules_sdl12
 bazel-rules_libsdl12
 bazel-out
 bazel-testlogs
-
+.bazelrc.buildbuddysecrets
