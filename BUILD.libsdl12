@@ -33,6 +33,11 @@ config_setting(
     values = {"cpu": "x64_msvc_windows", "compilation_mode": "dbg"}
 )
 
+config_setting(
+    name = "linux",
+    values = {"host_cpu": "k8"}  # TODO: is this enough to limit to linux?
+)
+
 cc_library(
     name = "sdl",
     srcs = glob([
@@ -245,6 +250,8 @@ cc_library(
         "//conditions:default": [
           "@x11repository//:X11",
           "@x11repository//:Xext",
+        ],
+        "linux": [
           "@libx11-dev//:libx11-dev", # <---- THE REAL THING that fixed include for Xlib.h
           "@libxext-dev//:libxext-dev",
           "@x11proto-dev//:x11proto-dev",
