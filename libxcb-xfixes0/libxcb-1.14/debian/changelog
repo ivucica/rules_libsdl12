@@ -1,0 +1,542 @@
+libxcb (1.14-2) unstable; urgency=medium
+
+  * symbols: Updated.
+
+ -- Timo Aaltonen <tjaalton@debian.org>  Fri, 27 Mar 2020 15:49:37 +0200
+
+libxcb (1.14-1) unstable; urgency=medium
+
+  * New upstream release.
+  * control: Use debhelper-compat, bump to 12.
+  * control: Bump build-dep on xcb-proto.
+  * control: Bump policy to 4.5.0.
+
+ -- Timo Aaltonen <tjaalton@debian.org>  Fri, 27 Mar 2020 09:46:09 +0200
+
+libxcb (1.13.1-5) unstable; urgency=medium
+
+  * control: Fix a typo. (Closes: #950779)
+  * tests: Use the correct compiler for proposed autopkgtest cross-
+    testing support.
+
+ -- Timo Aaltonen <tjaalton@debian.org>  Thu, 06 Feb 2020 11:45:53 +0200
+
+libxcb (1.13.1-4) unstable; urgency=medium
+
+  * control: Add libxcb-xfixes0-dev to libxcb-xinput-dev Depends.
+    (Closes: #947499)
+
+ -- Timo Aaltonen <tjaalton@debian.org>  Wed, 05 Feb 2020 19:27:55 +0200
+
+libxcb (1.13.1-3) unstable; urgency=medium
+
+  * Use python3 (closes: #936940).
+
+ -- Julien Cristau <jcristau@debian.org>  Fri, 03 Jan 2020 14:08:59 +0100
+
+libxcb (1.13.1-2) unstable; urgency=medium
+
+  * Add missing autopkgtest dependency on xauth.
+  * Set source format to 1.0.
+  * Bump standards version to 4.2.1.
+
+ -- Andreas Boll <aboll@debian.org>  Fri, 14 Dec 2018 11:28:13 +0100
+
+libxcb (1.13.1-1) unstable; urgency=medium
+
+  * New upstream release.
+    - fix KWin crashes on NVIDIA
+
+ -- Timo Aaltonen <tjaalton@debian.org>  Tue, 09 Oct 2018 11:45:36 +0300
+
+libxcb (1.13-3) unstable; urgency=medium
+
+  * Rebuild to get -dbgsym back. (Closes: #906934)
+
+ -- Timo Aaltonen <tjaalton@debian.org>  Wed, 22 Aug 2018 21:34:31 +0300
+
+libxcb (1.13-2) unstable; urgency=medium
+
+  [ Timo Aaltonen ]
+  * Package libxcb-xinput0/libxcb-xinput-dev. (Closes: #733227) (LP: #1777994)
+
+  [ Andreas Boll ]
+  * control: Fix VCS urls.
+
+ -- Timo Aaltonen <tjaalton@debian.org>  Thu, 21 Jun 2018 13:52:59 +0300
+
+libxcb (1.13-1) unstable; urgency=medium
+
+  [ Julien Cristau ]
+  * Switch xcb.freedesktop.org URLs in packaging to https.
+  * Stop building -dbg packages, rely on automatic dbgsym packages instead.
+
+  [ Helmut Grohne ]
+  * Make build-dependencies cross-satisfiable (closes: #788861)
+    + Mark python build-dependency with :native to pick an executable python
+    + Do not build-depend on check when the nocheck profile is passed
+
+  [ Timo Aaltonen ]
+  * New upstream release. (Closes: #892215)
+  * control: Bump xcb-proto build-dep to 1.13.
+  * tests: Add a simple autopkgtest.
+  * control: Update VCS urls.
+  * control, rules: Bump debhelper to 11, use max-parallel=1 for tests.
+  * Update symbols.
+  * rules: Update clean target.
+  * control: Bump policy to 4.1.3, no changes.
+
+ -- Timo Aaltonen <tjaalton@debian.org>  Wed, 07 Mar 2018 10:57:47 +0200
+
+libxcb (1.12-1) unstable; urgency=medium
+
+  * New upstream release (closes: #830491).
+    + bump xcb-proto build-dep to 1.12
+    + disable xevie and xprint bindings, stop building those packages
+  * Revert workaround for broken check.pc from 1.9.1-3.
+  * Update symbols files.
+    xcb_xkb_get_names_value_list_alignment_pad{,_end,_length} go away, because
+    the padding changed from a "normal" field to <pad> in xcb-proto 1.12, but
+    nothing should have been using it.
+
+ -- Julien Cristau <jcristau@debian.org>  Sat, 24 Sep 2016 19:52:14 +0200
+
+libxcb (1.11.1-1) unstable; urgency=medium
+
+  [ Andreas Boll ]
+  * New upstream release (Closes: #778307).
+    - xcb.h: add 'struct' before xcb_setup_t, xcb_query_extension_reply_t
+      (Closes: #788232).
+  * Add build-dep on xutils-dev.
+  * Bump xcb-proto and python-xcbgen build-deps to 1.11.
+  * Update libxcb1.symbols and liblibxcb-xprint0.symbols with new
+    symbols.
+  * Removes some symbols from libxcb-xkb1.symbols (previously wrong generated
+    code, no users found via Debian Code Search).
+  * Bump shlibs.
+  * Change maintainer to Debian X Strike Force.
+  * Update Vcs-* fields.
+  * Bump debhelper build-dep to 9 (Fixes Lintian warning: package-needs-
+    versioned-debhelper-build-depends 9).
+  * Remove obsolete Breaks/Conflicts/Replaces from pre-squeeze (Fixes
+    Lintian warning: breaks-without-version libxcb-xlib0).
+  * Remove obsolete XC- prefix from Package-Type field.
+  * Bump standards version to 3.9.6.
+  * Install manpages into libxcb-doc package (Closes: #751981).
+
+  [ Julien Cristau ]
+  * Disable silent build rules.
+  * Remove Josh and Julien from Uploaders, add myself.
+
+ -- Julien Cristau <jcristau@debian.org>  Tue, 27 Oct 2015 22:34:12 +0000
+
+libxcb (1.10-3) unstable; urgency=medium
+
+  * Add missing dependencies to libxcb-present-dev.  Thanks, Michel Dänzer!
+
+ -- Julien Cristau <jcristau@debian.org>  Fri, 06 Jun 2014 17:08:36 +0200
+
+libxcb (1.10-2) unstable; urgency=medium
+
+  * Add conflicts/replaces for sync dev package name change (closes: #733590)
+  * Pack generic events with 64bit types (as in the present extension) so the
+    fake full_sequence field doesn't introduce unexpected padding (pulled from
+    upstream git).
+
+ -- Julien Cristau <jcristau@debian.org>  Sat, 04 Jan 2014 14:20:09 +0100
+
+libxcb (1.10-1) unstable; urgency=low
+
+  * New upstream release.
+
+  [ Michele Cane ]
+  * Bump dependency to xcb-proto and python-xcbgen >= 1.10 (closes: #662113).
+
+  [ Julien Cristau ]
+  * Re-enable kfreebsd-amd64 tests, #712196 was fixed in libc.
+  * Add new packages for the XKEYBOARD (closes: #718701), DRI3 and Present
+    extensions.
+  * Rename libxcb-sync0 for SONAME bump.  The -dev package is now
+    libxcb-sync-dev (but the old name is still provided as a virtual package).
+  * Add randr 1.4 symbols.
+  * Add xres 1.2 symbols.
+  * Add xfixes 5 symbols.
+  * Add mit-shm 1.2 symbols.
+  * Bump libxcb1 symbols and shlibs for fd passing and event queues APIs.
+
+ -- Julien Cristau <jcristau@debian.org>  Sun, 22 Dec 2013 18:41:14 +0100
+
+libxcb (1.9.1-3.1) unstable; urgency=low
+
+  * Non-maintainer upload.
+  * Fix "FTBFS when $HOME does not exist: /install-sh: No such file or
+    directory":
+    apply upstream fix to configure.ac, taken from
+    http://cgit.freedesktop.org/xcb/libxcb/commit/?id=50fb3a6312dd0b6b613fc886ffd6827952d1e286
+    (Closes: #722688)
+  * debian/control: remove Cyril Brulebois from Uploaders on his request.
+    (Cf. #722688)
+
+ -- gregor herrmann <gregoa@debian.org>  Sun, 24 Nov 2013 02:51:08 +0100
+
+libxcb (1.9.1-3) unstable; urgency=low
+
+  * Revert #711599 workaround now that check is fixed.
+  * Don't run make check on kfreebsd-amd64 because of #712196.
+  * Remove unused DEB_*_GNU_TYPE variables from d/rules.
+  * Turns out check.pc's not quite right yet (#712140).  Work around that, too.
+
+ -- Julien Cristau <jcristau@debian.org>  Sat, 15 Jun 2013 12:52:40 +0200
+
+libxcb (1.9.1-2) unstable; urgency=low
+
+  * Add DRI2 1.4 symbols (added in xcb-proto 1.8).  Fixes FTBFS.
+  * Bump shlibs.
+
+ -- Julien Cristau <jcristau@debian.org>  Sun, 09 Jun 2013 22:51:39 +0200
+
+libxcb (1.9.1-1) unstable; urgency=low
+
+  * New upstream release.
+  * Work around #711599 by adding -lm -lrt explicitly to the tests linker
+    flags.
+  * Remove all-local rule from tests/Makefile.am to fix build with new
+    automake (closes: #710344).  Thanks, Marc Deslauriers!
+  * Delete test-driver on clean.  Apparently new automake gives us yet more
+    cruft in the source tree.
+  * libxcb1 Breaks alsa-utils (<< 1.0.24.2-5) to avoid leaving alsamixer
+    broken during partial upgrades (closes: #657538).
+
+ -- Julien Cristau <jcristau@debian.org>  Sun, 09 Jun 2013 20:52:53 +0200
+
+libxcb (1.8.1-2) unstable; urgency=low
+
+  * Cherry-pick from upstream 1.9:
+    Fix a multi-thread deadlock.  This fixes a deadlock which was seen
+    in-the-wild with wine.  It could happen that two threads tried to read
+    from the socket at the same time and one of the thread got stuck inside of
+    poll()/select().  The fix works by making sure that the writing thread
+    doesn't steal the reading thread's reply.  Closes: #689269.
+
+ -- Julien Cristau <jcristau@debian.org>  Mon, 15 Oct 2012 21:13:33 +0200
+
+libxcb (1.8.1-1) unstable; urgency=low
+
+  * New upstream release.
+
+ -- Cyril Brulebois <kibi@debian.org>  Sun, 11 Mar 2012 10:15:32 +0100
+
+libxcb (1.8-2) unstable; urgency=high
+
+  * Stop passing MSG_WAITALL to recv() (closes: #659104)
+
+ -- Julien Cristau <jcristau@debian.org>  Thu, 09 Feb 2012 23:58:07 +0100
+
+libxcb (1.8-1) unstable; urgency=low
+
+  [ Steve Langasek ]
+  * Use debhelper's dpkg-buildflags support instead of hard-coding CFLAGS,
+    picking up hardening flags and improving cross-build support.
+
+  [ Timo Aaltonen ]
+  * New upstream release.
+  * control: Bump the xcb-proto build-dep.
+
+  [ Arnaud Fontaine ]
+  * Bump Standards-Version to 3.9.2. No changes needed.
+  * Memory leak reported by valgrind was fixed in 1.8. Closes: #609478.
+  * Update debian/*.symbols with symbols added in 1.8.
+  * Add libxcb-doc package with doxygen documentation and tutorial.
+    Closes: #512564.
+
+ -- Arnaud Fontaine <arnau@debian.org>  Wed, 25 Jan 2012 16:12:14 +0900
+
+libxcb (1.7-4) unstable; urgency=low
+
+  * Mark the -dev packages Multi-Arch: same, after thoroughly reviewing
+    that the package contents are consistent across amd64 and armel
+    architectures.
+
+ -- Steve Langasek <vorlon@debian.org>  Tue, 08 Nov 2011 17:44:48 -0800
+
+libxcb (1.7-3) unstable; urgency=low
+
+  [ Steve Langasek ]
+  * Build for multiarch.
+
+  [ Julien Cristau ]
+  * Remove some unnecessary parts from debian/rules.  As a bonus, this should
+    fix the build failure with DEB_BUILD_OPTIONS=nocheck (closes: #629691).
+
+ -- Julien Cristau <jcristau@debian.org>  Wed, 08 Jun 2011 23:21:10 +0200
+
+libxcb (1.7-2) unstable; urgency=low
+
+  * Revert source format change.
+  * Upload to unstable.
+
+ -- Julien Cristau <jcristau@debian.org>  Sun, 06 Feb 2011 22:09:25 +0100
+
+libxcb (1.7-1) experimental; urgency=low
+
+  * New upstream release
+  * Bump standard version
+  * Use 3.0 source format
+
+ -- Julien Danjou <acid@debian.org>  Sat, 23 Oct 2010 14:48:55 +0200
+
+libxcb (1.6-1) unstable; urgency=low
+
+  * New upstream release.
+  * Bump Build-Depends on xcb-proto (from 1.5 to 1.6) accordingly.
+  * debian/libxcb1.symbols: Add xcb_discard_reply@Base, new in this
+    release.
+
+ -- Cyril Brulebois <kibi@debian.org>  Tue, 13 Apr 2010 17:20:59 +0200
+
+libxcb (1.5-3) unstable; urgency=low
+
+  * Add udeb needed for the graphical installer: libxcb1-udeb.
+  * Version the B-D on libxau-dev to ensure libxcb1-udeb gets a dependency
+    on libxau6-udeb.
+  * Version the B-D on libxdmcp-dev to ensure libxcb1-udeb gets a
+    dependency on libxdmcp6-udeb.
+  * Bump Standards-Version from 3.8.3 to 3.8.4 (no changes needed).
+  * Remove Jamey Sharp from Uploaders (Closes: #568277), with many thanks
+    for your work!
+  * Add myself to Uploaders.
+
+ -- Cyril Brulebois <kibi@debian.org>  Wed, 10 Mar 2010 21:45:48 +0100
+
+libxcb (1.5-2) unstable; urgency=low
+
+  * Add libxcb-dri2-0
+
+ -- Julien Danjou <acid@debian.org>  Thu, 03 Dec 2009 11:26:51 +0100
+
+libxcb (1.5-1) unstable; urgency=low
+
+  * New upstream release
+  * Bump standard version
+
+ -- Julien Danjou <acid@debian.org>  Thu, 03 Dec 2009 10:17:51 +0100
+
+libxcb (1.4-1) unstable; urgency=low
+
+  [ Julien Danjou ]
+  * New upstream release
+  * Bump build-dep on xcb-proto to 1.5 (Closes: #536188)
+  * Bump standard version
+
+  [ Julien Cristau ]
+  * libxcb-randr0-dev needs to depend on libxcb-render0-dev (closes: #532688).
+    Thanks, Remi Denis-Courmont!
+  * Fix generation of dbg packages (closes: #537584).
+
+ -- Julien Danjou <acid@debian.org>  Mon, 27 Jul 2009 15:49:47 +0200
+
+libxcb (1.3-2) unstable; urgency=low
+
+  * Revert the libxcb-randr SONAME bump, which was accidental.
+  * Add symbols files for all libraries, to help us catch ABI changes.
+  * Use debhelper 7 and get rid of cdbs, reducing build time by a lot.
+  * Tighten the glob in *.install files to catch SONAME changes.
+
+ -- Julien Cristau <jcristau@debian.org>  Fri, 29 May 2009 14:58:44 +0200
+
+libxcb (1.3-1) unstable; urgency=low
+
+  [ Julien Cristau ]
+  * Use Breaks instead of Conflicts, as the buildds should no longer choke on
+    that (closes: #526111).  Thanks, Steve Langasek!
+  * Fix Vcs-{Git,Browser}, thanks again to Steve Langasek (closes: #526107).
+
+  [ Julien Danjou ]
+  * New upstream release.
+    + disables Nagle on tcp sockets, closes: #487635
+    + fixes local socket connections on hurd, closes: #522708
+    + fixes XID generation bug, closes: #527591
+  * Bump standard version
+  * Move -dbg packages to section debug
+  * Switch libxcb-randr0 to libxcb-randr1
+
+ -- Julien Danjou <acid@debian.org>  Fri, 29 May 2009 11:38:20 +0200
+
+libxcb (1.2-1) unstable; urgency=low
+
+  * New upstream release.
+  * Conflicts libxcb-xlib0
+
+ -- Julien Danjou <acid@debian.org>  Tue, 17 Feb 2009 14:09:31 +0100
+
+libxcb (1.1.93-1) experimental; urgency=low
+
+  * New upstream release.
+  * Add myself as uploader.
+  * Bump standards version.
+  * Add missing ${misc:Depends} in various deps.
+  * Relax some build-deps to ease backporting.
+
+ -- Julien Danjou <acid@debian.org>  Sat, 07 Feb 2009 16:20:33 +0100
+
+libxcb (1.1.92-0.1) experimental; urgency=low
+
+  * New upstream release.
+    - implements a socket handoff mechanism for use by Xlib
+  * libxcb-xlib is no more.
+  * Add build-dep on python-xcbgen.
+  * Drop obsolete versioned binutils build-dep.
+  * Bump libxcb1 shlibs.
+  * Run autoreconf at build time; build-dep on automake and libtool.
+
+ -- Julien Cristau <jcristau@debian.org>  Mon, 01 Dec 2008 21:29:57 +0100
+
+libxcb (1.1-1.1) unstable; urgency=low
+
+  * Non-maintainer upload.
+  * Turn sloppy locking on by default (closes: #481745).  It can be disabled
+    by setting the LIBXCB_DISABLE_SLOPPY_LOCK environment variable (to any
+    value).
+
+ -- Julien Cristau <jcristau@debian.org>  Wed, 28 May 2008 15:16:42 +0200
+
+libxcb (1.1-1) unstable; urgency=low
+
+  * New upstream release.
+  * Depend on xcb-proto between 1.1 and 2.0.
+  * Lintian fix: ${binary:Version}, not ${Source-Version}.
+  * Update Vcs-* and Homepage: headers for dpkg 1.14.6.
+
+ -- Jamey Sharp <sharpone@debian.org>  Sat, 24 Nov 2007 14:59:42 -0800
+
+libxcb (1.0-3) unstable; urgency=low
+
+  * libxcb1-dev: Add Conflicts and Replaces for old libxcb0-dev packages
+    from experimental. (Closes: #407376)
+
+ -- Josh Triplett <josh@freedesktop.org>  Tue, 22 May 2007 12:01:50 -0700
+
+libxcb (1.0-2) unstable; urgency=low
+
+  * Incorporate NMU by Julien Cristau; thanks, Julien!
+  * Add XS-Vcs-Browser field to debian/control.
+  * Cherry-pick post-1.0 changes from master:
+    * " Fix unit tests for FreeBSD"
+  * Upload to unstable.
+
+ -- Josh Triplett <josh@freedesktop.org>  Mon, 21 May 2007 12:48:40 -0700
+
+libxcb (1.0-1.1) experimental; urgency=low
+
+  * Non-maintainer upload.
+  * libxcb1-dev needs a dependency on libpthread-stubs0-dev and versioned
+    dependencies on libxau-dev and libxdmcp-dev, because they are needed by
+    anything using xcb.pc (closes: #408409).
+
+ -- Julien Cristau <julien.cristau@ens-lyon.org>  Wed, 31 Jan 2007 03:42:13 +0100
+
+libxcb (1.0-1) experimental; urgency=low
+
+  * New upstream version.
+  * The "Thanksgiving" release: We feel thankful to have it released.
+  * Bump versioned Build-Depends on xcb-proto to 1.0, to match configure.ac.
+  * Add version to Build-Depends on check, requiring 0.9.4-2 or newer, when
+    check first started shipping the pkg-config file.
+  * Add Build-Depends on libpthread-stubs0-dev.  Use a versioned
+    Build-Depends, to help buildds find it in experimental.
+  * Add version to Build-Depends on xsltproc, requiring 1.1.19-1 or newer, to
+    get the fix for bug 398327.
+  * Add XS-Vcs-Git field.
+  * Cherry-pick post-1.0 changes from master:
+    * "NetBSD doesn't have AI_ADDRCONFIG: use it only if it's available."
+    * "Use substitition variables in xcb-xinerama.pc.in, not instances of their
+       values"
+  * Add new library, -dev, and -dbg packages for libxcb-xinerama.
+  * Install pkg-config files to /usr/lib/pkgconfig, not
+    /usr/share/pkgconfig.
+
+ -- Josh Triplett <josh@freedesktop.org>  Sun, 10 Dec 2006 16:27:28 -0800
+
+libxcb (0.9.92-1) experimental; urgency=low
+
+  * New upstream version.
+
+  [ Josh Triplett ]
+  * No longer installs files to /usr/include/X11, so remove Pre-Depends on
+    x11-common.
+  * Update to Standards-Version 3.7.2 (no changes required).
+  * Point specifically to http://xcb.freedesktop.org/dist in copyright file,
+    rather than http://xcb.freedesktop.org .
+  * Add debian/watch file.
+  * Install pkgconfig files to /usr/share/pkgconfig.
+  * Version Build-Depends on xcb-proto as (>= 0.9.92)
+  * Change libxcb0{,-dev,-dbg} to libxcb1{,-dev,-dbg} to match soname bump, and
+    update Depends of other library -dev packages.
+  * Add debian/control stanzas and debhelper install files for new library
+    libxcb-xlib0.
+  * Change libxcb${ext}0{,-dev,-dbg} to libxcb-${ext}0{,-dev,-dbg}, to match
+    the sonames of the libraries.
+  * cdbs >= 0.4.40 now builds -dbg packages for each library package, without
+    requiring DEB_DBG_PACKAGE_libxcb* for each one.  Remove assignments to
+    these variables in debian/rules, and version cdbs Build-Depends accordingly.
+  * Change -dbg package priorities from optional to extra.
+
+ -- Jamey Sharp <sharpone@debian.org>  Sun, 08 Oct 2006 01:19:28 -0700
+
+libxcb (0.9-3) experimental; urgency=low
+
+  * Stop running autoreconf in debian/rules, and remove Build-Depends for
+    autoconf, automake, and libtool.
+  * Update -dbg package handling to work with debhelper compat level 5.
+    Increase minimum version on debhelper Build-Depends to 5.0.0.
+  * Stop installing the libtool .la files.
+  * Add Build-Depends on libxdmcp-dev.
+  * Debian X11R7 transition:
+    * Change Depends and Build-Depends on x-dev to x11proto-core-dev.
+    * Install headers to /usr/include/X11, not /usr/X11R6/include/X11.
+    * Pre-Depends: x11-common (>= 1:1.09).
+  * Create library, -dev, and -dbg packages for each new extension library.
+  * Drop library version from source package name.
+  * Add a Section field for the source package in debian/control.
+  * Set DEB_MAKE_CHECK_TARGET=check in debian/rules.
+  * Stop setting DEB_CONFIGURE_EXTRA_FLAGS = --with-opt in debian/rules;
+    cdbs does the right thing on its own, and correctly handles
+    DEB_BUILD_OPTS.
+  * Work around the unsetting of CFLAGS in src/Makefile.am, by passing CFLAGS
+    to make via DEB_MAKE_INVOKE in debian/rules.
+  * Remove Bugs field in control, so bugs go to the Debian BTS.
+  * Set distribution to experimental.
+
+ -- Josh Triplett <josh@freedesktop.org>  Sat, 29 Apr 2006 15:57:15 -0700
+
+libxcb0 (0.9-2) unstable; urgency=low
+
+  * Split into libxcb0 and libxcb0-dev.
+    * Change control file for new packages.
+    * Add install and dirs files for new packages.
+  * Update Build-Depends for renaming of fd.o-xau, fd.o-xproto, and
+    fd.o-xcb-proto.
+  * Remove fd.o prefix from package name.
+  * Change Maintainer to xcb@lists.freedesktop.org, move myself to
+    Uploaders, and add Jamey Sharp to Uploaders.  Update copyright.debian
+    accordingly.
+  * Add Bugs field pointing to xcb@lists.freedesktop.org.
+  * Update homepage URL in description and copyright.debian to
+    http://xcb.freedesktop.org, and put it in a Homepage: field in the
+    description.
+  * Add libxcb0-dbg package.
+
+ -- Josh Triplett <josh@freedesktop.org>  Tue, 17 May 2005 12:53:53 -0700
+
+fd.o-xcb (0.9-1) unstable; urgency=low
+
+  * New version using XSLT; works with XML descriptions in xcb-proto 0.9.
+  * Updated Debian packaging.
+
+ -- Josh Triplett <josh@freedesktop.org>  Fri, 29 Oct 2004 15:11:09 -0700
+
+fd.o-xcb (0.8-1) unstable; urgency=low
+
+  * Initial Release.
+
+ -- Jamey Sharp <sharpone@debian.org>  Thu, 18 Mar 2004 00:09:03 -0800

@@ -1,0 +1,27 @@
+#!/usr/bin/make -f
+
+DEB_HOST_ARCH_OS ?= $(shell dpkg-architecture -qDEB_HOST_ARCH_OS)
+
+ifeq ($(DEB_HOST_ARCH_OS), linux)
+SHMDIR = /dev/shm
+else
+# kfreebsd buildds don't seem to have writable /dev/shm
+SHMDIR = /tmp
+endif
+
+%:
+	dh $@ --with quilt,autoreconf --builddirectory=build/ --parallel
+
+override_dh_makeshlibs:
+	dh_makeshlibs --add-udeb=libxshmfence1-udeb -- -c4
+
+override_dh_install:
+	dh_install --fail-missing -X.la
+
+override_dh_auto_configure:
+	dh_auto_configure -- \
+	    --disable-silent-rules \
+	    --with-shared-memory-dir=$(SHMDIR)
+
+override_dh_auto_test:
+	dh_auto_test -- VERBOSE=1

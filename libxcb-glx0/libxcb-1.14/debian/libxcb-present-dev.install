@@ -1,0 +1,4 @@
+usr/include/xcb/present.h
+usr/lib/*/libxcb-present.a
+usr/lib/*/libxcb-present.so
+usr/lib/*/pkgconfig/xcb-present.pc

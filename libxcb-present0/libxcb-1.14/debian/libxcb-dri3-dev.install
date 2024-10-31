@@ -1,0 +1,4 @@
+usr/include/xcb/dri3.h
+usr/lib/*/libxcb-dri3.a
+usr/lib/*/libxcb-dri3.so
+usr/lib/*/pkgconfig/xcb-dri3.pc

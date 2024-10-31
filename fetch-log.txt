@@ -1,6 +1,6 @@
 [1m[7m[31mUpdating libx11-dev
 [91m(B[mGet:1 http://archive.ubuntu.com/ubuntu focal-updates/main amd64 libx11-dev amd64 2:1.6.9-2ubuntu1.6 [648 kB]
-Fetched 648 kB in 1s (1,060 kB/s)
+Fetched 648 kB in 0s (10.5 MB/s)
 Reading package lists...
 Picking 'libx11' as source package instead of 'libx11-dev'
 NOTICE: 'libx11' packaging is maintained in the 'Git' version control system at:
@@ -19,10 +19,10 @@ Get:4 http://archive.ubuntu.com/ubuntu focal-updates/main libx11 2:1.6.9-2ubuntu
 [1mdpkg-source: [0m[32minfo[0m: upstream files that have been modified: 
  libx11-1.6.9/ChangeLog
  libx11-1.6.9/autogen.sh
-Fetched 3,070 kB in 1s (3,635 kB/s)
+Fetched 3,070 kB in 0s (50.6 MB/s)
 [1m[7m[31mUpdating libxext-dev
 [91m(B[mGet:1 http://archive.ubuntu.com/ubuntu focal/main amd64 libxext-dev amd64 2:1.3.4-0ubuntu1 [82.2 kB]
-Fetched 82.2 kB in 0s (3,755 kB/s)
+Fetched 82.2 kB in 0s (4,588 kB/s)
 Reading package lists...
 Picking 'libxext' as source package instead of 'libxext-dev'
 NOTICE: 'libxext' packaging is maintained in the 'Git' version control system at:
@@ -39,10 +39,10 @@ Get:3 http://archive.ubuntu.com/ubuntu focal/main libxext 2:1.3.4-0ubuntu1 (diff
 [1mdpkg-source: [0m[32minfo[0m: applying libxext_1.3.4-0ubuntu1.diff.gz
 [1mdpkg-source: [0m[32minfo[0m: upstream files that have been modified: 
  libxext-1.3.4/autogen.sh
-Fetched 517 kB in 0s (17.7 MB/s)
+Fetched 517 kB in 1s (722 kB/s)
 [1m[7m[31mUpdating libxrandr-dev
 [91m(B[mGet:1 http://archive.ubuntu.com/ubuntu focal/main amd64 libxrandr-dev amd64 2:1.5.2-0ubuntu1 [25.0 kB]
-Fetched 25.0 kB in 0s (234 kB/s)
+Fetched 25.0 kB in 0s (1,352 kB/s)
 Reading package lists...
 Picking 'libxrandr' as source package instead of 'libxrandr-dev'
 NOTICE: 'libxrandr' packaging is maintained in the 'Git' version control system at:
@@ -60,10 +60,10 @@ Get:3 http://archive.ubuntu.com/ubuntu focal/main libxrandr 2:1.5.2-0ubuntu1 (di
 [1mdpkg-source: [0m[32minfo[0m: upstream files that have been modified: 
  libxrandr-1.5.2/.gitignore
  libxrandr-1.5.2/autogen.sh
-Fetched 430 kB in 1s (691 kB/s)
+Fetched 430 kB in 0s (13.5 MB/s)
 [1m[7m[31mUpdating libxrender-dev
 [91m(B[mGet:1 http://archive.ubuntu.com/ubuntu focal/main amd64 libxrender-dev amd64 1:0.9.10-1 [24.9 kB]
-Fetched 24.9 kB in 0s (1,267 kB/s)
+Fetched 24.9 kB in 0s (1,172 kB/s)
 Reading package lists...
 Picking 'libxrender' as source package instead of 'libxrender-dev'
 NOTICE: 'libxrender' packaging is maintained in the 'Git' version control system at:
@@ -81,10 +81,10 @@ Get:3 http://archive.ubuntu.com/ubuntu focal/main libxrender 1:0.9.10-1 (diff) [
 [1mdpkg-source: [0m[32minfo[0m: upstream files that have been modified: 
  libxrender-0.9.10/.gitignore
  libxrender-0.9.10/autogen.sh
-Fetched 391 kB in 1s (632 kB/s)
+Fetched 391 kB in 0s (15.3 MB/s)
 [1m[7m[31mUpdating x11proto-dev
 [91m(B[mGet:1 http://archive.ubuntu.com/ubuntu focal/main amd64 x11proto-dev all 2019.2-1ubuntu1 [594 kB]
-Fetched 594 kB in 1s (992 kB/s)
+Fetched 594 kB in 0s (22.5 MB/s)
 Reading package lists...
 Picking 'xorgproto' as source package instead of 'x11proto-dev'
 NOTICE: 'xorgproto' packaging is maintained in the 'Git' version control system at:
@@ -100,10 +100,10 @@ Get:4 http://archive.ubuntu.com/ubuntu focal/main xorgproto 2019.2-1ubuntu1 (dif
 [1mdpkg-source: [0m[32minfo[0m: extracting xorgproto in xorgproto-2019.2
 [1mdpkg-source: [0m[32minfo[0m: unpacking xorgproto_2019.2.orig.tar.gz
 [1mdpkg-source: [0m[32minfo[0m: applying xorgproto_2019.2-1ubuntu1.diff.gz
-Fetched 1,107 kB in 1s (1,539 kB/s)
+Fetched 1,107 kB in 0s (23.8 MB/s)
 [1m[7m[31mUpdating xorg-sgml-doctools
 [91m(B[mGet:1 http://archive.ubuntu.com/ubuntu focal/main amd64 xorg-sgml-doctools all 1:1.11-1 [12.9 kB]
-Fetched 12.9 kB in 0s (854 kB/s)
+Fetched 12.9 kB in 0s (80.8 kB/s)
 Reading package lists...
 NOTICE: 'xorg-sgml-doctools' packaging is maintained in the 'Git' version control system at:
 git://git.debian.org/git/pkg-xorg/doc/xorg-sgml-doctools
@@ -119,10 +119,10 @@ Get:3 http://archive.ubuntu.com/ubuntu focal/main xorg-sgml-doctools 1:1.11-1 (d
 [1mdpkg-source: [0m[32minfo[0m: applying xorg-sgml-doctools_1.11-1.diff.gz
 [1mdpkg-source: [0m[32minfo[0m: upstream files that have been modified: 
  xorg-sgml-doctools-1.11/autogen.sh
-Fetched 156 kB in 0s (311 kB/s)
+Fetched 156 kB in 0s (317 kB/s)
 [1m[7m[31mUpdating libxcb1-dev
 [91m(B[mGet:1 http://archive.ubuntu.com/ubuntu focal/main amd64 libxcb1-dev amd64 1.14-2 [80.5 kB]
-Fetched 80.5 kB in 0s (221 kB/s)
+Fetched 80.5 kB in 0s (2,176 kB/s)
 Reading package lists...
 Picking 'libxcb' as source package instead of 'libxcb1-dev'
 NOTICE: 'libxcb' packaging is maintained in the 'Git' version control system at:
@@ -139,10 +139,10 @@ Get:3 http://archive.ubuntu.com/ubuntu focal/main libxcb 1.14-2 (diff) [25.7 kB]
 [1mdpkg-source: [0m[32minfo[0m: applying libxcb_1.14-2.diff.gz
 [1mdpkg-source: [0m[32minfo[0m: upstream files that have been modified: 
  libxcb-1.14/.autom4te.cfg
-Fetched 671 kB in 0s (22.6 MB/s)
+Fetched 671 kB in 1s (1,044 kB/s)
 [1m[7m[31mUpdating libx11-xcb-dev
 [91m(B[mGet:1 http://archive.ubuntu.com/ubuntu focal-updates/main amd64 libx11-xcb-dev amd64 2:1.6.9-2ubuntu1.6 [9,792 B]
-Fetched 9,792 B in 0s (59.2 kB/s)
+Fetched 9,792 B in 0s (554 kB/s)
 Reading package lists...
 Picking 'libx11' as source package instead of 'libx11-xcb-dev'
 NOTICE: 'libx11' packaging is maintained in the 'Git' version control system at:
@@ -161,10 +161,10 @@ Get:4 http://archive.ubuntu.com/ubuntu focal-updates/main libx11 2:1.6.9-2ubuntu
 [1mdpkg-source: [0m[32minfo[0m: upstream files that have been modified: 
  libx11-1.6.9/ChangeLog
  libx11-1.6.9/autogen.sh
-Fetched 3,070 kB in 0s (47.6 MB/s)
+Fetched 3,070 kB in 0s (46.6 MB/s)
 [1m[7m[31mUpdating libxau-dev
 [91m(B[mGet:1 http://archive.ubuntu.com/ubuntu focal/main amd64 libxau-dev amd64 1:1.0.9-0ubuntu1 [9,552 B]
-Fetched 9,552 B in 0s (602 kB/s)
+Fetched 9,552 B in 0s (59.9 kB/s)
 Reading package lists...
 Picking 'libxau' as source package instead of 'libxau-dev'
 NOTICE: 'libxau' packaging is maintained in the 'Git' version control system at:
@@ -181,10 +181,10 @@ Get:3 http://archive.ubuntu.com/ubuntu focal/main libxau 1:1.0.9-0ubuntu1 (diff)
 [1mdpkg-source: [0m[32minfo[0m: applying libxau_1.0.9-0ubuntu1.diff.gz
 [1mdpkg-source: [0m[32minfo[0m: upstream files that have been modified: 
  libxau-1.0.9/autogen.sh
-Fetched 411 kB in 0s (12.2 MB/s)
+Fetched 411 kB in 0s (15.7 MB/s)
 [1m[7m[31mUpdating libxdmcp-dev
 [91m(B[mGet:1 http://archive.ubuntu.com/ubuntu focal/main amd64 libxdmcp-dev amd64 1:1.1.3-0ubuntu1 [25.3 kB]
-Fetched 25.3 kB in 0s (97.5 kB/s)
+Fetched 25.3 kB in 0s (1,329 kB/s)
 Reading package lists...
 Picking 'libxdmcp' as source package instead of 'libxdmcp-dev'
 NOTICE: 'libxdmcp' packaging is maintained in the 'Git' version control system at:
@@ -199,10 +199,291 @@ Get:3 http://archive.ubuntu.com/ubuntu focal/main libxdmcp 1:1.1.3-0ubuntu1 (dif
 [1mdpkg-source: [0m[32minfo[0m: extracting libxdmcp in libxdmcp-1.1.3
 [1mdpkg-source: [0m[32minfo[0m: unpacking libxdmcp_1.1.3.orig.tar.gz
 [1mdpkg-source: [0m[32minfo[0m: applying libxdmcp_1.1.3-0ubuntu1.diff.gz
-Fetched 449 kB in 1s (709 kB/s)
+Fetched 449 kB in 1s (582 kB/s)
+[1m[7m[31mUpdating libxext6
+[91m(B[mGet:1 http://archive.ubuntu.com/ubuntu focal/main amd64 libxext6 amd64 2:1.3.4-0ubuntu1 [29.1 kB]
+Fetched 29.1 kB in 0s (1,445 kB/s)
+Reading package lists...
+Picking 'libxext' as source package instead of 'libxext6'
+NOTICE: 'libxext' packaging is maintained in the 'Git' version control system at:
+git://git.debian.org/git/pkg-xorg/lib/libxext
+Please use:
+git clone git://git.debian.org/git/pkg-xorg/lib/libxext
+to retrieve the latest (possibly unreleased) updates to the package.
+Need to get 517 kB of source archives.
+Get:1 http://archive.ubuntu.com/ubuntu focal/main libxext 2:1.3.4-0ubuntu1 (dsc) [1,727 B]
+Get:2 http://archive.ubuntu.com/ubuntu focal/main libxext 2:1.3.4-0ubuntu1 (tar) [494 kB]
+Get:3 http://archive.ubuntu.com/ubuntu focal/main libxext 2:1.3.4-0ubuntu1 (diff) [20.7 kB]
+[1mdpkg-source: [0m[32minfo[0m: extracting libxext in libxext-1.3.4
+[1mdpkg-source: [0m[32minfo[0m: unpacking libxext_1.3.4.orig.tar.gz
+[1mdpkg-source: [0m[32minfo[0m: applying libxext_1.3.4-0ubuntu1.diff.gz
+[1mdpkg-source: [0m[32minfo[0m: upstream files that have been modified: 
+ libxext-1.3.4/autogen.sh
+Fetched 517 kB in 1s (798 kB/s)
+[1m[7m[31mUpdating libxfixes3
+[91m(B[mGet:1 http://archive.ubuntu.com/ubuntu focal/main amd64 libxfixes3 amd64 1:5.0.3-2 [10.9 kB]
+Fetched 10.9 kB in 0s (518 kB/s)
+Reading package lists...
+Picking 'libxfixes' as source package instead of 'libxfixes3'
+NOTICE: 'libxfixes' packaging is maintained in the 'Git' version control system at:
+https://salsa.debian.org/xorg-team/lib/libxfixes.git
+Please use:
+git clone https://salsa.debian.org/xorg-team/lib/libxfixes.git
+to retrieve the latest (possibly unreleased) updates to the package.
+Need to get 377 kB of source archives.
+Get:1 http://archive.ubuntu.com/ubuntu focal/main libxfixes 1:5.0.3-2 (dsc) [2,014 B]
+Get:2 http://archive.ubuntu.com/ubuntu focal/main libxfixes 1:5.0.3-2 (tar) [360 kB]
+Get:3 http://archive.ubuntu.com/ubuntu focal/main libxfixes 1:5.0.3-2 (diff) [14.7 kB]
+[1mdpkg-source: [0m[32minfo[0m: extracting libxfixes in libxfixes-5.0.3
+[1mdpkg-source: [0m[32minfo[0m: unpacking libxfixes_5.0.3.orig.tar.gz
+[1mdpkg-source: [0m[32minfo[0m: applying libxfixes_5.0.3-2.diff.gz
+[1mdpkg-source: [0m[32minfo[0m: upstream files that have been modified: 
+ libxfixes-5.0.3/autogen.sh
+Fetched 377 kB in 0s (12.1 MB/s)
+[1m[7m[31mUpdating libxxf86vm1
+[91m(B[mGet:1 http://archive.ubuntu.com/ubuntu focal/main amd64 libxxf86vm1 amd64 1:1.1.4-1build1 [10.2 kB]
+Fetched 10.2 kB in 0s (62.8 kB/s)
+Reading package lists...
+Picking 'libxxf86vm' as source package instead of 'libxxf86vm1'
+NOTICE: 'libxxf86vm' packaging is maintained in the 'Git' version control system at:
+git://git.debian.org/git/pkg-xorg/lib/libxxf86vm
+Please use:
+git clone git://git.debian.org/git/pkg-xorg/lib/libxxf86vm
+to retrieve the latest (possibly unreleased) updates to the package.
+Need to get 373 kB of source archives.
+Get:1 http://archive.ubuntu.com/ubuntu focal/main libxxf86vm 1:1.1.4-1build1 (dsc) [2,141 B]
+Get:2 http://archive.ubuntu.com/ubuntu focal/main libxxf86vm 1:1.1.4-1build1 (tar) [363 kB]
+Get:3 http://archive.ubuntu.com/ubuntu focal/main libxxf86vm 1:1.1.4-1build1 (diff) [8,101 B]
+[1mdpkg-source: [0m[32minfo[0m: extracting libxxf86vm in libxxf86vm-1.1.4
+[1mdpkg-source: [0m[32minfo[0m: unpacking libxxf86vm_1.1.4.orig.tar.gz
+[1mdpkg-source: [0m[32minfo[0m: applying libxxf86vm_1.1.4-1build1.diff.gz
+[1mdpkg-source: [0m[32minfo[0m: upstream files that have been modified: 
+ libxxf86vm-1.1.4/autogen.sh
+Fetched 373 kB in 0s (12.9 MB/s)
+[1m[7m[31mUpdating libxcb-glx0
+[91m(B[mGet:1 http://archive.ubuntu.com/ubuntu focal/main amd64 libxcb-glx0 amd64 1.14-2 [22.1 kB]
+Fetched 22.1 kB in 0s (79.6 kB/s)
+Reading package lists...
+Picking 'libxcb' as source package instead of 'libxcb-glx0'
+NOTICE: 'libxcb' packaging is maintained in the 'Git' version control system at:
+https://salsa.debian.org/xorg-team/lib/libxcb.git
+Please use:
+git clone https://salsa.debian.org/xorg-team/lib/libxcb.git
+to retrieve the latest (possibly unreleased) updates to the package.
+Need to get 671 kB of source archives.
+Get:1 http://archive.ubuntu.com/ubuntu focal/main libxcb 1.14-2 (dsc) [5,344 B]
+Get:2 http://archive.ubuntu.com/ubuntu focal/main libxcb 1.14-2 (tar) [640 kB]
+Get:3 http://archive.ubuntu.com/ubuntu focal/main libxcb 1.14-2 (diff) [25.7 kB]
+[1mdpkg-source: [0m[32minfo[0m: extracting libxcb in libxcb-1.14
+[1mdpkg-source: [0m[32minfo[0m: unpacking libxcb_1.14.orig.tar.gz
+[1mdpkg-source: [0m[32minfo[0m: applying libxcb_1.14-2.diff.gz
+[1mdpkg-source: [0m[32minfo[0m: upstream files that have been modified: 
+ libxcb-1.14/.autom4te.cfg
+Fetched 671 kB in 0s (19.7 MB/s)
+[1m[7m[31mUpdating libxcb-dri2-0
+[91m(B[mGet:1 http://archive.ubuntu.com/ubuntu focal/main amd64 libxcb-dri2-0 amd64 1.14-2 [6,920 B]
+Fetched 6,920 B in 0s (302 kB/s)
+Reading package lists...
+Picking 'libxcb' as source package instead of 'libxcb-dri2-0'
+NOTICE: 'libxcb' packaging is maintained in the 'Git' version control system at:
+https://salsa.debian.org/xorg-team/lib/libxcb.git
+Please use:
+git clone https://salsa.debian.org/xorg-team/lib/libxcb.git
+to retrieve the latest (possibly unreleased) updates to the package.
+Need to get 671 kB of source archives.
+Get:1 http://archive.ubuntu.com/ubuntu focal/main libxcb 1.14-2 (dsc) [5,344 B]
+Get:2 http://archive.ubuntu.com/ubuntu focal/main libxcb 1.14-2 (tar) [640 kB]
+Get:3 http://archive.ubuntu.com/ubuntu focal/main libxcb 1.14-2 (diff) [25.7 kB]
+[1mdpkg-source: [0m[32minfo[0m: extracting libxcb in libxcb-1.14
+[1mdpkg-source: [0m[32minfo[0m: unpacking libxcb_1.14.orig.tar.gz
+[1mdpkg-source: [0m[32minfo[0m: applying libxcb_1.14-2.diff.gz
+[1mdpkg-source: [0m[32minfo[0m: upstream files that have been modified: 
+ libxcb-1.14/.autom4te.cfg
+Fetched 671 kB in 1s (702 kB/s)
+[1m[7m[31mUpdating libxcb-dri3-0
+[91m(B[mGet:1 http://archive.ubuntu.com/ubuntu focal/main amd64 libxcb-dri3-0 amd64 1.14-2 [6,552 B]
+Fetched 6,552 B in 0s (21.7 kB/s)
+Reading package lists...
+Picking 'libxcb' as source package instead of 'libxcb-dri3-0'
+NOTICE: 'libxcb' packaging is maintained in the 'Git' version control system at:
+https://salsa.debian.org/xorg-team/lib/libxcb.git
+Please use:
+git clone https://salsa.debian.org/xorg-team/lib/libxcb.git
+to retrieve the latest (possibly unreleased) updates to the package.
+Need to get 671 kB of source archives.
+Get:1 http://archive.ubuntu.com/ubuntu focal/main libxcb 1.14-2 (dsc) [5,344 B]
+Get:2 http://archive.ubuntu.com/ubuntu focal/main libxcb 1.14-2 (tar) [640 kB]
+Get:3 http://archive.ubuntu.com/ubuntu focal/main libxcb 1.14-2 (diff) [25.7 kB]
+[1mdpkg-source: [0m[32minfo[0m: extracting libxcb in libxcb-1.14
+[1mdpkg-source: [0m[32minfo[0m: unpacking libxcb_1.14.orig.tar.gz
+[1mdpkg-source: [0m[32minfo[0m: applying libxcb_1.14-2.diff.gz
+[1mdpkg-source: [0m[32minfo[0m: upstream files that have been modified: 
+ libxcb-1.14/.autom4te.cfg
+Fetched 671 kB in 0s (20.2 MB/s)
+[1m[7m[31mUpdating libxcb-present0
+[91m(B[mGet:1 http://archive.ubuntu.com/ubuntu focal/main amd64 libxcb-present0 amd64 1.14-2 [5,560 B]
+Fetched 5,560 B in 0s (256 kB/s)
+Reading package lists...
+Picking 'libxcb' as source package instead of 'libxcb-present0'
+NOTICE: 'libxcb' packaging is maintained in the 'Git' version control system at:
+https://salsa.debian.org/xorg-team/lib/libxcb.git
+Please use:
+git clone https://salsa.debian.org/xorg-team/lib/libxcb.git
+to retrieve the latest (possibly unreleased) updates to the package.
+Need to get 671 kB of source archives.
+Get:1 http://archive.ubuntu.com/ubuntu focal/main libxcb 1.14-2 (dsc) [5,344 B]
+Get:2 http://archive.ubuntu.com/ubuntu focal/main libxcb 1.14-2 (tar) [640 kB]
+Get:3 http://archive.ubuntu.com/ubuntu focal/main libxcb 1.14-2 (diff) [25.7 kB]
+[1mdpkg-source: [0m[32minfo[0m: extracting libxcb in libxcb-1.14
+[1mdpkg-source: [0m[32minfo[0m: unpacking libxcb_1.14.orig.tar.gz
+[1mdpkg-source: [0m[32minfo[0m: applying libxcb_1.14-2.diff.gz
+[1mdpkg-source: [0m[32minfo[0m: upstream files that have been modified: 
+ libxcb-1.14/.autom4te.cfg
+Fetched 671 kB in 1s (734 kB/s)
+[1m[7m[31mUpdating libxcb-sync1
+[91m(B[mGet:1 http://archive.ubuntu.com/ubuntu focal/main amd64 libxcb-sync1 amd64 1.14-2 [8,884 B]
+Fetched 8,884 B in 0s (297 kB/s)
+Reading package lists...
+Picking 'libxcb' as source package instead of 'libxcb-sync1'
+NOTICE: 'libxcb' packaging is maintained in the 'Git' version control system at:
+https://salsa.debian.org/xorg-team/lib/libxcb.git
+Please use:
+git clone https://salsa.debian.org/xorg-team/lib/libxcb.git
+to retrieve the latest (possibly unreleased) updates to the package.
+Need to get 671 kB of source archives.
+Get:1 http://archive.ubuntu.com/ubuntu focal/main libxcb 1.14-2 (dsc) [5,344 B]
+Get:2 http://archive.ubuntu.com/ubuntu focal/main libxcb 1.14-2 (tar) [640 kB]
+Get:3 http://archive.ubuntu.com/ubuntu focal/main libxcb 1.14-2 (diff) [25.7 kB]
+[1mdpkg-source: [0m[32minfo[0m: extracting libxcb in libxcb-1.14
+[1mdpkg-source: [0m[32minfo[0m: unpacking libxcb_1.14.orig.tar.gz
+[1mdpkg-source: [0m[32minfo[0m: applying libxcb_1.14-2.diff.gz
+[1mdpkg-source: [0m[32minfo[0m: upstream files that have been modified: 
+ libxcb-1.14/.autom4te.cfg
+Fetched 671 kB in 0s (26.9 MB/s)
+[1m[7m[31mUpdating libxcb-xfixes0
+[91m(B[mGet:1 http://archive.ubuntu.com/ubuntu focal/main amd64 libxcb-xfixes0 amd64 1.14-2 [9,296 B]
+Fetched 9,296 B in 0s (55.2 kB/s)
+Reading package lists...
+Picking 'libxcb' as source package instead of 'libxcb-xfixes0'
+NOTICE: 'libxcb' packaging is maintained in the 'Git' version control system at:
+https://salsa.debian.org/xorg-team/lib/libxcb.git
+Please use:
+git clone https://salsa.debian.org/xorg-team/lib/libxcb.git
+to retrieve the latest (possibly unreleased) updates to the package.
+Need to get 671 kB of source archives.
+Get:1 http://archive.ubuntu.com/ubuntu focal/main libxcb 1.14-2 (dsc) [5,344 B]
+Get:2 http://archive.ubuntu.com/ubuntu focal/main libxcb 1.14-2 (tar) [640 kB]
+Get:3 http://archive.ubuntu.com/ubuntu focal/main libxcb 1.14-2 (diff) [25.7 kB]
+[1mdpkg-source: [0m[32minfo[0m: extracting libxcb in libxcb-1.14
+[1mdpkg-source: [0m[32minfo[0m: unpacking libxcb_1.14.orig.tar.gz
+[1mdpkg-source: [0m[32minfo[0m: applying libxcb_1.14-2.diff.gz
+[1mdpkg-source: [0m[32minfo[0m: upstream files that have been modified: 
+ libxcb-1.14/.autom4te.cfg
+Fetched 671 kB in 0s (25.9 MB/s)
+[1m[7m[31mUpdating libxshmfence1
+[91m(B[mGet:1 http://archive.ubuntu.com/ubuntu focal/main amd64 libxshmfence1 amd64 1.3-1 [5,028 B]
+Fetched 5,028 B in 0s (232 kB/s)
+Reading package lists...
+Picking 'libxshmfence' as source package instead of 'libxshmfence1'
+NOTICE: 'libxshmfence' packaging is maintained in the 'Git' version control system at:
+https://salsa.debian.org/xorg-team/lib/libxshmfence.git
+Please use:
+git clone https://salsa.debian.org/xorg-team/lib/libxshmfence.git
+to retrieve the latest (possibly unreleased) updates to the package.
+Need to get 399 kB of source archives.
+Get:1 http://archive.ubuntu.com/ubuntu focal/main libxshmfence 1.3-1 (dsc) [2,096 B]
+Get:2 http://archive.ubuntu.com/ubuntu focal/main libxshmfence 1.3-1 (tar) [379 kB]
+Get:3 http://archive.ubuntu.com/ubuntu focal/main libxshmfence 1.3-1 (diff) [17.5 kB]
+[1mdpkg-source: [0m[32minfo[0m: extracting libxshmfence in libxshmfence-1.3
+[1mdpkg-source: [0m[32minfo[0m: unpacking libxshmfence_1.3.orig.tar.gz
+[1mdpkg-source: [0m[32minfo[0m: applying libxshmfence_1.3-1.diff.gz
+[1mdpkg-source: [0m[32minfo[0m: upstream files that have been modified: 
+ libxshmfence-1.3/autogen.sh
+Fetched 399 kB in 0s (13.8 MB/s)
+[1m[7m[31mUpdating libdrm2
+[91m(B[mGet:1 http://archive.ubuntu.com/ubuntu focal-updates/main amd64 libdrm2 amd64 2.4.107-8ubuntu1~20.04.2 [34.1 kB]
+Fetched 34.1 kB in 0s (1,267 kB/s)
+Reading package lists...
+Picking 'libdrm' as source package instead of 'libdrm2'
+NOTICE: 'libdrm' packaging is maintained in the 'Git' version control system at:
+https://salsa.debian.org/xorg-team/lib/libdrm
+Please use:
+git clone https://salsa.debian.org/xorg-team/lib/libdrm
+to retrieve the latest (possibly unreleased) updates to the package.
+Need to get 488 kB of source archives.
+Get:1 http://archive.ubuntu.com/ubuntu focal-updates/main libdrm 2.4.107-8ubuntu1~20.04.2 (dsc) [3,188 B]
+Get:2 http://archive.ubuntu.com/ubuntu focal-updates/main libdrm 2.4.107-8ubuntu1~20.04.2 (tar) [426 kB]
+Get:3 http://archive.ubuntu.com/ubuntu focal-updates/main libdrm 2.4.107-8ubuntu1~20.04.2 (diff) [59.1 kB]
+[1mdpkg-source: [0m[32minfo[0m: extracting libdrm in libdrm-2.4.107
+[1mdpkg-source: [0m[32minfo[0m: unpacking libdrm_2.4.107.orig.tar.xz
+[1mdpkg-source: [0m[32minfo[0m: unpacking libdrm_2.4.107-8ubuntu1~20.04.2.debian.tar.xz
+[1mdpkg-source: [0m[32minfo[0m: using patch list from debian/patches/series
+[1mdpkg-source: [0m[32minfo[0m: applying 01_default_perms.diff
+[1mdpkg-source: [0m[32minfo[0m: applying Revert-meson-use-library-instead-of-shared_library.patch
+Fetched 488 kB in 1s (795 kB/s)
+[1m[7m[31mUpdating libexpat1
+[91m(B[mGet:1 http://archive.ubuntu.com/ubuntu focal-updates/main amd64 libexpat1 amd64 2.2.9-1ubuntu0.7 [74.7 kB]
+Fetched 74.7 kB in 0s (202 kB/s)
+Reading package lists...
+Picking 'expat' as source package instead of 'libexpat1'
+Need to get 8,304 kB of source archives.
+Get:1 http://archive.ubuntu.com/ubuntu focal-updates/main expat 2.2.9-1ubuntu0.7 (dsc) [1,930 B]
+Get:2 http://archive.ubuntu.com/ubuntu focal-updates/main expat 2.2.9-1ubuntu0.7 (tar) [8,273 kB]
+Get:3 http://archive.ubuntu.com/ubuntu focal-updates/main expat 2.2.9-1ubuntu0.7 (diff) [28.8 kB]
+[1mdpkg-source: [0m[32minfo[0m: extracting expat in expat-2.2.9
+[1mdpkg-source: [0m[32minfo[0m: unpacking expat_2.2.9.orig.tar.gz
+[1mdpkg-source: [0m[32minfo[0m: unpacking expat_2.2.9-1ubuntu0.7.debian.tar.xz
+[1mdpkg-source: [0m[32minfo[0m: using patch list from debian/patches/series
+[1mdpkg-source: [0m[32minfo[0m: applying CVE-2021-45960.patch
+[1mdpkg-source: [0m[32minfo[0m: applying CVE-2021-46143.patch
+[1mdpkg-source: [0m[32minfo[0m: applying CVE-2022-22822-to-CVE-2022-22827.patch
+[1mdpkg-source: [0m[32minfo[0m: applying CVE-2022-23852-1.patch
+[1mdpkg-source: [0m[32minfo[0m: applying CVE-2022-23852-2.patch
+[1mdpkg-source: [0m[32minfo[0m: applying CVE-2022-23990.patch
+[1mdpkg-source: [0m[32minfo[0m: applying CVE-2022-25235-1.patch
+[1mdpkg-source: [0m[32minfo[0m: applying CVE-2022-25235-2.patch
+[1mdpkg-source: [0m[32minfo[0m: applying CVE-2022-25236-1.patch
+[1mdpkg-source: [0m[32minfo[0m: applying CVE-2022-25236-2.patch
+[1mdpkg-source: [0m[32minfo[0m: applying CVE-2022-25313.patch
+[1mdpkg-source: [0m[32minfo[0m: applying fix-build_model-regression.patch
+[1mdpkg-source: [0m[32minfo[0m: applying protect-against-nested-element-declaration-model-regressions.patch
+[1mdpkg-source: [0m[32minfo[0m: applying CVE-2022-25314.patch
+[1mdpkg-source: [0m[32minfo[0m: applying CVE-2022-25315.patch
+[1mdpkg-source: [0m[32minfo[0m: applying CVE-2022-25236-3.patch
+[1mdpkg-source: [0m[32minfo[0m: applying CVE-2022-25236-4.patch
+[1mdpkg-source: [0m[32minfo[0m: applying CVE-2022-25236-5.patch
+[1mdpkg-source: [0m[32minfo[0m: applying CVE-2022-25236-6.patch
+[1mdpkg-source: [0m[32minfo[0m: applying fix_test_dup.patch
+[1mdpkg-source: [0m[32minfo[0m: applying CVE-2022-40674.patch
+[1mdpkg-source: [0m[32minfo[0m: applying CVE-2022-43680-1.patch
+[1mdpkg-source: [0m[32minfo[0m: applying CVE-2022-43680-2.patch
+[1mdpkg-source: [0m[32minfo[0m: applying CVE-2024-45490-1.patch
+[1mdpkg-source: [0m[32minfo[0m: applying CVE-2024-45490-2.patch
+[1mdpkg-source: [0m[32minfo[0m: applying CVE-2024-45491.patch
+[1mdpkg-source: [0m[32minfo[0m: applying CVE-2024-45492.patch
+Fetched 8,304 kB in 1s (8,492 kB/s)
+[1m[7m[31mUpdating libbsd0
+[91m(B[mGet:1 http://archive.ubuntu.com/ubuntu focal/main amd64 libbsd0 amd64 0.10.0-1 [45.4 kB]
+Fetched 45.4 kB in 0s (2,325 kB/s)
+Reading package lists...
+Picking 'libbsd' as source package instead of 'libbsd0'
+NOTICE: 'libbsd' packaging is maintained in the 'Git' version control system at:
+https://git.hadrons.org/git/debian/pkgs/libbsd.git
+Please use:
+git clone https://git.hadrons.org/git/debian/pkgs/libbsd.git
+to retrieve the latest (possibly unreleased) updates to the package.
+Need to get 413 kB of source archives.
+Get:1 http://archive.ubuntu.com/ubuntu focal/main libbsd 0.10.0-1 (dsc) [2,197 B]
+Get:2 http://archive.ubuntu.com/ubuntu focal/main libbsd 0.10.0-1 (tar) [394 kB]
+Get:3 http://archive.ubuntu.com/ubuntu focal/main libbsd 0.10.0-1 (asc) [833 B]
+Get:4 http://archive.ubuntu.com/ubuntu focal/main libbsd 0.10.0-1 (diff) [16.7 kB]
+[1mdpkg-source: [0m[32minfo[0m: extracting libbsd in libbsd-0.10.0
+[1mdpkg-source: [0m[32minfo[0m: unpacking libbsd_0.10.0.orig.tar.xz
+[1mdpkg-source: [0m[32minfo[0m: unpacking libbsd_0.10.0-1.debian.tar.xz
+Fetched 413 kB in 1s (675 kB/s)
 [1m[7m[31mUpdating libgl-dev
 [91m(B[mGet:1 http://archive.ubuntu.com/ubuntu focal-updates/main amd64 libgl-dev amd64 1.3.2-1~ubuntu0.20.04.2 [97.8 kB]
-Fetched 97.8 kB in 0s (248 kB/s)
+Fetched 97.8 kB in 0s (240 kB/s)
 Reading package lists...
 Picking 'libglvnd' as source package instead of 'libgl-dev'
 NOTICE: 'libglvnd' packaging is maintained in the 'Git' version control system at:
@@ -217,10 +498,10 @@ Get:3 http://archive.ubuntu.com/ubuntu focal-updates/main libglvnd 1.3.2-1~ubunt
 [1mdpkg-source: [0m[32minfo[0m: extracting libglvnd in libglvnd-1.3.2
 [1mdpkg-source: [0m[32minfo[0m: unpacking libglvnd_1.3.2.orig.tar.gz
 [1mdpkg-source: [0m[32minfo[0m: unpacking libglvnd_1.3.2-1~ubuntu0.20.04.2.debian.tar.xz
-Fetched 1,057 kB in 0s (31.2 MB/s)
+Fetched 1,057 kB in 0s (25.9 MB/s)
 [1m[7m[31mUpdating libglu1-mesa-dev
 [91m(B[mGet:1 http://archive.ubuntu.com/ubuntu focal/main amd64 libglu1-mesa-dev amd64 9.0.1-1build1 [207 kB]
-Fetched 207 kB in 0s (434 kB/s)
+Fetched 207 kB in 0s (7,526 kB/s)
 Reading package lists...
 Picking 'libglu' as source package instead of 'libglu1-mesa-dev'
 NOTICE: 'libglu' packaging is maintained in the 'Git' version control system at:
@@ -239,10 +520,10 @@ Get:3 http://archive.ubuntu.com/ubuntu focal/main libglu 9.0.1-1build1 (diff) [1
  libglu-9.0.1/autogen.sh
  libglu-9.0.1/src/libtess/README
  libglu-9.0.1/src/libtess/alg-outline
-Fetched 679 kB in 0s (21.7 MB/s)
+Fetched 679 kB in 1s (1,017 kB/s)
 [1m[7m[31mUpdating libasound2-dev
 [91m(B[mGet:1 http://archive.ubuntu.com/ubuntu focal-updates/main amd64 libasound2-dev amd64 1.2.2-2.1ubuntu2.5 [104 kB]
-Fetched 104 kB in 0s (258 kB/s)
+Fetched 104 kB in 0s (262 kB/s)
 Reading package lists...
 Picking 'alsa-lib' as source package instead of 'libasound2-dev'
 NOTICE: 'alsa-lib' packaging is maintained in the 'Git' version control system at:
@@ -314,10 +595,10 @@ Get:3 http://archive.ubuntu.com/ubuntu focal-updates/main alsa-lib 1.2.2-2.1ubun
 [1mdpkg-source: [0m[32minfo[0m: applying 0001-control-ctlparse-fix-enum-values-in-or.patch
 [1mdpkg-source: [0m[32minfo[0m: applying 0001-conf-USB-add-Cmedia-Audio-to-USB-Audio.pcm.iec95.patch
 [1mdpkg-source: [0m[32minfo[0m: applying 0001-ucm-fix-regexec-REG_NOMATCH-state-handling-for-defin.patch
-Fetched 1,092 kB in 0s (16.2 MB/s)
+Fetched 1,092 kB in 0s (25.4 MB/s)
 [1m[7m[31mUpdating libalsaplayer-dev
 [91m(B[mGet:1 http://archive.ubuntu.com/ubuntu focal/universe amd64 libalsaplayer-dev amd64 0.99.81-2build2 [48.8 kB]
-Fetched 48.8 kB in 0s (2,605 kB/s)
+Fetched 48.8 kB in 0s (3,653 kB/s)
 Reading package lists...
 Picking 'alsaplayer' as source package instead of 'libalsaplayer-dev'
 NOTICE: 'alsaplayer' packaging is maintained in the 'Git' version control system at:
@@ -340,10 +621,10 @@ Get:3 http://archive.ubuntu.com/ubuntu focal/universe alsaplayer 0.99.81-2build2
 [1mdpkg-source: [0m[32minfo[0m: applying 20_http_double_free.dpatch
 [1mdpkg-source: [0m[32minfo[0m: applying 30_const_char.dpatch
 [1mdpkg-source: [0m[32minfo[0m: applying 50_fix_J_option.patch
-Fetched 823 kB in 0s (23.9 MB/s)
+Fetched 823 kB in 0s (17.6 MB/s)
 [1m[7m[31mUpdating libgl1
 [91m(B[mGet:1 http://archive.ubuntu.com/ubuntu focal-updates/main amd64 libgl1 amd64 1.3.2-1~ubuntu0.20.04.2 [85.8 kB]
-Fetched 85.8 kB in 0s (3,926 kB/s)
+Fetched 85.8 kB in 0s (226 kB/s)
 Reading package lists...
 Picking 'libglvnd' as source package instead of 'libgl1'
 NOTICE: 'libglvnd' packaging is maintained in the 'Git' version control system at:
@@ -358,10 +639,10 @@ Get:3 http://archive.ubuntu.com/ubuntu focal-updates/main libglvnd 1.3.2-1~ubunt
 [1mdpkg-source: [0m[32minfo[0m: extracting libglvnd in libglvnd-1.3.2
 [1mdpkg-source: [0m[32minfo[0m: unpacking libglvnd_1.3.2.orig.tar.gz
 [1mdpkg-source: [0m[32minfo[0m: unpacking libglvnd_1.3.2-1~ubuntu0.20.04.2.debian.tar.xz
-Fetched 1,057 kB in 1s (1,480 kB/s)
+Fetched 1,057 kB in 0s (26.7 MB/s)
 [1m[7m[31mUpdating libglu1-mesa
 [91m(B[mGet:1 http://archive.ubuntu.com/ubuntu focal/main amd64 libglu1-mesa amd64 9.0.1-1build1 [168 kB]
-Fetched 168 kB in 0s (8,082 kB/s)
+Fetched 168 kB in 0s (5,551 kB/s)
 Reading package lists...
 Picking 'libglu' as source package instead of 'libglu1-mesa'
 NOTICE: 'libglu' packaging is maintained in the 'Git' version control system at:
@@ -380,10 +661,10 @@ Get:3 http://archive.ubuntu.com/ubuntu focal/main libglu 9.0.1-1build1 (diff) [1
  libglu-9.0.1/autogen.sh
  libglu-9.0.1/src/libtess/README
  libglu-9.0.1/src/libtess/alg-outline
-Fetched 679 kB in 0s (20.6 MB/s)
+Fetched 679 kB in 1s (1,015 kB/s)
 [1m[7m[31mUpdating libglvnd0
 [91m(B[mGet:1 http://archive.ubuntu.com/ubuntu focal-updates/main amd64 libglvnd0 amd64 1.3.2-1~ubuntu0.20.04.2 [48.1 kB]
-Fetched 48.1 kB in 0s (1,692 kB/s)
+Fetched 48.1 kB in 0s (2,828 kB/s)
 Reading package lists...
 Picking 'libglvnd' as source package instead of 'libglvnd0'
 NOTICE: 'libglvnd' packaging is maintained in the 'Git' version control system at:
@@ -398,10 +679,10 @@ Get:3 http://archive.ubuntu.com/ubuntu focal-updates/main libglvnd 1.3.2-1~ubunt
 [1mdpkg-source: [0m[32minfo[0m: extracting libglvnd in libglvnd-1.3.2
 [1mdpkg-source: [0m[32minfo[0m: unpacking libglvnd_1.3.2.orig.tar.gz
 [1mdpkg-source: [0m[32minfo[0m: unpacking libglvnd_1.3.2-1~ubuntu0.20.04.2.debian.tar.xz
-Fetched 1,057 kB in 1s (1,462 kB/s)
+Fetched 1,057 kB in 0s (27.2 MB/s)
 [1m[7m[31mUpdating libglx0
 [91m(B[mGet:1 http://archive.ubuntu.com/ubuntu focal-updates/main amd64 libglx0 amd64 1.3.2-1~ubuntu0.20.04.2 [32.5 kB]
-Fetched 32.5 kB in 0s (122 kB/s)
+Fetched 32.5 kB in 0s (1,540 kB/s)
 Reading package lists...
 Picking 'libglvnd' as source package instead of 'libglx0'
 NOTICE: 'libglvnd' packaging is maintained in the 'Git' version control system at:
@@ -416,10 +697,10 @@ Get:3 http://archive.ubuntu.com/ubuntu focal-updates/main libglvnd 1.3.2-1~ubunt
 [1mdpkg-source: [0m[32minfo[0m: extracting libglvnd in libglvnd-1.3.2
 [1mdpkg-source: [0m[32minfo[0m: unpacking libglvnd_1.3.2.orig.tar.gz
 [1mdpkg-source: [0m[32minfo[0m: unpacking libglvnd_1.3.2-1~ubuntu0.20.04.2.debian.tar.xz
-Fetched 1,057 kB in 1s (1,493 kB/s)
+Fetched 1,057 kB in 1s (1,151 kB/s)
 [1m[7m[31mUpdating libglx-mesa0
 [91m(B[mGet:1 http://archive.ubuntu.com/ubuntu focal-updates/main amd64 libglx-mesa0 amd64 21.2.6-0ubuntu0.1~20.04.2 [137 kB]
-Fetched 137 kB in 0s (308 kB/s)
+Fetched 137 kB in 0s (6,544 kB/s)
 Reading package lists...
 Picking 'mesa' as source package instead of 'libglx-mesa0'
 NOTICE: 'mesa' packaging is maintained in the 'Git' version control system at:
@@ -438,6 +719,388 @@ Get:3 http://archive.ubuntu.com/ubuntu focal-updates/main mesa 21.2.6-0ubuntu0.1
  mesa-21.2.6/.gitlab/issue_templates/Bug Report - AMD Radeon Vulkan.md
  mesa-21.2.6/.gitlab/issue_templates/Bug Report.md
 Fetched 24.7 MB in 1s (17.7 MB/s)
+[1m[7m[31mUpdating libx11-6
+[91m(B[mGet:1 http://archive.ubuntu.com/ubuntu focal-updates/main amd64 libx11-6 amd64 2:1.6.9-2ubuntu1.6 [577 kB]
+Fetched 577 kB in 0s (22.9 MB/s)
+Reading package lists...
+Picking 'libx11' as source package instead of 'libx11-6'
+NOTICE: 'libx11' packaging is maintained in the 'Git' version control system at:
+https://salsa.debian.org/xorg-team/lib/libx11
+Please use:
+git clone https://salsa.debian.org/xorg-team/lib/libx11
+to retrieve the latest (possibly unreleased) updates to the package.
+Need to get 3,070 kB of source archives.
+Get:1 http://archive.ubuntu.com/ubuntu focal-updates/main libx11 2:1.6.9-2ubuntu1.6 (dsc) [2,671 B]
+Get:2 http://archive.ubuntu.com/ubuntu focal-updates/main libx11 2:1.6.9-2ubuntu1.6 (tar) [2,994 kB]
+Get:3 http://archive.ubuntu.com/ubuntu focal-updates/main libx11 2:1.6.9-2ubuntu1.6 (asc) [659 B]
+Get:4 http://archive.ubuntu.com/ubuntu focal-updates/main libx11 2:1.6.9-2ubuntu1.6 (diff) [72.0 kB]
+[1mdpkg-source: [0m[32minfo[0m: extracting libx11 in libx11-1.6.9
+[1mdpkg-source: [0m[32minfo[0m: unpacking libx11_1.6.9.orig.tar.gz
+[1mdpkg-source: [0m[32minfo[0m: applying libx11_1.6.9-2ubuntu1.6.diff.gz
+[1mdpkg-source: [0m[32minfo[0m: upstream files that have been modified: 
+ libx11-1.6.9/ChangeLog
+ libx11-1.6.9/autogen.sh
+Fetched 3,070 kB in 0s (30.8 MB/s)
+[1m[7m[31mUpdating libxcb1
+[91m(B[mGet:1 http://archive.ubuntu.com/ubuntu focal/main amd64 libxcb1 amd64 1.14-2 [44.7 kB]
+Fetched 44.7 kB in 0s (1,392 kB/s)
+Reading package lists...
+Picking 'libxcb' as source package instead of 'libxcb1'
+NOTICE: 'libxcb' packaging is maintained in the 'Git' version control system at:
+https://salsa.debian.org/xorg-team/lib/libxcb.git
+Please use:
+git clone https://salsa.debian.org/xorg-team/lib/libxcb.git
+to retrieve the latest (possibly unreleased) updates to the package.
+Need to get 671 kB of source archives.
+Get:1 http://archive.ubuntu.com/ubuntu focal/main libxcb 1.14-2 (dsc) [5,344 B]
+Get:2 http://archive.ubuntu.com/ubuntu focal/main libxcb 1.14-2 (tar) [640 kB]
+Get:3 http://archive.ubuntu.com/ubuntu focal/main libxcb 1.14-2 (diff) [25.7 kB]
+[1mdpkg-source: [0m[32minfo[0m: extracting libxcb in libxcb-1.14
+[1mdpkg-source: [0m[32minfo[0m: unpacking libxcb_1.14.orig.tar.gz
+[1mdpkg-source: [0m[32minfo[0m: applying libxcb_1.14-2.diff.gz
+[1mdpkg-source: [0m[32minfo[0m: upstream files that have been modified: 
+ libxcb-1.14/.autom4te.cfg
+Fetched 671 kB in 0s (19.4 MB/s)
+[1m[7m[31mUpdating libxau6
+[91m(B[mGet:1 http://archive.ubuntu.com/ubuntu focal/main amd64 libxau6 amd64 1:1.0.9-0ubuntu1 [7,488 B]
+Fetched 7,488 B in 0s (366 kB/s)
+Reading package lists...
+Picking 'libxau' as source package instead of 'libxau6'
+NOTICE: 'libxau' packaging is maintained in the 'Git' version control system at:
+git://git.debian.org/git/pkg-xorg/lib/libxau
+Please use:
+git clone git://git.debian.org/git/pkg-xorg/lib/libxau
+to retrieve the latest (possibly unreleased) updates to the package.
+Need to get 411 kB of source archives.
+Get:1 http://archive.ubuntu.com/ubuntu focal/main libxau 1:1.0.9-0ubuntu1 (dsc) [1,563 B]
+Get:2 http://archive.ubuntu.com/ubuntu focal/main libxau 1:1.0.9-0ubuntu1 (tar) [394 kB]
+Get:3 http://archive.ubuntu.com/ubuntu focal/main libxau 1:1.0.9-0ubuntu1 (diff) [15.1 kB]
+[1mdpkg-source: [0m[32minfo[0m: extracting libxau in libxau-1.0.9
+[1mdpkg-source: [0m[32minfo[0m: unpacking libxau_1.0.9.orig.tar.gz
+[1mdpkg-source: [0m[32minfo[0m: applying libxau_1.0.9-0ubuntu1.diff.gz
+[1mdpkg-source: [0m[32minfo[0m: upstream files that have been modified: 
+ libxau-1.0.9/autogen.sh
+Fetched 411 kB in 0s (14.2 MB/s)
+[1m[7m[31mUpdating libxdmcp6
+[91m(B[mGet:1 http://archive.ubuntu.com/ubuntu focal/main amd64 libxdmcp6 amd64 1:1.1.3-0ubuntu1 [10.6 kB]
+Fetched 10.6 kB in 0s (823 kB/s)
+Reading package lists...
+Picking 'libxdmcp' as source package instead of 'libxdmcp6'
+NOTICE: 'libxdmcp' packaging is maintained in the 'Git' version control system at:
+git://git.debian.org/git/pkg-xorg/lib/libxdmcp
+Please use:
+git clone git://git.debian.org/git/pkg-xorg/lib/libxdmcp
+to retrieve the latest (possibly unreleased) updates to the package.
+Need to get 449 kB of source archives.
+Get:1 http://archive.ubuntu.com/ubuntu focal/main libxdmcp 1:1.1.3-0ubuntu1 (dsc) [1,608 B]
+Get:2 http://archive.ubuntu.com/ubuntu focal/main libxdmcp 1:1.1.3-0ubuntu1 (tar) [430 kB]
+Get:3 http://archive.ubuntu.com/ubuntu focal/main libxdmcp 1:1.1.3-0ubuntu1 (diff) [18.1 kB]
+[1mdpkg-source: [0m[32minfo[0m: extracting libxdmcp in libxdmcp-1.1.3
+[1mdpkg-source: [0m[32minfo[0m: unpacking libxdmcp_1.1.3.orig.tar.gz
+[1mdpkg-source: [0m[32minfo[0m: applying libxdmcp_1.1.3-0ubuntu1.diff.gz
+Fetched 449 kB in 1s (711 kB/s)
+[1m[7m[31mUpdating libglapi-mesa
+[91m(B[mGet:1 http://archive.ubuntu.com/ubuntu focal-updates/main amd64 libglapi-mesa amd64 21.2.6-0ubuntu0.1~20.04.2 [27.4 kB]
+Fetched 27.4 kB in 0s (1,138 kB/s)
+Reading package lists...
+Picking 'mesa' as source package instead of 'libglapi-mesa'
+NOTICE: 'mesa' packaging is maintained in the 'Git' version control system at:
+https://salsa.debian.org/xorg-team/lib/mesa.git
+Please use:
+git clone https://salsa.debian.org/xorg-team/lib/mesa.git
+to retrieve the latest (possibly unreleased) updates to the package.
+Need to get 24.7 MB of source archives.
+Get:1 http://archive.ubuntu.com/ubuntu focal-updates/main mesa 21.2.6-0ubuntu0.1~20.04.2 (dsc) [5,543 B]
+Get:2 http://archive.ubuntu.com/ubuntu focal-updates/main mesa 21.2.6-0ubuntu0.1~20.04.2 (tar) [24.6 MB]
+Get:3 http://archive.ubuntu.com/ubuntu focal-updates/main mesa 21.2.6-0ubuntu0.1~20.04.2 (diff) [111 kB]
+[1mdpkg-source: [0m[32minfo[0m: extracting mesa in mesa-21.2.6
+[1mdpkg-source: [0m[32minfo[0m: unpacking mesa_21.2.6.orig.tar.gz
+[1mdpkg-source: [0m[32minfo[0m: applying mesa_21.2.6-0ubuntu0.1~20.04.2.diff.gz
+[1mdpkg-source: [0m[32minfo[0m: upstream files that have been modified: 
+ mesa-21.2.6/.gitlab/issue_templates/Bug Report - AMD Radeon Vulkan.md
+ mesa-21.2.6/.gitlab/issue_templates/Bug Report.md
+Fetched 24.7 MB in 0s (80.3 MB/s)
+[1m[7m[31mUpdating libxext6
+[91m(B[mGet:1 http://archive.ubuntu.com/ubuntu focal/main amd64 libxext6 amd64 2:1.3.4-0ubuntu1 [29.1 kB]
+Fetched 29.1 kB in 0s (1,416 kB/s)
+Reading package lists...
+Picking 'libxext' as source package instead of 'libxext6'
+NOTICE: 'libxext' packaging is maintained in the 'Git' version control system at:
+git://git.debian.org/git/pkg-xorg/lib/libxext
+Please use:
+git clone git://git.debian.org/git/pkg-xorg/lib/libxext
+to retrieve the latest (possibly unreleased) updates to the package.
+Need to get 517 kB of source archives.
+Get:1 http://archive.ubuntu.com/ubuntu focal/main libxext 2:1.3.4-0ubuntu1 (dsc) [1,727 B]
+Get:2 http://archive.ubuntu.com/ubuntu focal/main libxext 2:1.3.4-0ubuntu1 (tar) [494 kB]
+Get:3 http://archive.ubuntu.com/ubuntu focal/main libxext 2:1.3.4-0ubuntu1 (diff) [20.7 kB]
+[1mdpkg-source: [0m[32minfo[0m: extracting libxext in libxext-1.3.4
+[1mdpkg-source: [0m[32minfo[0m: unpacking libxext_1.3.4.orig.tar.gz
+[1mdpkg-source: [0m[32minfo[0m: applying libxext_1.3.4-0ubuntu1.diff.gz
+[1mdpkg-source: [0m[32minfo[0m: upstream files that have been modified: 
+ libxext-1.3.4/autogen.sh
+Fetched 517 kB in 0s (12.9 MB/s)
+[1m[7m[31mUpdating libxfixes3
+[91m(B[mGet:1 http://archive.ubuntu.com/ubuntu focal/main amd64 libxfixes3 amd64 1:5.0.3-2 [10.9 kB]
+Fetched 10.9 kB in 0s (473 kB/s)
+Reading package lists...
+Picking 'libxfixes' as source package instead of 'libxfixes3'
+NOTICE: 'libxfixes' packaging is maintained in the 'Git' version control system at:
+https://salsa.debian.org/xorg-team/lib/libxfixes.git
+Please use:
+git clone https://salsa.debian.org/xorg-team/lib/libxfixes.git
+to retrieve the latest (possibly unreleased) updates to the package.
+Need to get 377 kB of source archives.
+Get:1 http://archive.ubuntu.com/ubuntu focal/main libxfixes 1:5.0.3-2 (dsc) [2,014 B]
+Get:2 http://archive.ubuntu.com/ubuntu focal/main libxfixes 1:5.0.3-2 (tar) [360 kB]
+Get:3 http://archive.ubuntu.com/ubuntu focal/main libxfixes 1:5.0.3-2 (diff) [14.7 kB]
+[1mdpkg-source: [0m[32minfo[0m: extracting libxfixes in libxfixes-5.0.3
+[1mdpkg-source: [0m[32minfo[0m: unpacking libxfixes_5.0.3.orig.tar.gz
+[1mdpkg-source: [0m[32minfo[0m: applying libxfixes_5.0.3-2.diff.gz
+[1mdpkg-source: [0m[32minfo[0m: upstream files that have been modified: 
+ libxfixes-5.0.3/autogen.sh
+Fetched 377 kB in 0s (10.5 MB/s)
+[1m[7m[31mUpdating libxxf86vm1
+[91m(B[mGet:1 http://archive.ubuntu.com/ubuntu focal/main amd64 libxxf86vm1 amd64 1:1.1.4-1build1 [10.2 kB]
+Fetched 10.2 kB in 0s (61.8 kB/s)
+Reading package lists...
+Picking 'libxxf86vm' as source package instead of 'libxxf86vm1'
+NOTICE: 'libxxf86vm' packaging is maintained in the 'Git' version control system at:
+git://git.debian.org/git/pkg-xorg/lib/libxxf86vm
+Please use:
+git clone git://git.debian.org/git/pkg-xorg/lib/libxxf86vm
+to retrieve the latest (possibly unreleased) updates to the package.
+Need to get 373 kB of source archives.
+Get:1 http://archive.ubuntu.com/ubuntu focal/main libxxf86vm 1:1.1.4-1build1 (dsc) [2,141 B]
+Get:2 http://archive.ubuntu.com/ubuntu focal/main libxxf86vm 1:1.1.4-1build1 (tar) [363 kB]
+Get:3 http://archive.ubuntu.com/ubuntu focal/main libxxf86vm 1:1.1.4-1build1 (diff) [8,101 B]
+[1mdpkg-source: [0m[32minfo[0m: extracting libxxf86vm in libxxf86vm-1.1.4
+[1mdpkg-source: [0m[32minfo[0m: unpacking libxxf86vm_1.1.4.orig.tar.gz
+[1mdpkg-source: [0m[32minfo[0m: applying libxxf86vm_1.1.4-1build1.diff.gz
+[1mdpkg-source: [0m[32minfo[0m: upstream files that have been modified: 
+ libxxf86vm-1.1.4/autogen.sh
+Fetched 373 kB in 1s (623 kB/s)
+[1m[7m[31mUpdating libxcb-glx0
+[91m(B[mGet:1 http://archive.ubuntu.com/ubuntu focal/main amd64 libxcb-glx0 amd64 1.14-2 [22.1 kB]
+Fetched 22.1 kB in 0s (499 kB/s)
+Reading package lists...
+Picking 'libxcb' as source package instead of 'libxcb-glx0'
+NOTICE: 'libxcb' packaging is maintained in the 'Git' version control system at:
+https://salsa.debian.org/xorg-team/lib/libxcb.git
+Please use:
+git clone https://salsa.debian.org/xorg-team/lib/libxcb.git
+to retrieve the latest (possibly unreleased) updates to the package.
+Need to get 671 kB of source archives.
+Get:1 http://archive.ubuntu.com/ubuntu focal/main libxcb 1.14-2 (dsc) [5,344 B]
+Get:2 http://archive.ubuntu.com/ubuntu focal/main libxcb 1.14-2 (tar) [640 kB]
+Get:3 http://archive.ubuntu.com/ubuntu focal/main libxcb 1.14-2 (diff) [25.7 kB]
+[1mdpkg-source: [0m[32minfo[0m: extracting libxcb in libxcb-1.14
+[1mdpkg-source: [0m[32minfo[0m: unpacking libxcb_1.14.orig.tar.gz
+[1mdpkg-source: [0m[32minfo[0m: applying libxcb_1.14-2.diff.gz
+[1mdpkg-source: [0m[32minfo[0m: upstream files that have been modified: 
+ libxcb-1.14/.autom4te.cfg
+Fetched 671 kB in 0s (19.4 MB/s)
+[1m[7m[31mUpdating libxcb-dri2-0
+[91m(B[mGet:1 http://archive.ubuntu.com/ubuntu focal/main amd64 libxcb-dri2-0 amd64 1.14-2 [6,920 B]
+Fetched 6,920 B in 0s (179 kB/s)
+Reading package lists...
+Picking 'libxcb' as source package instead of 'libxcb-dri2-0'
+NOTICE: 'libxcb' packaging is maintained in the 'Git' version control system at:
+https://salsa.debian.org/xorg-team/lib/libxcb.git
+Please use:
+git clone https://salsa.debian.org/xorg-team/lib/libxcb.git
+to retrieve the latest (possibly unreleased) updates to the package.
+Need to get 671 kB of source archives.
+Get:1 http://archive.ubuntu.com/ubuntu focal/main libxcb 1.14-2 (dsc) [5,344 B]
+Get:2 http://archive.ubuntu.com/ubuntu focal/main libxcb 1.14-2 (tar) [640 kB]
+Get:3 http://archive.ubuntu.com/ubuntu focal/main libxcb 1.14-2 (diff) [25.7 kB]
+[1mdpkg-source: [0m[32minfo[0m: extracting libxcb in libxcb-1.14
+[1mdpkg-source: [0m[32minfo[0m: unpacking libxcb_1.14.orig.tar.gz
+[1mdpkg-source: [0m[32minfo[0m: applying libxcb_1.14-2.diff.gz
+[1mdpkg-source: [0m[32minfo[0m: upstream files that have been modified: 
+ libxcb-1.14/.autom4te.cfg
+Fetched 671 kB in 0s (17.5 MB/s)
+[1m[7m[31mUpdating libxcb-dri3-0
+[91m(B[mGet:1 http://archive.ubuntu.com/ubuntu focal/main amd64 libxcb-dri3-0 amd64 1.14-2 [6,552 B]
+Fetched 6,552 B in 0s (28.3 kB/s)
+Reading package lists...
+Picking 'libxcb' as source package instead of 'libxcb-dri3-0'
+NOTICE: 'libxcb' packaging is maintained in the 'Git' version control system at:
+https://salsa.debian.org/xorg-team/lib/libxcb.git
+Please use:
+git clone https://salsa.debian.org/xorg-team/lib/libxcb.git
+to retrieve the latest (possibly unreleased) updates to the package.
+Need to get 671 kB of source archives.
+Get:1 http://archive.ubuntu.com/ubuntu focal/main libxcb 1.14-2 (dsc) [5,344 B]
+Get:2 http://archive.ubuntu.com/ubuntu focal/main libxcb 1.14-2 (tar) [640 kB]
+Get:3 http://archive.ubuntu.com/ubuntu focal/main libxcb 1.14-2 (diff) [25.7 kB]
+[1mdpkg-source: [0m[32minfo[0m: extracting libxcb in libxcb-1.14
+[1mdpkg-source: [0m[32minfo[0m: unpacking libxcb_1.14.orig.tar.gz
+[1mdpkg-source: [0m[32minfo[0m: applying libxcb_1.14-2.diff.gz
+[1mdpkg-source: [0m[32minfo[0m: upstream files that have been modified: 
+ libxcb-1.14/.autom4te.cfg
+Fetched 671 kB in 0s (23.8 MB/s)
+[1m[7m[31mUpdating libxcb-present0
+[91m(B[mGet:1 http://archive.ubuntu.com/ubuntu focal/main amd64 libxcb-present0 amd64 1.14-2 [5,560 B]
+Fetched 5,560 B in 0s (27.4 kB/s)
+Reading package lists...
+Picking 'libxcb' as source package instead of 'libxcb-present0'
+NOTICE: 'libxcb' packaging is maintained in the 'Git' version control system at:
+https://salsa.debian.org/xorg-team/lib/libxcb.git
+Please use:
+git clone https://salsa.debian.org/xorg-team/lib/libxcb.git
+to retrieve the latest (possibly unreleased) updates to the package.
+Need to get 671 kB of source archives.
+Get:1 http://archive.ubuntu.com/ubuntu focal/main libxcb 1.14-2 (dsc) [5,344 B]
+Get:2 http://archive.ubuntu.com/ubuntu focal/main libxcb 1.14-2 (tar) [640 kB]
+Get:3 http://archive.ubuntu.com/ubuntu focal/main libxcb 1.14-2 (diff) [25.7 kB]
+[1mdpkg-source: [0m[32minfo[0m: extracting libxcb in libxcb-1.14
+[1mdpkg-source: [0m[32minfo[0m: unpacking libxcb_1.14.orig.tar.gz
+[1mdpkg-source: [0m[32minfo[0m: applying libxcb_1.14-2.diff.gz
+[1mdpkg-source: [0m[32minfo[0m: upstream files that have been modified: 
+ libxcb-1.14/.autom4te.cfg
+Fetched 671 kB in 1s (1,041 kB/s)
+[1m[7m[31mUpdating libxcb-sync1
+[91m(B[mGet:1 http://archive.ubuntu.com/ubuntu focal/main amd64 libxcb-sync1 amd64 1.14-2 [8,884 B]
+Fetched 8,884 B in 0s (637 kB/s)
+Reading package lists...
+Picking 'libxcb' as source package instead of 'libxcb-sync1'
+NOTICE: 'libxcb' packaging is maintained in the 'Git' version control system at:
+https://salsa.debian.org/xorg-team/lib/libxcb.git
+Please use:
+git clone https://salsa.debian.org/xorg-team/lib/libxcb.git
+to retrieve the latest (possibly unreleased) updates to the package.
+Need to get 671 kB of source archives.
+Get:1 http://archive.ubuntu.com/ubuntu focal/main libxcb 1.14-2 (dsc) [5,344 B]
+Get:2 http://archive.ubuntu.com/ubuntu focal/main libxcb 1.14-2 (tar) [640 kB]
+Get:3 http://archive.ubuntu.com/ubuntu focal/main libxcb 1.14-2 (diff) [25.7 kB]
+[1mdpkg-source: [0m[32minfo[0m: extracting libxcb in libxcb-1.14
+[1mdpkg-source: [0m[32minfo[0m: unpacking libxcb_1.14.orig.tar.gz
+[1mdpkg-source: [0m[32minfo[0m: applying libxcb_1.14-2.diff.gz
+[1mdpkg-source: [0m[32minfo[0m: upstream files that have been modified: 
+ libxcb-1.14/.autom4te.cfg
+Fetched 671 kB in 0s (22.1 MB/s)
+[1m[7m[31mUpdating libxcb-xfixes0
+[91m(B[mGet:1 http://archive.ubuntu.com/ubuntu focal/main amd64 libxcb-xfixes0 amd64 1.14-2 [9,296 B]
+Fetched 9,296 B in 0s (43.1 kB/s)
+Reading package lists...
+Picking 'libxcb' as source package instead of 'libxcb-xfixes0'
+NOTICE: 'libxcb' packaging is maintained in the 'Git' version control system at:
+https://salsa.debian.org/xorg-team/lib/libxcb.git
+Please use:
+git clone https://salsa.debian.org/xorg-team/lib/libxcb.git
+to retrieve the latest (possibly unreleased) updates to the package.
+Need to get 671 kB of source archives.
+Get:1 http://archive.ubuntu.com/ubuntu focal/main libxcb 1.14-2 (dsc) [5,344 B]
+Get:2 http://archive.ubuntu.com/ubuntu focal/main libxcb 1.14-2 (tar) [640 kB]
+Get:3 http://archive.ubuntu.com/ubuntu focal/main libxcb 1.14-2 (diff) [25.7 kB]
+[1mdpkg-source: [0m[32minfo[0m: extracting libxcb in libxcb-1.14
+[1mdpkg-source: [0m[32minfo[0m: unpacking libxcb_1.14.orig.tar.gz
+[1mdpkg-source: [0m[32minfo[0m: applying libxcb_1.14-2.diff.gz
+[1mdpkg-source: [0m[32minfo[0m: upstream files that have been modified: 
+ libxcb-1.14/.autom4te.cfg
+Fetched 671 kB in 0s (25.1 MB/s)
+[1m[7m[31mUpdating libxshmfence1
+[91m(B[mGet:1 http://archive.ubuntu.com/ubuntu focal/main amd64 libxshmfence1 amd64 1.3-1 [5,028 B]
+Fetched 5,028 B in 0s (307 kB/s)
+Reading package lists...
+Picking 'libxshmfence' as source package instead of 'libxshmfence1'
+NOTICE: 'libxshmfence' packaging is maintained in the 'Git' version control system at:
+https://salsa.debian.org/xorg-team/lib/libxshmfence.git
+Please use:
+git clone https://salsa.debian.org/xorg-team/lib/libxshmfence.git
+to retrieve the latest (possibly unreleased) updates to the package.
+Need to get 399 kB of source archives.
+Get:1 http://archive.ubuntu.com/ubuntu focal/main libxshmfence 1.3-1 (dsc) [2,096 B]
+Get:2 http://archive.ubuntu.com/ubuntu focal/main libxshmfence 1.3-1 (tar) [379 kB]
+Get:3 http://archive.ubuntu.com/ubuntu focal/main libxshmfence 1.3-1 (diff) [17.5 kB]
+[1mdpkg-source: [0m[32minfo[0m: extracting libxshmfence in libxshmfence-1.3
+[1mdpkg-source: [0m[32minfo[0m: unpacking libxshmfence_1.3.orig.tar.gz
+[1mdpkg-source: [0m[32minfo[0m: applying libxshmfence_1.3-1.diff.gz
+[1mdpkg-source: [0m[32minfo[0m: upstream files that have been modified: 
+ libxshmfence-1.3/autogen.sh
+Fetched 399 kB in 1s (653 kB/s)
+[1m[7m[31mUpdating libdrm2
+[91m(B[mGet:1 http://archive.ubuntu.com/ubuntu focal-updates/main amd64 libdrm2 amd64 2.4.107-8ubuntu1~20.04.2 [34.1 kB]
+Fetched 34.1 kB in 0s (121 kB/s)
+Reading package lists...
+Picking 'libdrm' as source package instead of 'libdrm2'
+NOTICE: 'libdrm' packaging is maintained in the 'Git' version control system at:
+https://salsa.debian.org/xorg-team/lib/libdrm
+Please use:
+git clone https://salsa.debian.org/xorg-team/lib/libdrm
+to retrieve the latest (possibly unreleased) updates to the package.
+Need to get 488 kB of source archives.
+Get:1 http://archive.ubuntu.com/ubuntu focal-updates/main libdrm 2.4.107-8ubuntu1~20.04.2 (dsc) [3,188 B]
+Get:2 http://archive.ubuntu.com/ubuntu focal-updates/main libdrm 2.4.107-8ubuntu1~20.04.2 (tar) [426 kB]
+Get:3 http://archive.ubuntu.com/ubuntu focal-updates/main libdrm 2.4.107-8ubuntu1~20.04.2 (diff) [59.1 kB]
+[1mdpkg-source: [0m[32minfo[0m: extracting libdrm in libdrm-2.4.107
+[1mdpkg-source: [0m[32minfo[0m: unpacking libdrm_2.4.107.orig.tar.xz
+[1mdpkg-source: [0m[32minfo[0m: unpacking libdrm_2.4.107-8ubuntu1~20.04.2.debian.tar.xz
+[1mdpkg-source: [0m[32minfo[0m: using patch list from debian/patches/series
+[1mdpkg-source: [0m[32minfo[0m: applying 01_default_perms.diff
+[1mdpkg-source: [0m[32minfo[0m: applying Revert-meson-use-library-instead-of-shared_library.patch
+Fetched 488 kB in 0s (16.2 MB/s)
+[1m[7m[31mUpdating libexpat1
+[91m(B[mGet:1 http://archive.ubuntu.com/ubuntu focal-updates/main amd64 libexpat1 amd64 2.2.9-1ubuntu0.7 [74.7 kB]
+Fetched 74.7 kB in 0s (3,730 kB/s)
+Reading package lists...
+Picking 'expat' as source package instead of 'libexpat1'
+Need to get 8,304 kB of source archives.
+Get:1 http://archive.ubuntu.com/ubuntu focal-updates/main expat 2.2.9-1ubuntu0.7 (dsc) [1,930 B]
+Get:2 http://archive.ubuntu.com/ubuntu focal-updates/main expat 2.2.9-1ubuntu0.7 (tar) [8,273 kB]
+Get:3 http://archive.ubuntu.com/ubuntu focal-updates/main expat 2.2.9-1ubuntu0.7 (diff) [28.8 kB]
+[1mdpkg-source: [0m[32minfo[0m: extracting expat in expat-2.2.9
+[1mdpkg-source: [0m[32minfo[0m: unpacking expat_2.2.9.orig.tar.gz
+[1mdpkg-source: [0m[32minfo[0m: unpacking expat_2.2.9-1ubuntu0.7.debian.tar.xz
+[1mdpkg-source: [0m[32minfo[0m: using patch list from debian/patches/series
+[1mdpkg-source: [0m[32minfo[0m: applying CVE-2021-45960.patch
+[1mdpkg-source: [0m[32minfo[0m: applying CVE-2021-46143.patch
+[1mdpkg-source: [0m[32minfo[0m: applying CVE-2022-22822-to-CVE-2022-22827.patch
+[1mdpkg-source: [0m[32minfo[0m: applying CVE-2022-23852-1.patch
+[1mdpkg-source: [0m[32minfo[0m: applying CVE-2022-23852-2.patch
+[1mdpkg-source: [0m[32minfo[0m: applying CVE-2022-23990.patch
+[1mdpkg-source: [0m[32minfo[0m: applying CVE-2022-25235-1.patch
+[1mdpkg-source: [0m[32minfo[0m: applying CVE-2022-25235-2.patch
+[1mdpkg-source: [0m[32minfo[0m: applying CVE-2022-25236-1.patch
+[1mdpkg-source: [0m[32minfo[0m: applying CVE-2022-25236-2.patch
+[1mdpkg-source: [0m[32minfo[0m: applying CVE-2022-25313.patch
+[1mdpkg-source: [0m[32minfo[0m: applying fix-build_model-regression.patch
+[1mdpkg-source: [0m[32minfo[0m: applying protect-against-nested-element-declaration-model-regressions.patch
+[1mdpkg-source: [0m[32minfo[0m: applying CVE-2022-25314.patch
+[1mdpkg-source: [0m[32minfo[0m: applying CVE-2022-25315.patch
+[1mdpkg-source: [0m[32minfo[0m: applying CVE-2022-25236-3.patch
+[1mdpkg-source: [0m[32minfo[0m: applying CVE-2022-25236-4.patch
+[1mdpkg-source: [0m[32minfo[0m: applying CVE-2022-25236-5.patch
+[1mdpkg-source: [0m[32minfo[0m: applying CVE-2022-25236-6.patch
+[1mdpkg-source: [0m[32minfo[0m: applying fix_test_dup.patch
+[1mdpkg-source: [0m[32minfo[0m: applying CVE-2022-40674.patch
+[1mdpkg-source: [0m[32minfo[0m: applying CVE-2022-43680-1.patch
+[1mdpkg-source: [0m[32minfo[0m: applying CVE-2022-43680-2.patch
+[1mdpkg-source: [0m[32minfo[0m: applying CVE-2024-45490-1.patch
+[1mdpkg-source: [0m[32minfo[0m: applying CVE-2024-45490-2.patch
+[1mdpkg-source: [0m[32minfo[0m: applying CVE-2024-45491.patch
+[1mdpkg-source: [0m[32minfo[0m: applying CVE-2024-45492.patch
+Fetched 8,304 kB in 0s (54.3 MB/s)
+[1m[7m[31mUpdating libbsd0
+[91m(B[mGet:1 http://archive.ubuntu.com/ubuntu focal/main amd64 libbsd0 amd64 0.10.0-1 [45.4 kB]
+Fetched 45.4 kB in 0s (1,510 kB/s)
+Reading package lists...
+Picking 'libbsd' as source package instead of 'libbsd0'
+NOTICE: 'libbsd' packaging is maintained in the 'Git' version control system at:
+https://git.hadrons.org/git/debian/pkgs/libbsd.git
+Please use:
+git clone https://git.hadrons.org/git/debian/pkgs/libbsd.git
+to retrieve the latest (possibly unreleased) updates to the package.
+Need to get 413 kB of source archives.
+Get:1 http://archive.ubuntu.com/ubuntu focal/main libbsd 0.10.0-1 (dsc) [2,197 B]
+Get:2 http://archive.ubuntu.com/ubuntu focal/main libbsd 0.10.0-1 (tar) [394 kB]
+Get:3 http://archive.ubuntu.com/ubuntu focal/main libbsd 0.10.0-1 (asc) [833 B]
+Get:4 http://archive.ubuntu.com/ubuntu focal/main libbsd 0.10.0-1 (diff) [16.7 kB]
+[1mdpkg-source: [0m[32minfo[0m: extracting libbsd in libbsd-0.10.0
+[1mdpkg-source: [0m[32minfo[0m: unpacking libbsd_0.10.0.orig.tar.xz
+[1mdpkg-source: [0m[32minfo[0m: unpacking libbsd_0.10.0-1.debian.tar.xz
+Fetched 413 kB in 0s (15.4 MB/s)
 [1m[7m[32mBefore committing, run 'git add .' or similar to stage all changes.
 
 Update '.gitignore' if necessary.

@@ -1,0 +1,4 @@
+usr/include/xcb/xkb.h
+usr/lib/*/libxcb-xkb.a
+usr/lib/*/libxcb-xkb.so
+usr/lib/*/pkgconfig/xcb-xkb.pc

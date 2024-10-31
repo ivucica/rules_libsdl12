@@ -1,0 +1,4 @@
+usr/include/xcb/xinput.h
+usr/lib/*/libxcb-xinput.a
+usr/lib/*/libxcb-xinput.so
+usr/lib/*/pkgconfig/xcb-xinput.pc
