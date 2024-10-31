@@ -179,7 +179,17 @@ def _x11_deb_repository_rule_impl(repository_ctx):
             "libXdmcp.so.6.0.0",
         ]
 
-        r += 'cc_library(name="libXdmcp", srcs=[' + ",".join(['":' + str(e) + '"' for e in libs]) + '], visibility=["//visibility:public"])\n'
+        # deps from lddtree:
+        # libbsd.so.0 => /lib/x86_64-linux-gnu/libbsd.so.0
+        deps = [
+            # "libbsd.so has a corrupt section with a size (c32884c383c2480a) larger than the file size"
+            # Maybe it'll be in RBE. Let's try without it.
+            # "@libbsd0//:libbsd",
+        ]
+
+        deps_str = ",".join([str('"' + e + '"') for e in deps])
+
+        r += 'cc_library(name="libXdmcp", srcs=[' + ",".join(['":' + str(e) + '"' for e in libs]) + '], deps=[' + deps_str + '], visibility=["//visibility:public"])\n'
 
     if repository_ctx.name == "libgl1":
         repository_ctx.file("libGL.so.1.7.0", repository_ctx.read(libs[0]), executable = False, legacy_utf8 = False)
@@ -234,7 +244,44 @@ def _x11_deb_repository_rule_impl(repository_ctx):
             "libGLX_mesa.so.0.0.0",
         ]
 
-        r += 'cc_library(name="libGLX_mesa", srcs=[' + ",".join(['":' + str(e) + '"' for e in libs]) + '], visibility=["//visibility:public"])\n'
+        # deps from lddtree:
+        # libdrm.so.2 => /lib/x86_64-linux-gnu/libdrm.so.2
+        # libxcb-glx.so.0 => /lib/x86_64-linux-gnu/libxcb-glx.so.0
+        # libX11-xcb.so.1 => /lib/x86_64-linux-gnu/libX11-xcb.so.1
+        # libxcb-dri2.so.0 => /lib/x86_64-linux-gnu/libxcb-dri2.so.0
+        # libXext.so.6 => /lib/x86_64-linux-gnu/libXext.so.6
+        # libXfixes.so.3 => /lib/x86_64-linux-gnu/libXfixes.so.3
+        # libXxf86vm.so.1 => /lib/x86_64-linux-gnu/libXxf86vm.so.1
+        # libxcb-shm.so.0 => /lib/x86_64-linux-gnu/libxcb-shm.so.0
+        # libexpat.so.1 => /lib/x86_64-linux-gnu/libexpat.so.1
+        # libxcb-dri3.so.0 => /lib/x86_64-linux-gnu/libxcb-dri3.so.0
+        # libxcb-present.so.0 => /lib/x86_64-linux-gnu/libxcb-present.so.0
+        # libxcb-sync.so.1 => /lib/x86_64-linux-gnu/libxcb-sync.so.1
+        # libxshmfence.so.1 => /lib/x86_64-linux-gnu/libxshmfence.so.1
+        # libxcb-xfixes.so.0 => /lib/x86_64-linux-gnu/libxcb-xfixes.so.0
+        deps = [
+            "@libdrm2//:libdrm",
+            "@libxcb-glx0//:libxcb-glx",
+            "@libx11-xcb1//:libx11-xcb1",
+            "@libxcb-dri2-0//:libxcb-dri2",
+            "@libxext6//:libXext",
+            "@libxfixes3//:libXfixes",
+            "@libxxf86vm1//:libXxf86vm",
+            "@libxcb-shm0//:libxcb-shm0",
+            "@libexpat1//:libexpat",
+            "@libxcb-dri3-0//:libxcb-dri3",
+            "@libxcb-present0//:libxcb-present",
+            "@libxcb-sync1//:libxcb-sync",
+            "@libxshmfence1//:libxshmfence",
+            "@libxcb-xfixes0//:libxcb-xfixes",
+        ]
+
+        # deps_str = ",".join([str('"' + e + '"') for e in deps])
+        # TEMP: use nothing because trying to link with those .so says "file format not recognized".
+        # This means RBE will continue not building correctly.
+        deps_str = ""
+
+        r += 'cc_library(name="libGLX_mesa", srcs=[' + ",".join(['":' + str(e) + '"' for e in libs]) + '], deps=[' + deps_str + '], visibility=["//visibility:public"])\n'
 
     if repository_ctx.name == "libglx0":
         libs = [e for e in libs if 'libGLX.so.0.0.0' in str(e)]
@@ -261,6 +308,148 @@ def _x11_deb_repository_rule_impl(repository_ctx):
 
         r += 'cc_library(name="libglapi", srcs=[' + ",".join(['":' + str(e) + '"' for e in libs]) + '], visibility=["//visibility:public"])\n'
 
+    if repository_ctx.name == "libxext6":
+        repository_ctx.file("libXext.so.6.4.0", repository_ctx.read(libs[0]), executable = False)
+        repository_ctx.file("libXext.so.6", repository_ctx.read(libs[0]), executable = False)
+        repository_ctx.file("libXext.so", repository_ctx.read(libs[0]), executable = False)
+        libs = [
+            "libXext.so",
+            "libXext.so.6",
+            "libXext.so.6.4.0",
+        ]
+        r += 'cc_library(name="libXext", srcs=[' + ",".join(['":' + str(e) + '"' for e in libs]) + '], visibility=["//visibility:public"])\n'
+
+    if repository_ctx.name == "libxfixes3":
+        repository_ctx.file("libXfixes.so.3.1.0", repository_ctx.read(libs[0]), executable = False)
+        repository_ctx.file("libXfixes.so.3", repository_ctx.read(libs[0]), executable = False)
+        repository_ctx.file("libXfixes.so", repository_ctx.read(libs[0]), executable = False)
+        libs = [
+            "libXfixes.so",
+            "libXfixes.so.3",
+            "libXfixes.so.3.1.0",
+        ]
+        r += 'cc_library(name="libXfixes", srcs=[' + ",".join(['":' + str(e) + '"' for e in libs]) + '], visibility=["//visibility:public"])\n'
+
+    if repository_ctx.name == "libxxf86vm1":
+        repository_ctx.file("libXxf86vm.so.1.0.0", repository_ctx.read(libs[0]), executable = False)
+        repository_ctx.file("libXxf86vm.so.1", repository_ctx.read(libs[0]), executable = False)
+        repository_ctx.file("libXxf86vm.so", repository_ctx.read(libs[0]), executable = False)
+        libs = [
+            "libXxf86vm.so",
+            "libXxf86vm.so.1",
+            "libXxf86vm.so.1.0.0",
+        ]
+        r += 'cc_library(name="libXxf86vm", srcs=[' + ",".join(['":' + str(e) + '"' for e in libs]) + '], visibility=["//visibility:public"])\n'
+
+    if repository_ctx.name == "libxcb-glx0":
+        repository_ctx.file("libxcb-glx.so.0.0.0", repository_ctx.read(libs[0]), executable = False)
+        repository_ctx.file("libxcb-glx.so.0", repository_ctx.read(libs[0]), executable = False)
+        repository_ctx.file("libxcb-glx.so", repository_ctx.read(libs[0]), executable = False)
+        libs = [
+            "libxcb-glx.so",
+            "libxcb-glx.so.0",
+            "libxcb-glx.so.0.0.0",
+        ]
+        r += 'cc_library(name="libxcb-glx", srcs=[' + ",".join(['":' + str(e) + '"' for e in libs]) + '], visibility=["//visibility:public"])\n'
+
+    if repository_ctx.name == "libxcb-dri2-0":
+        repository_ctx.file("libxcb-dri2.so.0.0.0", repository_ctx.read(libs[0]), executable = False)
+        repository_ctx.file("libxcb-dri2.so.0", repository_ctx.read(libs[0]), executable = False)
+        repository_ctx.file("libxcb-dri2.so", repository_ctx.read(libs[0]), executable = False)
+        libs = [
+            "libxcb-dri2.so",
+            "libxcb-dri2.so.0",
+            "libxcb-dri2.so.0.0.0",
+        ]
+        r += 'cc_library(name="libxcb-dri2", srcs=[' + ",".join(['":' + str(e) + '"' for e in libs]) + '], visibility=["//visibility:public"])\n'
+
+    if repository_ctx.name == "libxcb-dri3-0":
+        repository_ctx.file("libxcb-dri3.so.0.0.0", repository_ctx.read(libs[0]), executable = False)
+        repository_ctx.file("libxcb-dri3.so.0", repository_ctx.read(libs[0]), executable = False)
+        repository_ctx.file("libxcb-dri3.so", repository_ctx.read(libs[0]), executable = False)
+        libs = [
+            "libxcb-dri3.so",
+            "libxcb-dri3.so.0",
+            "libxcb-dri3.so.0.0.0",
+        ]
+        r += 'cc_library(name="libxcb-dri3", srcs=[' + ",".join(['":' + str(e) + '"' for e in libs]) + '], visibility=["//visibility:public"])\n'
+
+    if repository_ctx.name == "libxcb-present0":
+        repository_ctx.file("libxcb-present.so.0.0.0", repository_ctx.read(libs[0]), executable = False)
+        repository_ctx.file("libxcb-present.so.0", repository_ctx.read(libs[0]), executable = False)
+        repository_ctx.file("libxcb-present.so", repository_ctx.read(libs[0]), executable = False)
+        libs = [
+            "libxcb-present.so",
+            "libxcb-present.so.0",
+            "libxcb-present.so.0.0.0",
+        ]
+        r += 'cc_library(name="libxcb-present", srcs=[' + ",".join(['":' + str(e) + '"' for e in libs]) + '], visibility=["//visibility:public"])\n'
+
+    if repository_ctx.name == "libxcb-sync1":
+        repository_ctx.file("libxcb-sync.so.1.0.0", repository_ctx.read(libs[0]), executable = False)
+        repository_ctx.file("libxcb-sync.so.1", repository_ctx.read(libs[0]), executable = False)
+        repository_ctx.file("libxcb-sync.so", repository_ctx.read(libs[0]), executable = False)
+        libs = [
+            "libxcb-sync.so",
+            "libxcb-sync.so.1",
+            "libxcb-sync.so.1.0.0",
+        ]
+        r += 'cc_library(name="libxcb-sync", srcs=[' + ",".join(['":' + str(e) + '"' for e in libs]) + '], visibility=["//visibility:public"])\n'
+
+    if repository_ctx.name == "libxcb-xfixes0":
+        repository_ctx.file("libxcb-xfixes.so.0.0.0", repository_ctx.read(libs[0]), executable = False)
+        repository_ctx.file("libxcb-xfixes.so.0", repository_ctx.read(libs[0]), executable = False)
+        repository_ctx.file("libxcb-xfixes.so", repository_ctx.read(libs[0]), executable = False)
+        libs = [
+            "libxcb-xfixes.so",
+            "libxcb-xfixes.so.0",
+            "libxcb-xfixes.so.0.0.0",
+        ]
+        r += 'cc_library(name="libxcb-xfixes", srcs=[' + ",".join(['":' + str(e) + '"' for e in libs]) + '], visibility=["//visibility:public"])\n'
+
+    if repository_ctx.name == "libxshmfence1":
+        repository_ctx.file("libxshmfence.so.1.0.0", repository_ctx.read(libs[0]), executable = False)
+        repository_ctx.file("libxshmfence.so.1", repository_ctx.read(libs[0]), executable = False)
+        repository_ctx.file("libxshmfence.so", repository_ctx.read(libs[0]), executable = False)
+        libs = [
+            "libxshmfence.so",
+            "libxshmfence.so.1",
+            "libxshmfence.so.1.0.0",
+        ]
+        r += 'cc_library(name="libxshmfence", srcs=[' + ",".join(['":' + str(e) + '"' for e in libs]) + '], visibility=["//visibility:public"])\n'
+
+    if repository_ctx.name == "libdrm2":
+        repository_ctx.file("libdrm.so.2.4.0", repository_ctx.read(libs[0]), executable = False)
+        repository_ctx.file("libdrm.so.2", repository_ctx.read(libs[0]), executable = False)
+        repository_ctx.file("libdrm.so", repository_ctx.read(libs[0]), executable = False)
+        libs = [
+            "libdrm.so",
+            "libdrm.so.2",
+            "libdrm.so.2.4.0",
+        ]
+        r += 'cc_library(name="libdrm", srcs=[' + ",".join(['":' + str(e) + '"' for e in libs]) + '], visibility=["//visibility:public"])\n'
+
+    if repository_ctx.name == "libexpat1":
+        repository_ctx.file("libexpat.so.1.6.0", repository_ctx.read(libs[0]), executable = False)
+        repository_ctx.file("libexpat.so.1", repository_ctx.read(libs[0]), executable = False)
+        repository_ctx.file("libexpat.so", repository_ctx.read(libs[0]), executable = False)
+        libs = [
+            "libexpat.so",
+            "libexpat.so.1",
+            "libexpat.so.1.6.0",
+        ]
+        r += 'cc_library(name="libexpat", srcs=[' + ",".join(['":' + str(e) + '"' for e in libs]) + '], visibility=["//visibility:public"])\n'
+
+    if repository_ctx.name == "libbsd0":
+        repository_ctx.file("libbsd.so.0.8.0", repository_ctx.read(libs[0]), executable = False)
+        repository_ctx.file("libbsd.so.0", repository_ctx.read(libs[0]), executable = False)
+        repository_ctx.file("libbsd.so", repository_ctx.read(libs[0]), executable = False)
+        libs = [
+            "libbsd.so",
+            "libbsd.so.0",
+            "libbsd.so.0.8.0",
+        ]
+        r += 'cc_library(name="libbsd", srcs=[' + ",".join(['":' + str(e) + '"' for e in libs]) + '], visibility=["//visibility:public"])\n'
 
     # Note: cc_import, cc_library etc have really interesting semantics and
     # the best way to do this should be checked.
@@ -404,7 +593,7 @@ def x11_deb_repository(name, urls, sha256):
 # x11_repository_deb adds all repos.
 def x11_repository_deb():
     #master_deb_hash = 'master.deb'
-    master_deb_hash = "27bd8c4629b5f466b42ee03a9c46e4d839aaa930"
+    master_deb_hash = "aa5393d882d338390d84e51dd646423e9d5b6633"
 
     x11_deb_repository(
         name = "libx11-dev",
@@ -552,6 +741,95 @@ def x11_repository_deb():
         sha256 = "30d27c6b71753bea3f144d91756ca440a9f7cf3842497a3af4cf228e615c15b2",
     )
 
+    x11_deb_repository(
+        name = "libx11-xcb1",
+        urls = ["https://github.com/ivucica/rules_libsdl12/raw/" +  master_deb_hash + "/libx11-xcb1/libx11-xcb1_2%253a1.6.9-2ubuntu1.6_amd64.deb"],
+        sha256 = "da988703b47d7923d4bee2be97dd91b8225efaa70ea284e1bc84e025992c449f",
+    )
+
+    x11_deb_repository(
+        name = "libxext6",
+        urls = ["https://github.com/ivucica/rules_libsdl12/raw/" +  master_deb_hash + "/libxext6/libxext6_2%253a1.3.4-0ubuntu1_amd64.deb"],
+        sha256 = "a3c546490c0ae0f9247cf8f2919fc7b99b386a538ac91ae48a4ebb96a2a69834",
+    )
+
+    x11_deb_repository(
+        name = "libxfixes3",
+        urls = ["https://github.com/ivucica/rules_libsdl12/raw/" +  master_deb_hash + "/libxfixes3/libxfixes3_1%253a5.0.3-2_amd64.deb"],
+        sha256 = "ee3d380e5f825048a381fea92e8215bc65662fa4ce06346579fbaada2b1f7acc",
+    )
+
+    x11_deb_repository(
+        name = "libxxf86vm1",
+        urls = ["https://github.com/ivucica/rules_libsdl12/raw/" +  master_deb_hash + "/libxxf86vm1/libxxf86vm1_1%253a1.1.4-1build1_amd64.deb"],
+        sha256 = "45f668e2bb605559261db4651348d4c248ee871610b541a076e4fc2f05807cc0",
+    )
+
+    x11_deb_repository(
+        name = "libxcb-glx0",
+        urls = ["https://github.com/ivucica/rules_libsdl12/raw/" +  master_deb_hash + "/libxcb-glx0/libxcb-glx0_1.14-2_amd64.deb"],
+        sha256 = "7c4b5d4a025a1ba37439a89dcf9f51ed031e038555759ce745072976b4f7b743",
+    )
+
+    x11_deb_repository(
+        name = "libxcb-dri2-0",
+        urls = ["https://github.com/ivucica/rules_libsdl12/raw/" +  master_deb_hash + "/libxcb-dri2-0/libxcb-dri2-0_1.14-2_amd64.deb"],
+        sha256 = "36fb1a063de7d5337887f0ca8e7a0f43ec0c82b3c022af439a6f896fa5a80535",
+    )
+
+    x11_deb_repository(
+        name = "libxcb-dri3-0",
+        urls = ["https://github.com/ivucica/rules_libsdl12/raw/" +  master_deb_hash + "/libxcb-dri3-0/libxcb-dri3-0_1.14-2_amd64.deb"],
+        sha256 = "d6df34fbf1b2cd584ad51839037e3da2b4131f239c6d1ef2cb41e6757fc5d48e",
+    )
+
+    x11_deb_repository(
+        name = "libxcb-present0",
+        urls = ["https://github.com/ivucica/rules_libsdl12/raw/" +  master_deb_hash + "/libxcb-present0/libxcb-present0_1.14-2_amd64.deb"],
+        sha256 = "fb608f5fbdd36ca851118754a990e55309f4cf538db17b7dd91eb117bc06ff5e",
+    )
+
+    x11_deb_repository(
+        name = "libxcb-sync1",
+        urls = ["https://github.com/ivucica/rules_libsdl12/raw/" +  master_deb_hash + "/libxcb-sync1/libxcb-sync1_1.14-2_amd64.deb"],
+        sha256 = "d79b16f888b16031cfc25bbf6f92b404f421d7965e625cede4825b15aa795e6e",
+    )
+
+    x11_deb_repository(
+        name = "libxcb-xfixes0",
+        urls = ["https://github.com/ivucica/rules_libsdl12/raw/" +  master_deb_hash + "/libxcb-xfixes0/libxcb-xfixes0_1.14-2_amd64.deb"],
+        sha256 = "9fbb1bbb105749359d99580bd388bcfec472cf3c6ff7f3b353ee78e61ec1bb81",
+    )
+
+    x11_deb_repository(
+        name = "libxshmfence1",
+        urls = ["https://github.com/ivucica/rules_libsdl12/raw/" +  master_deb_hash + "/libxshmfence1/libxshmfence1_1.3-1_amd64.deb"],
+        sha256 = "f5fa812a85d8f4aa6b2760ba838ce9608297a2336b53e555efd3837b80d5dc10",
+    )
+
+    x11_deb_repository(
+        name = "libdrm2",
+        urls = ["https://github.com/ivucica/rules_libsdl12/raw/" +  master_deb_hash + "/libdrm2/libdrm2_2.4.107-8ubuntu1~20.04.2_amd64.deb"],
+        sha256 = "9b01d73313841abe8e3f24c2715edced675fbe329bbd10be912a5b135cd51fb6",
+    )
+
+    x11_deb_repository(
+        name = "libexpat1",
+        urls = ["https://github.com/ivucica/rules_libsdl12/raw/" +  master_deb_hash + "/libexpat1/libexpat1_2.2.9-1ubuntu0.7_amd64.deb"],
+        sha256 = "42dd972877a1212686846db5a9a78c3cecfc3da56249d3beecd53c4ff9d51453",
+    )
+
+    x11_deb_repository(
+        name = "libbsd0",
+        urls = ["https://github.com/ivucica/rules_libsdl12/raw/" +  master_deb_hash + "/libbsd0/libbsd0_0.10.0-1_amd64.deb"],
+        sha256 = "4f668025fe923a372eb7fc368d6769fcfff6809233d48fd20fc072917cd82e60",
+    )
+
+    x11_deb_repository(
+        name = "libxcb-shm0",
+        urls = ["https://github.com/ivucica/rules_libsdl12/raw/" +  master_deb_hash + "/libxcb-shm0/libxcb-shm0_1.14-2_amd64.deb"],
+        sha256 = "776c691acd4fcdad314f0f09c98927a608cbc422007ce0f0c88e9d6711773217",
+    )
 
 def x11_repository():
     return native.new_local_repository(
@@ -569,3 +847,42 @@ def xcb_repository():
         ]),
         path = "/usr/include",
     )
+
+# Dependencies loaded by the built binary:
+#         linux-vdso.so.1 (0x00007ffd583d9000)
+#         libX11.so.6 => /workspaces/yatc/bazel-bin/_solib_k8/_U@libx11-6_S_S_ClibX11___U/libX11.so.6 (0x000078b6e76ca000)
+#         libxcb.so.1 => /workspaces/yatc/bazel-bin/_solib_k8/_U@libxcb1_S_S_Clibxcb___U/libxcb.so.1 (0x000078b6e76a0000)
+#         libXau.so.6 => /workspaces/yatc/bazel-bin/_solib_k8/_U@libxau6_S_S_ClibXau___U/libXau.so.6 (0x000078b6e769a000)
+#         libXdmcp.so.6 => /workspaces/yatc/bazel-bin/_solib_k8/_U@libxdmcp6_S_S_ClibXdmcp___U/libXdmcp.so.6 (0x000078b6e7692000)
+#         libGL.so.1 => /workspaces/yatc/bazel-bin/_solib_k8/_U@libgl1_S_S_ClibGL___U/libGL.so.1 (0x000078b6e760a000)
+#         libglapi.so.0 => /workspaces/yatc/bazel-bin/_solib_k8/_U@libglapi-mesa_S_S_Clibglapi___U/libglapi.so.0 (0x000078b6e75cd000)
+#         libGLX.so.0 => /workspaces/yatc/bazel-bin/_solib_k8/_U@libglx0_S_S_ClibGLX___U/libGLX.so.0 (0x000078b6e7599000)
+#         libGLdispatch.so.0 => /workspaces/yatc/bazel-bin/_solib_k8/_U@libglvnd0_S_S_ClibGLdispatch___U/libGLdispatch.so.0 (0x000078b6e74e1000)
+#         libGLX_mesa.so.0 => /workspaces/yatc/bazel-bin/_solib_k8/_U@libglx-mesa0_S_S_ClibGLX_Umesa___U/libGLX_mesa.so.0 (0x000078b6e7468000)
+#         libGLU.so.1 => /workspaces/yatc/bazel-bin/_solib_k8/_U@libglu1-mesa_S_S_ClibGLU___U/libGLU.so.1 (0x000078b6e73f6000)
+#         libdl.so.2 => /lib/x86_64-linux-gnu/libdl.so.2 (0x000078b6e73e9000)
+#         libstdc++.so.6 => /lib/x86_64-linux-gnu/libstdc++.so.6 (0x000078b6e7205000)
+#         libm.so.6 => /lib/x86_64-linux-gnu/libm.so.6 (0x000078b6e70b6000)
+#         libgcc_s.so.1 => /lib/x86_64-linux-gnu/libgcc_s.so.1 (0x000078b6e709b000)
+#         libpthread.so.0 => /lib/x86_64-linux-gnu/libpthread.so.0 (0x000078b6e7078000)
+#         libc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x000078b6e6e86000)
+#         libbsd.so.0 => /lib/x86_64-linux-gnu/libbsd.so.0 (0x000078b6e6e6c000)
+#         libdrm.so.2 => /lib/x86_64-linux-gnu/libdrm.so.2 (0x000078b6e6e54000)
+#         libxcb-glx.so.0 => /lib/x86_64-linux-gnu/libxcb-glx.so.0 (0x000078b6e6e37000)
+#         libX11-xcb.so.1 => /lib/x86_64-linux-gnu/libX11-xcb.so.1 (0x000078b6e6e32000)
+#         libxcb-dri2.so.0 => /lib/x86_64-linux-gnu/libxcb-dri2.so.0 (0x000078b6e6e2b000)
+#         libXext.so.6 => /lib/x86_64-linux-gnu/libXext.so.6 (0x000078b6e6e16000)
+#         libXfixes.so.3 => /lib/x86_64-linux-gnu/libXfixes.so.3 (0x000078b6e6e0e000)
+#         libXxf86vm.so.1 => /lib/x86_64-linux-gnu/libXxf86vm.so.1 (0x000078b6e6e05000)
+#         libxcb-shm.so.0 => /lib/x86_64-linux-gnu/libxcb-shm.so.0 (0x000078b6e6e00000)
+#         libexpat.so.1 => /lib/x86_64-linux-gnu/libexpat.so.1 (0x000078b6e6dd2000)
+#         libxcb-dri3.so.0 => /lib/x86_64-linux-gnu/libxcb-dri3.so.0 (0x000078b6e6dcc000)
+#         libxcb-present.so.0 => /lib/x86_64-linux-gnu/libxcb-present.so.0 (0x000078b6e6dc7000)
+#         libxcb-sync.so.1 => /lib/x86_64-linux-gnu/libxcb-sync.so.1 (0x000078b6e6dbd000)
+#         libxshmfence.so.1 => /lib/x86_64-linux-gnu/libxshmfence.so.1 (0x000078b6e6bb9000)
+#         libxcb-xfixes.so.0 => /lib/x86_64-linux-gnu/libxcb-xfixes.so.0 (0x000078b6e6baf000)
+#         /lib64/ld-linux-x86-64.so.2 (0x000078b6e780b000)
+#
+# We need to load system versions of libdl, libstdc++, libm, libgcc_s,
+# libpthread, libc, libbsd even inside the remote build environment. The rest we
+# need to include from Debian, as we can't expect it to be installed in RBE.
