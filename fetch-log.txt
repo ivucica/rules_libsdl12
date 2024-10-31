@@ -1124,3 +1124,20 @@ dpkg-source: info: applying libx11_1.6.9-2ubuntu1.6.diff.gz
 dpkg-source: info: upstream files that have been modified: 
  libx11-1.6.9/ChangeLog
  libx11-1.6.9/autogen.sh
+Reading package lists... Done
+Picking 'libxcb' as source package instead of 'libxcb-shm0'
+NOTICE: 'libxcb' packaging is maintained in the 'Git' version control system at:
+https://salsa.debian.org/xorg-team/lib/libxcb.git
+Please use:
+git clone https://salsa.debian.org/xorg-team/lib/libxcb.git
+to retrieve the latest (possibly unreleased) updates to the package.
+Need to get 671 kB of source archives.
+Get:1 http://archive.ubuntu.com/ubuntu focal/main libxcb 1.14-2 (dsc) [5,344 B]
+Get:2 http://archive.ubuntu.com/ubuntu focal/main libxcb 1.14-2 (tar) [640 kB]
+Get:3 http://archive.ubuntu.com/ubuntu focal/main libxcb 1.14-2 (diff) [25.7 kB]
+Fetched 671 kB in 1s (1,025 kB/s) 
+dpkg-source: info: extracting libxcb in libxcb-1.14
+dpkg-source: info: unpacking libxcb_1.14.orig.tar.gz
+dpkg-source: info: applying libxcb_1.14-2.diff.gz
+dpkg-source: info: upstream files that have been modified: 
+ libxcb-1.14/.autom4te.cfg
