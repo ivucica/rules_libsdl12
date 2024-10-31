@@ -849,39 +849,39 @@ def xcb_repository():
     )
 
 # Dependencies loaded by the built binary:
-#         linux-vdso.so.1 (0x00007ffd583d9000)
-#         libX11.so.6 => /workspaces/yatc/bazel-bin/_solib_k8/_U@libx11-6_S_S_ClibX11___U/libX11.so.6 (0x000078b6e76ca000)
-#         libxcb.so.1 => /workspaces/yatc/bazel-bin/_solib_k8/_U@libxcb1_S_S_Clibxcb___U/libxcb.so.1 (0x000078b6e76a0000)
-#         libXau.so.6 => /workspaces/yatc/bazel-bin/_solib_k8/_U@libxau6_S_S_ClibXau___U/libXau.so.6 (0x000078b6e769a000)
-#         libXdmcp.so.6 => /workspaces/yatc/bazel-bin/_solib_k8/_U@libxdmcp6_S_S_ClibXdmcp___U/libXdmcp.so.6 (0x000078b6e7692000)
-#         libGL.so.1 => /workspaces/yatc/bazel-bin/_solib_k8/_U@libgl1_S_S_ClibGL___U/libGL.so.1 (0x000078b6e760a000)
-#         libglapi.so.0 => /workspaces/yatc/bazel-bin/_solib_k8/_U@libglapi-mesa_S_S_Clibglapi___U/libglapi.so.0 (0x000078b6e75cd000)
-#         libGLX.so.0 => /workspaces/yatc/bazel-bin/_solib_k8/_U@libglx0_S_S_ClibGLX___U/libGLX.so.0 (0x000078b6e7599000)
-#         libGLdispatch.so.0 => /workspaces/yatc/bazel-bin/_solib_k8/_U@libglvnd0_S_S_ClibGLdispatch___U/libGLdispatch.so.0 (0x000078b6e74e1000)
-#         libGLX_mesa.so.0 => /workspaces/yatc/bazel-bin/_solib_k8/_U@libglx-mesa0_S_S_ClibGLX_Umesa___U/libGLX_mesa.so.0 (0x000078b6e7468000)
-#         libGLU.so.1 => /workspaces/yatc/bazel-bin/_solib_k8/_U@libglu1-mesa_S_S_ClibGLU___U/libGLU.so.1 (0x000078b6e73f6000)
-#         libdl.so.2 => /lib/x86_64-linux-gnu/libdl.so.2 (0x000078b6e73e9000)
-#         libstdc++.so.6 => /lib/x86_64-linux-gnu/libstdc++.so.6 (0x000078b6e7205000)
-#         libm.so.6 => /lib/x86_64-linux-gnu/libm.so.6 (0x000078b6e70b6000)
-#         libgcc_s.so.1 => /lib/x86_64-linux-gnu/libgcc_s.so.1 (0x000078b6e709b000)
-#         libpthread.so.0 => /lib/x86_64-linux-gnu/libpthread.so.0 (0x000078b6e7078000)
-#         libc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x000078b6e6e86000)
-#         libbsd.so.0 => /lib/x86_64-linux-gnu/libbsd.so.0 (0x000078b6e6e6c000)
-#         libdrm.so.2 => /lib/x86_64-linux-gnu/libdrm.so.2 (0x000078b6e6e54000)
-#         libxcb-glx.so.0 => /lib/x86_64-linux-gnu/libxcb-glx.so.0 (0x000078b6e6e37000)
-#         libX11-xcb.so.1 => /lib/x86_64-linux-gnu/libX11-xcb.so.1 (0x000078b6e6e32000)
-#         libxcb-dri2.so.0 => /lib/x86_64-linux-gnu/libxcb-dri2.so.0 (0x000078b6e6e2b000)
-#         libXext.so.6 => /lib/x86_64-linux-gnu/libXext.so.6 (0x000078b6e6e16000)
-#         libXfixes.so.3 => /lib/x86_64-linux-gnu/libXfixes.so.3 (0x000078b6e6e0e000)
-#         libXxf86vm.so.1 => /lib/x86_64-linux-gnu/libXxf86vm.so.1 (0x000078b6e6e05000)
-#         libxcb-shm.so.0 => /lib/x86_64-linux-gnu/libxcb-shm.so.0 (0x000078b6e6e00000)
-#         libexpat.so.1 => /lib/x86_64-linux-gnu/libexpat.so.1 (0x000078b6e6dd2000)
-#         libxcb-dri3.so.0 => /lib/x86_64-linux-gnu/libxcb-dri3.so.0 (0x000078b6e6dcc000)
-#         libxcb-present.so.0 => /lib/x86_64-linux-gnu/libxcb-present.so.0 (0x000078b6e6dc7000)
-#         libxcb-sync.so.1 => /lib/x86_64-linux-gnu/libxcb-sync.so.1 (0x000078b6e6dbd000)
-#         libxshmfence.so.1 => /lib/x86_64-linux-gnu/libxshmfence.so.1 (0x000078b6e6bb9000)
-#         libxcb-xfixes.so.0 => /lib/x86_64-linux-gnu/libxcb-xfixes.so.0 (0x000078b6e6baf000)
-#         /lib64/ld-linux-x86-64.so.2 (0x000078b6e780b000)
+# yatc => bazel-bin/yatc (interpreter => /lib64/ld-linux-x86-64.so.2)
+#     libX11.so.6 => bazel-bin/_solib_k8/_U@libx11-6_S_S_ClibX11___U/libX11.so.6
+#     libxcb.so.1 => /lib/x86_64-linux-gnu/libxcb.so.1
+#     libXau.so.6 => /lib/x86_64-linux-gnu/libXau.so.6
+#     libXdmcp.so.6 => /lib/x86_64-linux-gnu/libXdmcp.so.6
+#         libbsd.so.0 => /lib/x86_64-linux-gnu/libbsd.so.0
+#     libGL.so.1 => /lib/x86_64-linux-gnu/libGL.so.1
+#     libglapi.so.0 => /lib/x86_64-linux-gnu/libglapi.so.0
+#     libGLX.so.0 => /lib/x86_64-linux-gnu/libGLX.so.0
+#     libGLdispatch.so.0 => /lib/x86_64-linux-gnu/libGLdispatch.so.0
+#     libGLX_mesa.so.0 => /lib/x86_64-linux-gnu/libGLX_mesa.so.0
+#         libdrm.so.2 => /lib/x86_64-linux-gnu/libdrm.so.2
+#         libxcb-glx.so.0 => /lib/x86_64-linux-gnu/libxcb-glx.so.0
+#         libX11-xcb.so.1 => /lib/x86_64-linux-gnu/libX11-xcb.so.1
+#         libxcb-dri2.so.0 => /lib/x86_64-linux-gnu/libxcb-dri2.so.0
+#         libXext.so.6 => /lib/x86_64-linux-gnu/libXext.so.6
+#         libXfixes.so.3 => /lib/x86_64-linux-gnu/libXfixes.so.3
+#         libXxf86vm.so.1 => /lib/x86_64-linux-gnu/libXxf86vm.so.1
+#         libxcb-shm.so.0 => /lib/x86_64-linux-gnu/libxcb-shm.so.0
+#         libexpat.so.1 => /lib/x86_64-linux-gnu/libexpat.so.1
+#         libxcb-dri3.so.0 => /lib/x86_64-linux-gnu/libxcb-dri3.so.0
+#         libxcb-present.so.0 => /lib/x86_64-linux-gnu/libxcb-present.so.0
+#         libxcb-sync.so.1 => /lib/x86_64-linux-gnu/libxcb-sync.so.1
+#         libxshmfence.so.1 => /lib/x86_64-linux-gnu/libxshmfence.so.1
+#         libxcb-xfixes.so.0 => /lib/x86_64-linux-gnu/libxcb-xfixes.so.0
+#     libGLU.so.1 => /lib/x86_64-linux-gnu/libGLU.so.1
+#     libdl.so.2 => /lib/x86_64-linux-gnu/libdl.so.2
+#         ld-linux-x86-64.so.2 => /lib64/ld-linux-x86-64.so.2
+#     libstdc++.so.6 => /lib/x86_64-linux-gnu/libstdc++.so.6
+#     libm.so.6 => /lib/x86_64-linux-gnu/libm.so.6
+#     libgcc_s.so.1 => /lib/x86_64-linux-gnu/libgcc_s.so.1
+#     libpthread.so.0 => /lib/x86_64-linux-gnu/libpthread.so.0
+#     libc.so.6 => /lib/x86_64-linux-gnu/libc.so.6
 #
 # We need to load system versions of libdl, libstdc++, libm, libgcc_s,
 # libpthread, libc, libbsd even inside the remote build environment. The rest we
