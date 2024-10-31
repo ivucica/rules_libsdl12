@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PACKAGES_X11="libx11-dev libxext-dev libxrandr-dev libxrender-dev x11proto-dev xorg-sgml-doctools libxcb1-dev libx11-xcb-dev libxau-dev libxdmcp-dev libxext6 libxfixes3 libxxf86vm1 libxcb-glx0 libxcb-dri2-0 libxcb-dri3-0 libxcb-present0 libxcb-sync1 libxcb-xfixes0 libxshmfence1 libdrm2 libexpat1 libbsd0"
+PACKAGES_X11="libx11-dev libxext-dev libxrandr-dev libxrender-dev x11proto-dev xorg-sgml-doctools libxcb1-dev libx11-xcb-dev libxau-dev libxdmcp-dev libxext6 libxfixes3 libxxf86vm1 libxcb-glx0 libxcb-dri2-0 libxcb-dri3-0 libxcb-present0 libxcb-sync1 libxcb-xfixes0 libxshmfence1 libdrm2 libexpat1 libbsd0 libx11-xcb1"
 PACKAGES_EXTRA="libgl-dev libglu1-mesa-dev libasound2-dev libalsaplayer-dev libgl1 libglu1-mesa libglvnd0 libglx0 libglx-mesa0 libx11-6 libxcb1 libxau6 libxdmcp6 libglapi-mesa libxext6 libxfixes3 libxxf86vm1 libxcb-glx0 libxcb-dri2-0 libxcb-dri3-0 libxcb-present0 libxcb-sync1 libxcb-xfixes0 libxshmfence1 libdrm2 libexpat1 libbsd0"
 
 PACKAGES="${PACKAGES_X11} ${PACKAGES_EXTRA}"

@@ -1105,3 +1105,22 @@ Fetched 413 kB in 0s (15.4 MB/s)
 
 Update '.gitignore' if necessary.
 [91m(B[m
+Reading package lists... Done
+Picking 'libx11' as source package instead of 'libx11-xcb1'
+NOTICE: 'libx11' packaging is maintained in the 'Git' version control system at:
+https://salsa.debian.org/xorg-team/lib/libx11
+Please use:
+git clone https://salsa.debian.org/xorg-team/lib/libx11
+to retrieve the latest (possibly unreleased) updates to the package.
+Need to get 3,070 kB of source archives.
+Get:1 http://archive.ubuntu.com/ubuntu focal-updates/main libx11 2:1.6.9-2ubuntu1.6 (dsc) [2,671 B]
+Get:2 http://archive.ubuntu.com/ubuntu focal-updates/main libx11 2:1.6.9-2ubuntu1.6 (tar) [2,994 kB]
+Get:3 http://archive.ubuntu.com/ubuntu focal-updates/main libx11 2:1.6.9-2ubuntu1.6 (asc) [659 B]
+Get:4 http://archive.ubuntu.com/ubuntu focal-updates/main libx11 2:1.6.9-2ubuntu1.6 (diff) [72.0 kB]
+Fetched 3,070 kB in 0s (40.7 MB/s)
+dpkg-source: info: extracting libx11 in libx11-1.6.9
+dpkg-source: info: unpacking libx11_1.6.9.orig.tar.gz
+dpkg-source: info: applying libx11_1.6.9-2ubuntu1.6.diff.gz
+dpkg-source: info: upstream files that have been modified: 
+ libx11-1.6.9/ChangeLog
+ libx11-1.6.9/autogen.sh

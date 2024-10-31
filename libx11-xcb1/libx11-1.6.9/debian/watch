@@ -1,0 +1,4 @@
+#git=https://gitlab.freedesktop.org/xorg/lib/libX11.git
+version=3
+opts=pgpsigurlmangle=s/$/.sig/ \
+https://xorg.freedesktop.org/releases/individual/lib/ libX11-(.*)\.tar\.gz
