@@ -57,7 +57,8 @@ def _x11_deb_repository_rule_impl(repository_ctx):
         #'../libx11-dev_deb/file/libx11-dev.deb', # <-- seems bad.
         deb_path,
         out_path.basename,
-    ], working_directory = str(out_path.dirname), quiet = False)
+        "--output=" + str(out_path.dirname)],
+        quiet = False)
 
     if res.return_code:
         fail("Unpacking failed: " + res.stderr)
@@ -835,7 +836,7 @@ def x11_repository():
     return native.new_local_repository(
         name = "x11repository",
         build_file = "@rules_libsdl12//:BUILD.x11helper",
-        path = "/usr/include/X11",
+        path = "/usr/include",
     )
 
 def xcb_repository():
