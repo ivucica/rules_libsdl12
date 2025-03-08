@@ -172,19 +172,24 @@ cc_library(
     }),
     copts = [
         "-Iexternal/x11repository",
-        "-isystem", "external/libx11-dev/usr/include", # TODO: only if bin debs are used; or make x11repository expose these
-        "-isystem", "external/libxext-dev/usr/include", # TODO: only if bin debs are used; or make x11repository expose these
-        "-isystem", "external/x11proto-dev/usr/include", # TODO: only if bin debs are used; or make x11repository expose these
-        "-isystem", "external/libx11-xcb-dev/usr/include", # TODO: only if bin debs are used; or make x11repository expose these
-        "-isystem", "external/libxcb1-dev/usr/include", # TODO: only if bin debs are used; or make x11repository expose these
-        "-isystem", "external/libxdmcp-dev/usr/include", # TODO: only if bin debs are used; or make x11repository expose these
-        "-isystem", "external/libalsaplayer-dev/usr/include", # TODO: only if bin debs are used; or make x11repository expose these
-        "-isystem", "external/libasound2-dev/usr/include", # TODO: only if bin debs are used; or make x11repository expose these
     ] + select({
         ":darwin": [
             "-DSDL_VIDEO_DRIVER_QUARTZ=1",
         ],
-        "//conditions:default": ["-DSDL_VIDEO_DRIVER_X11"], # TODO: only define X11 driver like this for deb binary builds -- possibly only needed because of missing pkgconfig data?
+        ":windows": [],
+        ":windows_msys": [],
+        ":windows_msvc": [],
+        "//conditions:default": [
+            "-DSDL_VIDEO_DRIVER_X11", # TODO: only define X11 driver like this for deb binary builds -- possibly only needed because of missing pkgconfig data?
+            "-isystem", "external/libx11-dev/usr/include", # TODO: only if bin debs are used; or make x11repository expose these
+            "-isystem", "external/libxext-dev/usr/include", # TODO: only if bin debs are used; or make x11repository expose these
+            "-isystem", "external/x11proto-dev/usr/include", # TODO: only if bin debs are used; or make x11repository expose these
+            "-isystem", "external/libx11-xcb-dev/usr/include", # TODO: only if bin debs are used; or make x11repository expose these
+            "-isystem", "external/libxcb1-dev/usr/include", # TODO: only if bin debs are used; or make x11repository expose these
+            "-isystem", "external/libxdmcp-dev/usr/include", # TODO: only if bin debs are used; or make x11repository expose these
+            "-isystem", "external/libalsaplayer-dev/usr/include", # TODO: only if bin debs are used; or make x11repository expose these
+            "-isystem", "external/libasound2-dev/usr/include", # TODO: only if bin debs are used; or make x11repository expose these
+        ],
     }),
     linkopts = select({
         ":windows": [
@@ -301,13 +306,18 @@ genrule(
           "mkdir -p $(@D)/build-scripts",
           "mkdir -p $(@D)/include",
           "for i in $(SRCS) ; do",
-          "  if [[ $${i} == *.patch ]] ; then",
+          "  if [[ -z \"$${i}\" ]] ; then",
+          "    echo 'Iterating over SRCS resulted in empty string: $$i $(SRCS): failing'",
+          "    continue",
+          "    exit 1",
+          "  fi",
+          "  if [[ \"$${i}\" == *.patch ]] ; then",
           "    continue",
           "  fi",
-          "  if [[ $${i} == external/" + workspace_name + "/include/* ]] ; then",
+          "  if [[ \"$${i}\" == external/" + workspace_name + "/include/* ]] ; then",
           "    cp \"$$i\" \"$(@D)/SDL/$$(basename \"$${i}\")\"",
           "    cp \"$$i\" \"$(@D)/include/$$(basename \"$${i}\")\"",
-          "  elif [[ $${i} == external/" + workspace_name + "/build-scripts/* ]] ; then",
+          "  elif [[ \"$${i}\" == external/" + workspace_name + "/build-scripts/* ]] ; then",
           "    cp \"$$i\" \"$(@D)/build-scripts/$$(basename \"$${i}\")\"",
           "  else",
           "    cp \"$${i}\" \"$(@D)/$$(basename \"$${i}\")\"",

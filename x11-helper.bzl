@@ -38,6 +38,41 @@ def _recurse_collect_files(repository_ctx, root_dir):  #, entries):
     return (hdrs, libs)
 
 def _x11_deb_repository_rule_impl(repository_ctx):
+
+    if repository_ctx.os.name != 'linux':
+        # Ideally we would leave this empty for non-Debian targets (or when we
+        # do not want to use Debian binaries as a source of headers and
+        # libraries). However, let's just create an empty repository for now,
+        # only populating targets we offer with stubs.
+        #
+        # Under Windows, we don't want to do anything too complicated, since
+        # running shell commands is tricky. Since we're not doing it on Windows,
+        # we might as well skip it on other non-Linux OSes (e.g. macOS which
+        # would likely be "mac os x" in the os name -- something that needs
+        # verification).
+        repository_ctx.report_progress("Skipping x11_deb repository on non-Linux OS")
+        root = repository_ctx.path("usr")
+
+        buildfile = '\n'.join([
+            'cc_import(',
+            '  name = "hdrs",',
+            '  hdrs = [],',
+            '  visibility = ["//visibility:public"],',
+            ')',
+            'cc_library(',
+            '  name = "libs",',
+            '  srcs = [],',
+            '  visibility = ["//visibility:public"],',
+            ')',
+            'cc_import(',
+            '  name = "' + repository_ctx.name + '",',
+            '  hdrs = [],',
+            '  visibility = ["//visibility:public"],',
+            ')',
+        ]) + '\n'
+        repository_ctx.file("BUILD", buildfile)
+        return
+
     # path where the deb to unpack using ar will be found
     deb_path = repository_ctx.path(repository_ctx.attr.deb)  # label -> path
 
@@ -886,3 +921,11 @@ def xcb_repository():
 # We need to load system versions of libdl, libstdc++, libm, libgcc_s,
 # libpthread, libc, libbsd even inside the remote build environment. The rest we
 # need to include from Debian, as we can't expect it to be installed in RBE.
+
+# Note to self:
+# We could tell Bazel that a rule is running under Windows like so:
+# some_rule_impl(name = name, src = src, is_windows = select({
+#             "@bazel_tools//src/conditions:host_windows": True,
+#             "//conditions:default": False,
+#         }),
+# See https://github.com/bazelbuild/bazel-skylib/blob/0171c69e5cc691e2d0cd9f3f3e4c3bf112370ca2/rules/private/copy_file_private.bzl
