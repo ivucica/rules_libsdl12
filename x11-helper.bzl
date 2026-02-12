@@ -12,6 +12,36 @@ def dedup(lst):
     fakeset = {k: 1 for k in lst}
     return fakeset.keys()
 
+def _copy_file(repository_ctx, src, dest):
+    # Make a byte-for-byte copy using the host cp to avoid binary data going through Starlark strings.
+    repository_ctx.execute([
+        "mkdir",
+        "-p",
+        str(repository_ctx.path(dest).dirname),
+    ])
+    res = repository_ctx.execute([
+        "cp",
+        str(repository_ctx.path(src)),
+        str(repository_ctx.path(dest)),
+    ])
+    if res.return_code:
+        fail("copy failed: " + res.stderr)
+
+def _copy_and_alias(repository_ctx, libs, target_name, alias_names):
+    real = None
+    for e in libs:
+        if str(e).endswith(target_name):
+            real = e
+            break
+    if real == None:
+        real = libs[0]
+
+    _copy_file(repository_ctx, real, target_name)
+    for alias in alias_names:
+        repository_ctx.symlink(target_name, alias)
+
+    return [target_name] + alias_names
+
 def _recurse_collect_files(repository_ctx, root_dir):  #, entries):
     hdrs = []
     libs = []
@@ -169,50 +199,22 @@ def _x11_deb_repository_rule_impl(repository_ctx):
                 )
 
     if repository_ctx.name == "libx11-6":
-        repository_ctx.file("libX11.so.6.3.0", repository_ctx.read(libs[0]), executable = False, legacy_utf8 = False)
-        repository_ctx.file("libX11.so.6", repository_ctx.read(libs[0]), executable = False, legacy_utf8 = False)
-        repository_ctx.file("libX11.so", repository_ctx.read(libs[0]), executable = False, legacy_utf8 = False)
-        libs = [
-            "libX11.so",
-            "libX11.so.6",
-            "libX11.so.6.3.0",
-        ]
+        libs = _copy_and_alias(repository_ctx, libs, "libX11.so.6.3.0", ["libX11.so.6", "libX11.so"])
 
         r += 'cc_library(name="libX11", srcs=[' + ",".join(['":' + str(e) + '"' for e in libs]) + '], visibility=["//visibility:public"])\n'
 
     if repository_ctx.name == "libxcb1":
-        repository_ctx.file("libxcb.so.1.1.0", repository_ctx.read(libs[0]), executable = False, legacy_utf8 = False)
-        repository_ctx.file("libxcb.so.1", repository_ctx.read(libs[0]), executable = False, legacy_utf8 = False)
-        repository_ctx.file("libxcb.so", repository_ctx.read(libs[0]), executable = False, legacy_utf8 = False)
-        libs = [
-            "libxcb.so",
-            "libxcb.so.1",
-            "libxcb.so.1.1.0",
-        ]
+        libs = _copy_and_alias(repository_ctx, libs, "libxcb.so.1.1.0", ["libxcb.so.1", "libxcb.so"])
 
         r += 'cc_library(name="libxcb", srcs=[' + ",".join(['":' + str(e) + '"' for e in libs]) + '], visibility=["//visibility:public"])\n'
 
     if repository_ctx.name == "libxau6":
-        repository_ctx.file("libXau.so.6.0.0", repository_ctx.read(libs[0]), executable = False, legacy_utf8 = False)
-        repository_ctx.file("libXau.so.6", repository_ctx.read(libs[0]), executable = False, legacy_utf8 = False)
-        repository_ctx.file("libXau.so", repository_ctx.read(libs[0]), executable = False, legacy_utf8 = False)
-        libs = [
-            "libXau.so",
-            "libXau.so.6",
-            "libXau.so.6.0.0",
-        ]
+        libs = _copy_and_alias(repository_ctx, libs, "libXau.so.6.0.0", ["libXau.so.6", "libXau.so"])
 
         r += 'cc_library(name="libXau", srcs=[' + ",".join(['":' + str(e) + '"' for e in libs]) + '], visibility=["//visibility:public"])\n'
 
     if repository_ctx.name == "libxdmcp6":
-        repository_ctx.file("libXdmcp.so.6.0.0", repository_ctx.read(libs[0]), executable = False, legacy_utf8 = False)
-        repository_ctx.file("libXdmcp.so.6", repository_ctx.read(libs[0]), executable = False, legacy_utf8 = False)
-        repository_ctx.file("libXdmcp.so", repository_ctx.read(libs[0]), executable = False, legacy_utf8 = False)
-        libs = [
-            "libXdmcp.so",
-            "libXdmcp.so.6",
-            "libXdmcp.so.6.0.0",
-        ]
+        libs = _copy_and_alias(repository_ctx, libs, "libXdmcp.so.6.0.0", ["libXdmcp.so.6", "libXdmcp.so"])
 
         # deps from lddtree:
         # libbsd.so.0 => /lib/x86_64-linux-gnu/libbsd.so.0
@@ -226,41 +228,26 @@ def _x11_deb_repository_rule_impl(repository_ctx):
 
         r += 'cc_library(name="libXdmcp", srcs=[' + ",".join(['":' + str(e) + '"' for e in libs]) + '], deps=[' + deps_str + '], visibility=["//visibility:public"])\n'
 
+    if repository_ctx.name == "libx11-xcb1":
+        libs = sorted([e for e in libs if "libX11-xcb.so" in str(e)], key = lambda e: len(str(e)), reverse = True)
+        libs = _copy_and_alias(repository_ctx, libs, "libX11-xcb.so.1.0.0", ["libX11-xcb.so.1", "libX11-xcb.so"])
+
+        r += 'cc_library(name="libx11-xcb", srcs=[' + ",".join(['":' + str(e) + '"' for e in libs]) + '], visibility=["//visibility:public"])\n'
+
     if repository_ctx.name == "libgl1":
-        repository_ctx.file("libGL.so.1.7.0", repository_ctx.read(libs[0]), executable = False, legacy_utf8 = False)
-        repository_ctx.file("libGL.so.1", repository_ctx.read(libs[0]), executable = False, legacy_utf8 = False)
-        repository_ctx.file("libGL.so", repository_ctx.read(libs[0]), executable = False, legacy_utf8 = False)
-        libs = [
-            "libGL.so",
-            "libGL.so.1",
-            "libGL.so.1.7.0",
-        ]
+        libs = _copy_and_alias(repository_ctx, libs, "libGL.so.1.7.0", ["libGL.so.1", "libGL.so"])
 
         r += 'cc_library(name="libGL", srcs=[' + ",".join(['":' + str(e) + '"' for e in libs]) + '], visibility=["//visibility:public"], deps=["@libglvnd0//:libGLdispatch"])\n'
         extra_lib_deps.append('"@libglvnd0//:libGLdispatch"')
         extra_lib_deps.append('"@libglx0//:libGLX"')
 
     if repository_ctx.name == "libglu1-mesa":
-        repository_ctx.file("libGLU.so.1.3.1", repository_ctx.read(libs[0]), executable = False, legacy_utf8 = False)
-        repository_ctx.file("libGLU.so.1", repository_ctx.read(libs[0]), executable = False, legacy_utf8 = False)
-        repository_ctx.file("libGLU.so", repository_ctx.read(libs[0]), executable = False, legacy_utf8 = False)
-        libs = [
-            "libGLU.so",
-            "libGLU.so.1",
-            "libGLU.so.1.3.1",
-        ]
+        libs = _copy_and_alias(repository_ctx, libs, "libGLU.so.1.3.1", ["libGLU.so.1", "libGLU.so"])
 
         r += 'cc_library(name="libGLU", srcs=[' + ",".join(['":' + str(e) + '"' for e in libs]) + '], visibility=["//visibility:public"])\n'
 
     if repository_ctx.name == "libglvnd0":
-        repository_ctx.file("libGLdispatch.so.0.0.0", repository_ctx.read(libs[0]), executable = False, legacy_utf8 = False)
-        repository_ctx.file("libGLdispatch.so.0", repository_ctx.read(libs[0]), executable = False, legacy_utf8 = False)
-        repository_ctx.file("libGLdispatch.so", repository_ctx.read(libs[0]), executable = False, legacy_utf8 = False)
-        libs = [
-            "libGLdispatch.so",
-            "libGLdispatch.so.0",
-            "libGLdispatch.so.0.0.0",
-        ]
+        libs = _copy_and_alias(repository_ctx, libs, "libGLdispatch.so.0.0.0", ["libGLdispatch.so.0", "libGLdispatch.so"])
 
         # THIS DOES NOTHING: Our real problem is BuildBuddy's default platform is Ubuntu 16.04, so linking to GLIBC 2.34 is not going to happen.
         repository_ctx.file('dl_dummy.c', '#include <dlfcn.h>\n#include <gnu/lib-names.h>\nvoid unlikely_to_be_used_fn_name() {dlopen(LIBM_SO, RTLD_LAZY);}')
@@ -270,14 +257,7 @@ def _x11_deb_repository_rule_impl(repository_ctx):
     if repository_ctx.name == "libglx-mesa0":
         # expected that libs[0] will be libGLX_mesa.so.0{,.0.0}, not libGLX_indirect.so.0
         libs = [e for e in libs if 'libGLX_mesa' in str(e)]
-        repository_ctx.file("libGLX_mesa.so.0.0.0", repository_ctx.read(libs[0]), executable = False, legacy_utf8 = False)
-        repository_ctx.file("libGLX_mesa.so.0", repository_ctx.read(libs[0]), executable = False, legacy_utf8 = False)
-        repository_ctx.file("libGLX_mesa.so", repository_ctx.read(libs[0]), executable = False, legacy_utf8 = False)
-        libs = [
-            "libGLX_mesa.so",
-            "libGLX_mesa.so.0",
-            "libGLX_mesa.so.0.0.0",
-        ]
+        libs = _copy_and_alias(repository_ctx, libs, "libGLX_mesa.so.0.0.0", ["libGLX_mesa.so.0", "libGLX_mesa.so"])
 
         # deps from lddtree:
         # libdrm.so.2 => /lib/x86_64-linux-gnu/libdrm.so.2
@@ -297,12 +277,12 @@ def _x11_deb_repository_rule_impl(repository_ctx):
         deps = [
             "@libdrm2//:libdrm",
             "@libxcb-glx0//:libxcb-glx",
-            "@libx11-xcb1//:libx11-xcb1",
+            "@libx11-xcb1//:libx11-xcb",
             "@libxcb-dri2-0//:libxcb-dri2",
             "@libxext6//:libXext",
             "@libxfixes3//:libXfixes",
             "@libxxf86vm1//:libXxf86vm",
-            "@libxcb-shm0//:libxcb-shm0",
+            "@libxcb-shm0//:libxcb-shm",
             "@libexpat1//:libexpat",
             "@libxcb-dri3-0//:libxcb-dri3",
             "@libxcb-present0//:libxcb-present",
@@ -311,180 +291,81 @@ def _x11_deb_repository_rule_impl(repository_ctx):
             "@libxcb-xfixes0//:libxcb-xfixes",
         ]
 
-        # deps_str = ",".join([str('"' + e + '"') for e in deps])
-        # TEMP: use nothing because trying to link with those .so says "file format not recognized".
-        # This means RBE will continue not building correctly.
-        deps_str = ""
+        deps_str = ",".join([str('"' + e + '"') for e in deps])
 
         r += 'cc_library(name="libGLX_mesa", srcs=[' + ",".join(['":' + str(e) + '"' for e in libs]) + '], deps=[' + deps_str + '], visibility=["//visibility:public"])\n'
 
     if repository_ctx.name == "libglx0":
         libs = [e for e in libs if 'libGLX.so.0.0.0' in str(e)]
-        repository_ctx.file("libGLX.so.0.0.0", repository_ctx.read(libs[0]), executable = False, legacy_utf8 = False)
-        repository_ctx.file("libGLX.so.0", repository_ctx.read(libs[0]), executable = False, legacy_utf8 = False)
-        repository_ctx.file("libGLX.so", repository_ctx.read(libs[0]), executable = False, legacy_utf8 = False)
-        libs = [
-            "libGLX.so",
-            "libGLX.so.0",
-            "libGLX.so.0.0.0",
-        ]
+        libs = _copy_and_alias(repository_ctx, libs, "libGLX.so.0.0.0", ["libGLX.so.0", "libGLX.so"])
 
         r += 'cc_library(name="libGLX", srcs=[' + ",".join(['":' + str(e) + '"' for e in libs]) + '], visibility=["//visibility:public"], deps=["@libglvnd0//:libGLdispatch", "@libglx-mesa0//:libGLX_mesa"])\n'
 
     if repository_ctx.name == "libglapi-mesa":
-        repository_ctx.file("libglapi.so.0.0.0", repository_ctx.read(libs[0]), executable = False, legacy_utf8 = False)
-        repository_ctx.file("libglapi.so.0", repository_ctx.read(libs[0]), executable = False, legacy_utf8 = False)
-        repository_ctx.file("libglapi.so", repository_ctx.read(libs[0]), executable = False, legacy_utf8 = False)
-        libs = [
-            "libglapi.so",
-            "libglapi.so.0",
-            "libglapi.so.0.0.0",
-        ]
+        libs = _copy_and_alias(repository_ctx, libs, "libglapi.so.0.0.0", ["libglapi.so.0", "libglapi.so"])
 
         r += 'cc_library(name="libglapi", srcs=[' + ",".join(['":' + str(e) + '"' for e in libs]) + '], visibility=["//visibility:public"])\n'
 
     if repository_ctx.name == "libxext6":
-        repository_ctx.file("libXext.so.6.4.0", repository_ctx.read(libs[0]), executable = False)
-        repository_ctx.file("libXext.so.6", repository_ctx.read(libs[0]), executable = False)
-        repository_ctx.file("libXext.so", repository_ctx.read(libs[0]), executable = False)
-        libs = [
-            "libXext.so",
-            "libXext.so.6",
-            "libXext.so.6.4.0",
-        ]
+        libs = _copy_and_alias(repository_ctx, libs, "libXext.so.6.4.0", ["libXext.so.6", "libXext.so"])
         r += 'cc_library(name="libXext", srcs=[' + ",".join(['":' + str(e) + '"' for e in libs]) + '], visibility=["//visibility:public"])\n'
 
     if repository_ctx.name == "libxfixes3":
-        repository_ctx.file("libXfixes.so.3.1.0", repository_ctx.read(libs[0]), executable = False)
-        repository_ctx.file("libXfixes.so.3", repository_ctx.read(libs[0]), executable = False)
-        repository_ctx.file("libXfixes.so", repository_ctx.read(libs[0]), executable = False)
-        libs = [
-            "libXfixes.so",
-            "libXfixes.so.3",
-            "libXfixes.so.3.1.0",
-        ]
+        libs = _copy_and_alias(repository_ctx, libs, "libXfixes.so.3.1.0", ["libXfixes.so.3", "libXfixes.so"])
         r += 'cc_library(name="libXfixes", srcs=[' + ",".join(['":' + str(e) + '"' for e in libs]) + '], visibility=["//visibility:public"])\n'
 
     if repository_ctx.name == "libxxf86vm1":
-        repository_ctx.file("libXxf86vm.so.1.0.0", repository_ctx.read(libs[0]), executable = False)
-        repository_ctx.file("libXxf86vm.so.1", repository_ctx.read(libs[0]), executable = False)
-        repository_ctx.file("libXxf86vm.so", repository_ctx.read(libs[0]), executable = False)
-        libs = [
-            "libXxf86vm.so",
-            "libXxf86vm.so.1",
-            "libXxf86vm.so.1.0.0",
-        ]
+        libs = _copy_and_alias(repository_ctx, libs, "libXxf86vm.so.1.0.0", ["libXxf86vm.so.1", "libXxf86vm.so"])
         r += 'cc_library(name="libXxf86vm", srcs=[' + ",".join(['":' + str(e) + '"' for e in libs]) + '], visibility=["//visibility:public"])\n'
 
     if repository_ctx.name == "libxcb-glx0":
-        repository_ctx.file("libxcb-glx.so.0.0.0", repository_ctx.read(libs[0]), executable = False)
-        repository_ctx.file("libxcb-glx.so.0", repository_ctx.read(libs[0]), executable = False)
-        repository_ctx.file("libxcb-glx.so", repository_ctx.read(libs[0]), executable = False)
-        libs = [
-            "libxcb-glx.so",
-            "libxcb-glx.so.0",
-            "libxcb-glx.so.0.0.0",
-        ]
+        libs = _copy_and_alias(repository_ctx, libs, "libxcb-glx.so.0.0.0", ["libxcb-glx.so.0", "libxcb-glx.so"])
         r += 'cc_library(name="libxcb-glx", srcs=[' + ",".join(['":' + str(e) + '"' for e in libs]) + '], visibility=["//visibility:public"])\n'
 
     if repository_ctx.name == "libxcb-dri2-0":
-        repository_ctx.file("libxcb-dri2.so.0.0.0", repository_ctx.read(libs[0]), executable = False)
-        repository_ctx.file("libxcb-dri2.so.0", repository_ctx.read(libs[0]), executable = False)
-        repository_ctx.file("libxcb-dri2.so", repository_ctx.read(libs[0]), executable = False)
-        libs = [
-            "libxcb-dri2.so",
-            "libxcb-dri2.so.0",
-            "libxcb-dri2.so.0.0.0",
-        ]
+        libs = _copy_and_alias(repository_ctx, libs, "libxcb-dri2.so.0.0.0", ["libxcb-dri2.so.0", "libxcb-dri2.so"])
         r += 'cc_library(name="libxcb-dri2", srcs=[' + ",".join(['":' + str(e) + '"' for e in libs]) + '], visibility=["//visibility:public"])\n'
 
     if repository_ctx.name == "libxcb-dri3-0":
-        repository_ctx.file("libxcb-dri3.so.0.0.0", repository_ctx.read(libs[0]), executable = False)
-        repository_ctx.file("libxcb-dri3.so.0", repository_ctx.read(libs[0]), executable = False)
-        repository_ctx.file("libxcb-dri3.so", repository_ctx.read(libs[0]), executable = False)
-        libs = [
-            "libxcb-dri3.so",
-            "libxcb-dri3.so.0",
-            "libxcb-dri3.so.0.0.0",
-        ]
+        libs = _copy_and_alias(repository_ctx, libs, "libxcb-dri3.so.0.0.0", ["libxcb-dri3.so.0", "libxcb-dri3.so"])
         r += 'cc_library(name="libxcb-dri3", srcs=[' + ",".join(['":' + str(e) + '"' for e in libs]) + '], visibility=["//visibility:public"])\n'
 
     if repository_ctx.name == "libxcb-present0":
-        repository_ctx.file("libxcb-present.so.0.0.0", repository_ctx.read(libs[0]), executable = False)
-        repository_ctx.file("libxcb-present.so.0", repository_ctx.read(libs[0]), executable = False)
-        repository_ctx.file("libxcb-present.so", repository_ctx.read(libs[0]), executable = False)
-        libs = [
-            "libxcb-present.so",
-            "libxcb-present.so.0",
-            "libxcb-present.so.0.0.0",
-        ]
+        libs = _copy_and_alias(repository_ctx, libs, "libxcb-present.so.0.0.0", ["libxcb-present.so.0", "libxcb-present.so"])
         r += 'cc_library(name="libxcb-present", srcs=[' + ",".join(['":' + str(e) + '"' for e in libs]) + '], visibility=["//visibility:public"])\n'
 
     if repository_ctx.name == "libxcb-sync1":
-        repository_ctx.file("libxcb-sync.so.1.0.0", repository_ctx.read(libs[0]), executable = False)
-        repository_ctx.file("libxcb-sync.so.1", repository_ctx.read(libs[0]), executable = False)
-        repository_ctx.file("libxcb-sync.so", repository_ctx.read(libs[0]), executable = False)
-        libs = [
-            "libxcb-sync.so",
-            "libxcb-sync.so.1",
-            "libxcb-sync.so.1.0.0",
-        ]
+        libs = _copy_and_alias(repository_ctx, libs, "libxcb-sync.so.1.0.0", ["libxcb-sync.so.1", "libxcb-sync.so"])
         r += 'cc_library(name="libxcb-sync", srcs=[' + ",".join(['":' + str(e) + '"' for e in libs]) + '], visibility=["//visibility:public"])\n'
 
     if repository_ctx.name == "libxcb-xfixes0":
-        repository_ctx.file("libxcb-xfixes.so.0.0.0", repository_ctx.read(libs[0]), executable = False)
-        repository_ctx.file("libxcb-xfixes.so.0", repository_ctx.read(libs[0]), executable = False)
-        repository_ctx.file("libxcb-xfixes.so", repository_ctx.read(libs[0]), executable = False)
-        libs = [
-            "libxcb-xfixes.so",
-            "libxcb-xfixes.so.0",
-            "libxcb-xfixes.so.0.0.0",
-        ]
+        libs = _copy_and_alias(repository_ctx, libs, "libxcb-xfixes.so.0.0.0", ["libxcb-xfixes.so.0", "libxcb-xfixes.so"])
         r += 'cc_library(name="libxcb-xfixes", srcs=[' + ",".join(['":' + str(e) + '"' for e in libs]) + '], visibility=["//visibility:public"])\n'
 
+    if repository_ctx.name == "libxcb-shm0":
+        libs = sorted([e for e in libs if "libxcb-shm.so" in str(e)], key = lambda e: len(str(e)), reverse = True)
+        libs = _copy_and_alias(repository_ctx, libs, "libxcb-shm.so.0.0.0", ["libxcb-shm.so.0", "libxcb-shm.so"])
+        r += 'cc_library(name="libxcb-shm", srcs=[' + ",".join(['":' + str(e) + '"' for e in libs]) + '], visibility=["//visibility:public"])\n'
+
     if repository_ctx.name == "libxshmfence1":
-        repository_ctx.file("libxshmfence.so.1.0.0", repository_ctx.read(libs[0]), executable = False)
-        repository_ctx.file("libxshmfence.so.1", repository_ctx.read(libs[0]), executable = False)
-        repository_ctx.file("libxshmfence.so", repository_ctx.read(libs[0]), executable = False)
-        libs = [
-            "libxshmfence.so",
-            "libxshmfence.so.1",
-            "libxshmfence.so.1.0.0",
-        ]
+        libs = _copy_and_alias(repository_ctx, libs, "libxshmfence.so.1.0.0", ["libxshmfence.so.1", "libxshmfence.so"])
         r += 'cc_library(name="libxshmfence", srcs=[' + ",".join(['":' + str(e) + '"' for e in libs]) + '], visibility=["//visibility:public"])\n'
 
     if repository_ctx.name == "libdrm2":
-        repository_ctx.file("libdrm.so.2.4.0", repository_ctx.read(libs[0]), executable = False)
-        repository_ctx.file("libdrm.so.2", repository_ctx.read(libs[0]), executable = False)
-        repository_ctx.file("libdrm.so", repository_ctx.read(libs[0]), executable = False)
-        libs = [
-            "libdrm.so",
-            "libdrm.so.2",
-            "libdrm.so.2.4.0",
-        ]
+        libs = _copy_and_alias(repository_ctx, libs, "libdrm.so.2.4.0", ["libdrm.so.2", "libdrm.so"])
         r += 'cc_library(name="libdrm", srcs=[' + ",".join(['":' + str(e) + '"' for e in libs]) + '], visibility=["//visibility:public"])\n'
 
     if repository_ctx.name == "libexpat1":
-        repository_ctx.file("libexpat.so.1.6.0", repository_ctx.read(libs[0]), executable = False)
-        repository_ctx.file("libexpat.so.1", repository_ctx.read(libs[0]), executable = False)
-        repository_ctx.file("libexpat.so", repository_ctx.read(libs[0]), executable = False)
-        libs = [
-            "libexpat.so",
-            "libexpat.so.1",
-            "libexpat.so.1.6.0",
-        ]
+        libs = _copy_and_alias(repository_ctx, libs, "libexpat.so.1.6.0", ["libexpat.so.1", "libexpat.so"])
         r += 'cc_library(name="libexpat", srcs=[' + ",".join(['":' + str(e) + '"' for e in libs]) + '], visibility=["//visibility:public"])\n'
 
     if repository_ctx.name == "libbsd0":
-        repository_ctx.file("libbsd.so.0.8.0", repository_ctx.read(libs[0]), executable = False)
-        repository_ctx.file("libbsd.so.0", repository_ctx.read(libs[0]), executable = False)
-        repository_ctx.file("libbsd.so", repository_ctx.read(libs[0]), executable = False)
-        libs = [
-            "libbsd.so",
-            "libbsd.so.0",
-            "libbsd.so.0.8.0",
-        ]
+        libs = _copy_and_alias(repository_ctx, libs, "libbsd.so.0.8.0", ["libbsd.so.0", "libbsd.so"])
         r += 'cc_library(name="libbsd", srcs=[' + ",".join(['":' + str(e) + '"' for e in libs]) + '], visibility=["//visibility:public"])\n'
+
+    if repository_ctx.name == "libmd0":
+        libs = _copy_and_alias(repository_ctx, libs, "libmd.so.0.0.2", ["libmd.so.0", "libmd.so"])
+        r += 'cc_library(name="libmd", srcs=[' + ",".join(['":' + str(e) + '"' for e in libs]) + '], visibility=["//visibility:public"])\n'
 
     # Note: cc_import, cc_library etc have really interesting semantics and
     # the best way to do this should be checked.
@@ -628,7 +509,7 @@ def x11_deb_repository(name, urls, sha256):
 # x11_repository_deb adds all repos.
 def x11_repository_deb():
     #master_deb_hash = 'master.deb'
-    master_deb_hash = "aa5393d882d338390d84e51dd646423e9d5b6633"
+    master_deb_hash = "2aa9c52b29ce3afc08b95c43c8853f4a1dcfe6fc"
 
     x11_deb_repository(
         name = "libx11-dev",
@@ -858,6 +739,12 @@ def x11_repository_deb():
         name = "libbsd0",
         urls = ["https://github.com/ivucica/rules_libsdl12/raw/" +  master_deb_hash + "/libbsd0/libbsd0_0.10.0-1_amd64.deb"],
         sha256 = "4f668025fe923a372eb7fc368d6769fcfff6809233d48fd20fc072917cd82e60",
+    )
+
+    x11_deb_repository(
+        name = "libmd0",
+        urls = ["https://github.com/ivucica/rules_libsdl12/raw/" +  master_deb_hash + "/libmd0/libmd0_1.0.1-3_amd64.deb"],
+        sha256 = "fe904769ee32a2250a40fce092a92c9ad0baaf34e1ae4a2c90f8c2a3d536a98d",
     )
 
     x11_deb_repository(
