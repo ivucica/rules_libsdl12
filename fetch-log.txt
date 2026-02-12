@@ -139,6 +139,11 @@ Get:3 http://archive.ubuntu.com/ubuntu focal/main libxcb 1.14-2 (diff) [25.7 kB]
 [1mdpkg-source: [0m[32minfo[0m: applying libxcb_1.14-2.diff.gz
 [1mdpkg-source: [0m[32minfo[0m: upstream files that have been modified: 
  libxcb-1.14/.autom4te.cfg
+
+Manual note 2026-02-12: Added libmd0_1.0.1-3_amd64.deb by enabling deb-src for focal main/universe, then running:
+	apt-get download libmd0
+	apt-get source libmd0
+to capture both binary and sources.
 Fetched 671 kB in 1s (1,044 kB/s)
 [1m[7m[31mUpdating libx11-xcb-dev
 [91m(B[mGet:1 http://archive.ubuntu.com/ubuntu focal-updates/main amd64 libx11-xcb-dev amd64 2:1.6.9-2ubuntu1.6 [9,792 B]
