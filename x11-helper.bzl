@@ -753,12 +753,53 @@ def x11_repository_deb():
         sha256 = "776c691acd4fcdad314f0f09c98927a608cbc422007ce0f0c88e9d6711773217",
     )
 
+
+def _x11_repository_rule_impl(ctx):
+    primary_path = ctx.path(ctx.attr.primary_path)
+
+    # Determine the path to use
+    if primary_path.exists:
+        actual_path = primary_path
+    else:
+        # Falls back to a dummy dir in the root of the workspace calling this rule.
+        # 'x11_dummy' must exist in the helper root.
+        helper_root = ctx.path(Label("@rules_libsdl12//:WORKSPACE")).dirname
+        actual_path = helper_root.get_child(ctx.attr.dummy_path)  # ctx.path(ctx.attr.dummy_path)
+
+    # Symlink the BUILD file provided in the attributes
+    ctx.template("BUILD.bazel", ctx.attr.build_file)
+
+    # Link the contents of the chosen directory into this external repo
+    # This mimics what new_local_repository does under the hood
+    if actual_path.exists:
+        for item in actual_path.readdir():
+            ctx.symlink(item, item.basename)
+    else:
+        # Create an empty file to ensure the repo is valid if path is missing
+        ctx.file("empty.txt", "")
+
+
+x11_repository_rule = repository_rule(
+    implementation = _x11_repository_rule_impl,
+    attrs = {
+        "build_file":   attr.label(allow_single_file = True),
+        "primary_path": attr.string(default = "/usr/include/X11"),
+        "dummy_path":   attr.string(default = "x11_dummy"),
+    },
+)
+
+
 def x11_repository():
-    return native.new_local_repository(
+    # We may be also be able to check 'defines = native.settings_user_defined_variables'
+    # via 'is_deps_bin = defines.get("libsdl12_linux_deps_bin") == "true"' and simply
+    # instantiate a differente repo.
+
+    return x11_repository_rule(
         name = "x11repository",
         build_file = "@rules_libsdl12//:BUILD.x11helper",
-        path = "/usr/include/X11",
+        dummy_path = "x11_dummy",
     )
+
 
 def xcb_repository():
     return native.new_local_repository(
