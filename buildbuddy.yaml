@@ -9,5 +9,5 @@ actions:
       pull_request:
         branches:
           - "*"
-    bazel_commands:
-      - "test --config=remote //..." # <-- main modification for rules_libsdl12: --config=remote as a default for buildbuddy.yaml
+    steps:
+      - run: "bazel test --config=remote //..." # <-- main modification for rules_libsdl12: --config=remote as a default for buildbuddy.yaml
