@@ -1,0 +1,17 @@
+# -*- mode: python; -*-
+# vim: set syntax=python:
+
+module(name = "full_repo")
+
+# Normally you would use:
+#   bazel_dep(name = "rules_libsdl12", version = "...")
+# to pull in rules_libsdl12 from the Bazel Central Registry.
+#
+# For local development, use a local path override instead:
+local_path_override(
+    module_name = "rules_libsdl12",
+    path = "../..",
+)
+
+libsdl12 = use_extension("@rules_libsdl12//:extensions.bzl", "libsdl12")
+use_repo(libsdl12, "libsdl12")
