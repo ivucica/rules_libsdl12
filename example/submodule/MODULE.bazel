@@ -1,0 +1,28 @@
+# -*- mode: python; -*-
+# vim: set syntax=python:
+
+# Example: consuming rules_libsdl12 as a git submodule, without the Bazel
+# Central Registry.
+#
+# Setup:
+#   git submodule add https://github.com/ivucica/rules_libsdl12 \
+#       third_party/rules_libsdl12
+#   git submodule update --init
+#
+# Then in your MODULE.bazel (this file), use bazel_dep + local_path_override
+# to point Bazel at the submodule directory instead of the registry.
+
+module(name = "my_project")
+
+# Declare the dependency with any placeholder version; the local_path_override
+# below means Bazel will never consult the registry for this module.
+bazel_dep(name = "rules_libsdl12", version = "0.0.0")
+local_path_override(
+    module_name = "rules_libsdl12",
+    # Path relative to this MODULE.bazel file, pointing at the submodule root.
+    # Adjust to match wherever you placed the submodule.
+    path = "third_party/rules_libsdl12",
+)
+
+libsdl12 = use_extension("@rules_libsdl12//:extensions.bzl", "libsdl12")
+use_repo(libsdl12, "libsdl12")

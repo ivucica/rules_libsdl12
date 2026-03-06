@@ -763,7 +763,7 @@ def _x11_repository_rule_impl(ctx):
     else:
         # Falls back to a dummy dir in the root of the workspace calling this rule.
         # 'x11_dummy' must exist in the helper root.
-        helper_root = ctx.path(Label("@rules_libsdl12//:WORKSPACE")).dirname
+        helper_root = ctx.path(Label("@rules_libsdl12//:BUILD.bazel")).dirname
         actual_path = helper_root.get_child(ctx.attr.dummy_path)  # ctx.path(ctx.attr.dummy_path)
 
     # Symlink the BUILD file provided in the attributes

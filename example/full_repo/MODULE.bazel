@@ -1,0 +1,35 @@
+# -*- mode: python; -*-
+# vim: set syntax=python:
+
+module(name = "full_repo")
+
+# Option 1: Pull from Bazel Central Registry (once rules_libsdl12 is published):
+#   bazel_dep(name = "rules_libsdl12", version = "0.0.0")
+#
+# Option 2: Git submodule (no registry needed).
+#   If rules_libsdl12 is vendored as a git submodule at e.g.
+#   third_party/rules_libsdl12:
+#
+#   bazel_dep(name = "rules_libsdl12", version = "0.0.0")
+#   local_path_override(
+#       module_name = "rules_libsdl12",
+#       path = "third_party/rules_libsdl12",
+#   )
+#
+# Option 3: Archive override (pin a specific GitHub commit, no registry):
+#   bazel_dep(name = "rules_libsdl12", version = "0.0.0")
+#   archive_override(
+#       module_name = "rules_libsdl12",
+#       urls = ["https://github.com/ivucica/rules_libsdl12/archive/<commit>.tar.gz"],
+#       strip_prefix = "rules_libsdl12-<commit>",
+#   )
+#
+# This file uses local_path_override for local development of rules_libsdl12
+# itself. The submodule example is in example/submodule/.
+local_path_override(
+    module_name = "rules_libsdl12",
+    path = "../..",
+)
+
+libsdl12 = use_extension("@rules_libsdl12//:extensions.bzl", "libsdl12")
+use_repo(libsdl12, "libsdl12")

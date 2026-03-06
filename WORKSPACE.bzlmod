@@ -1,0 +1,7 @@
+# -*- mode: python; -*-
+# vim: set syntax=python:
+# This file is used by Bazel when Bzlmod is enabled (--enable_bzlmod or Bazel 7+
+# default). When this file exists, Bazel reads it INSTEAD of WORKSPACE, which
+# prevents the duplicate repository definitions that would occur if WORKSPACE's
+# libsdl12_repositories() call ran alongside the MODULE.bazel extension.
+# External dependencies are provided by MODULE.bazel / extensions.bzl instead.
