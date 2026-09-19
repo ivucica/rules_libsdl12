@@ -19,6 +19,9 @@ def libsdl12_repositories():
 
             type = "tar.gz",
             build_file = "@rules_libsdl12//:BUILD.libsdl12",
+
+            patches = ["@rules_libsdl12//:patch3.patch"],
+            patch_args = ["-p1"],
     )
 
     x11_repository()
