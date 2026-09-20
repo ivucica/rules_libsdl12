@@ -1,0 +1,10 @@
+# -*- mode: python; -*-
+# vim: set syntax=python:
+
+module(
+    name = "rules_libsdl12",
+    version = "0.0.0",
+)
+
+libsdl12 = use_extension("//:extensions.bzl", "libsdl12")
+use_repo(libsdl12, "libsdl12")

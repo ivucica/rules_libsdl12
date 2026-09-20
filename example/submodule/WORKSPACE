@@ -1,0 +1,23 @@
+# -*- mode: python; -*-
+# vim: set syntax=python:
+
+# WORKSPACE-based equivalent of the submodule example.
+#
+# When Bzlmod is not in use (or for Bazel 5 and earlier), reference the
+# submodule with local_repository pointing at its root directory.
+#
+# Setup (same as Bzlmod case):
+#   git submodule add https://github.com/ivucica/rules_libsdl12 \
+#       third_party/rules_libsdl12
+#   git submodule update --init
+
+workspace(name = "my_project")
+
+local_repository(
+    name = "rules_libsdl12",
+    # Adjust this path to wherever you placed the submodule.
+    path = __workspace_dir__ + "/third_party/rules_libsdl12",
+)
+
+load("@rules_libsdl12//:libsdl12.bzl", "libsdl12_repositories")
+libsdl12_repositories()

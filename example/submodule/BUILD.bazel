@@ -1,0 +1,13 @@
+# -*- mode: python; -*-
+# vim: set syntax=python:
+
+# Example target using SDL 1.2 brought in via a git submodule.
+# See MODULE.bazel (Bzlmod) or WORKSPACE (legacy) for setup instructions.
+cc_binary(
+    name = "submodule_example",
+    srcs = ["submodule_example.c"],
+    deps = [
+        "@rules_libsdl12//:libsdl12",
+        "@rules_libsdl12//:libsdl12-main",
+    ],
+)
